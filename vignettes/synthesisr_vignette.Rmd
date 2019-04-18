@@ -1,0 +1,60 @@
+---
+title: "Assembling and deduplicating search results with synthesisr"
+author: Eliza M. Grames
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Assembling and deduplicating search results with synthesisr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction to synthesisr
+
+
+
+
+## Import results and remove duplicates
+
+```{r}
+my_directory <- "~/synthesisr/inst/extdata/"
+
+search_results <- synthesisr::import_results(directory=my_directory, 
+                                             filename = NULL, 
+                                             save_dataset = FALSE, 
+                                             verbose = TRUE)
+
+first_dedupe <- synthesisr::deduplicate(df=search_results, 
+                                        field = "title", 
+                                        method = "quick", 
+                                        language = "English")
+
+second_dedupe <- synthesisr::deduplicate(df=first_dedupe, 
+                                         field="title",
+                                         method="similarity",
+                                         language="English",
+                                         cutoff_distance = 2)
+
+```
+
+
+## Detect chimeras
+
+Before accepting our deduped dataset, we want to check for any multilingual, chimera titles that could be limiting the functionality of the dedupe function. If chimeras are detected, they should be split into single-language titles and passed back to the deduplicate function. An automated function to trim chimera text is pending development for the next version of synthesisr.
+
+```{r}
+any_chimeras <- synthesisr::chimera_detect(second_dedupe$title, overlap = .6)
+```
+
+## Create document-feature matrices
+
+```{r}
+my_dfm <- synthesisr::create_dfm(second_dedupe$abstract, language="English")
+
+```
+
+## Report search results
+
