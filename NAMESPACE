@@ -1,0 +1,4 @@
+exportPattern("^[[:alpha:]]+")
+importFrom("stats", "dist")
+importFrom("utils", "read.csv", "read.table", "write.csv")
+importFrom("stopwords")

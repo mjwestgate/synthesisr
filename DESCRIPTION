@@ -1,0 +1,28 @@
+Package: synthesisr
+Type: Package
+Title: Import, Assemble, and Deduplicate Systematic Review Search Results
+Version: 0.1.0
+Author: Eliza Grames
+Maintainer: Eliza Grames <eliza.grames@uconn.edu>
+Description: Systematic review searches include multiple databases
+    that export results in a variety of formats with overlap in 
+    coverage between databases. To streamline the process of importing,
+    assembling, and deduplicating results, synthesisr recognizes the
+    file output of commonly used databases for systematic reviews and
+    merges results into a standardized format. 
+License: GPL-3
+LazyData: true
+Imports: 
+    litsearchr, 
+    revtools, 
+    stopwords, 
+    stringr, 
+    tm, 
+    xml2
+Suggests:
+    xlsx
+RoxygenNote: 6.1.0
+VignetteBuilder: knitr
+Depend: R (>= 2.10)
+Date: 2019-04-14
+Encoding: UTF-8
