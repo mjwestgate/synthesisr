@@ -52,8 +52,14 @@ read_files <- function(file){
   }
 
   if(any(c("bib", "nbib", "ris")==filetype)){
+    if (!requireNamespace("revtools", quietly = TRUE)){
+      stop("revtools needed to import .bib and .ris files. Please install it.",
+           call. = FALSE)
+    } else {
+
     df <- revtools::read_bibliography(file)
-  }
+    }
+    }
 
   return(df)
 

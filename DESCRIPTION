@@ -13,15 +13,14 @@ Description: Systematic review searches include multiple databases
 License: GPL-3
 LazyData: true
 Imports: 
-    litsearchr, 
-    revtools, 
     stopwords, 
     stringr, 
     tm, 
     xml2
 Suggests:
     xlsx,
-    knitr
+    knitr,
+    revtools
 RoxygenNote: 6.1.0
 VignetteBuilder: knitr
 Depends: R (>= 2.10)

@@ -65,7 +65,13 @@ deduplicate <- function(df, field, method=c("quick", "similarity", "fuzzy"),
   }
 
   if(method=="fuzzy"){
+    if (!requireNamespace("revtools", quietly = TRUE)){
+      stop("revtools needed for this function to work. Please install it.",
+           call. = FALSE)
+    } else {
+
     df <- revtools::find_duplicates(data=df, match_variable = field, remove_punctuation = TRUE)
+    }
   }
 
 return(df)
@@ -152,7 +158,7 @@ language_code <- function(language){
   if(nchar(language==2)){la_code <- language}
   if(nchar(language)>2){
 
-    reference <- litsearchr::possible_langs
+    reference <- synthesisr::possible_langs
     la_code <- as.character(reference$Short[which(reference$Language==language)])
   }
   return(la_code)
@@ -163,7 +169,7 @@ language_code <- function(language){
 #' @param language a character vector containing the name of the language for which to retrieve stopwords
 #' @return a character vector of stopwords
 get_stopwords <- function(language){
-  if(!any(litsearchr::possible_langs$Language==language)){stop("The language you specified is not supported.")} else {
+  if(!any(synthesisr::possible_langs$Language==language)){stop("The language you specified is not supported.")} else {
     la_code <- language_code(language)
   }
 
