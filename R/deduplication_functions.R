@@ -84,8 +84,6 @@ create_dfm <- function(elements, type=c("tokens", "keywords"), language="English
     if(any(nchar(dictionary)<4)){
       dictionary <- dictionary[-which(nchar(dictionary)<4)]
     }
-
-
   }
 
   if(type=="keywords"){
