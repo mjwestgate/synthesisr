@@ -16,13 +16,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Systematic review searches include multiple databases that export results in a variety of formats with overlap in coverage between databases. To streamline the process of importing, assembling, and deduplicating results, synthesisr recognizes the file output of commonly used databases for systematic reviews and merges results into a standardized format. It can then deduplicate search results, including detecting title fields that contain translations and deduplicating them based on a single-language title only.
 
-For reporting the results of a search, synthesisr currently has fairly limited functionality and simply reports the number of hits per database and the accumulation of new unique hits with additional search effort. We plan to expand on this in the future and add more advanced reporting that connects to other packages in the metaverse and reports included hits as a function of the original database and which databases retrieved unique included hits. 
+For reporting the results of a search, synthesisr currently has fairly limited functionality and simply reports the number of hits per database. We plan to expand on this in the future and add more advanced reporting that connects to other packages in the metaverse and reports included hits as a function of the original database,  which databases retrieved unique included hits, and the accumulation of new unique hits with additional search effort. 
 
 In addition to the systematic review search functions, there are a number of text mining functions stored in synthesisr that are used by multiple packages in the metaverse, such as tokenization and removing punctuation. Although these functions overlap with other packages, they are designed to be used with scientific article abstracts, which necessitates some nuances like not recognizing hyphens as punctuation, etc. 
 
 ## Import results and remove duplicates
-
-
 
 ```{r}
 my_directory <- "../inst/extdata/"
@@ -65,7 +63,7 @@ my_dfm <- synthesisr::create_dfm(second_dedupe$abstract, type = "tokens", langua
 
 
 ```{r}
-search_report <- synthesisr::report_results(second_dedupe, "database")
+search_report <- synthesisr::report_results(search_results, "database")
 search_report
 ```
 
