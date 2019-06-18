@@ -2,8 +2,19 @@ Package: synthesisr
 Type: Package
 Title: Import, Assemble, and Deduplicate Systematic Review Search Results
 Version: 0.1.0
-Author: Eliza Grames
-Maintainer: Eliza Grames <eliza.grames@uconn.edu>
+Authors@R: c(
+     person(
+    given = "Eliza",
+    family = "Grames",
+    role = c("aut", "cre"),
+    email = "eliza.grames@uconn.edu",
+    comment = c(ORCID = "0000-0003-1743-6815")),
+    person(
+    given = "Martin",
+    family = "Westgate",
+    role = c("aut"),
+    email = "martinjwestgate@gmail.com",
+    comment = c(ORCID = "0000-0003-0854-2034")))
 Description: Systematic review searches include multiple databases
     that export results in a variety of formats with overlap in 
     coverage between databases. To streamline the process of importing,
