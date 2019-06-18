@@ -72,15 +72,30 @@ return(df)
 }
 
 #' Create a document-feature matrix
-#' @description Given a character vector of document information and a language, creates a document-feature matrix.
+#' @description Given a character vector of document information, creates a document-feature matrix.
 #' @param elements a character vector of document information (e.g. document titles or abstracts)
-#' @param language the language to use for tokenizing documents
 #' @return a matrix with documents as rows and terms as columns
-create_dfm <- function(elements, language){
-  all_tokens <- sapply(elements, synthesisr::get_tokens, language)
-  dictionary <- unique(strsplit(synthesisr::remove_punctuation(paste(all_tokens, collapse=";;")), "\"")[[1]])
-  corp <- tm::SimpleCorpus(tm::VectorSource(names(all_tokens)))
-  dfm <- tm::DocumentTermMatrix(corp, control=list(dictionary))
+create_dfm <- function(elements, type=c("tokens", "keywords"), language="English", keywords=NULL){
+  if(type=="tokens"){
+    all_tokens <- sapply(elements, synthesisr::get_tokens, language)
+    dictionary <- unique(strsplit(synthesisr::remove_punctuation(paste(all_tokens, collapse=";;")), "\"")[[1]])
+    dictionary <- gsub("\\\\", "", dictionary)
+    dictionary <- stringr::str_trim(dictionary)
+    if(any(nchar(dictionary)<4)){
+      dictionary <- dictionary[-which(nchar(dictionary)<4)]
+    }
+
+
+  }
+
+  if(type=="keywords"){
+    dictionary <- keywords
+  }
+
+
+  corp <- tm::SimpleCorpus(tm::VectorSource(elements))
+  dfm <- tm::DocumentTermMatrix(corp, control = list(dictionary=dictionary))
+  dfm <- as.matrix(dfm)
   return(dfm)
 }
 
