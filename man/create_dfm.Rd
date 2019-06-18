@@ -4,16 +4,21 @@
 \alias{create_dfm}
 \title{Create a document-feature matrix}
 \usage{
-create_dfm(elements, language)
+create_dfm(elements, type = c("tokens", "keywords"),
+  language = "English", keywords = NULL)
 }
 \arguments{
 \item{elements}{a character vector of document information (e.g. document titles or abstracts)}
 
-\item{language}{the language to use for tokenizing documents}
+\item{type}{whether the dfm should be created based on document tokens or a restricted list of keywords}
+
+\item{language}{if type="tokens", the language to use for removing stopwords}
+
+\item{keywords}{if type="keywords", a character vector of keywords to use as document features}
 }
 \value{
 a matrix with documents as rows and terms as columns
 }
 \description{
-Given a character vector of document information and a language, creates a document-feature matrix.
+Given a character vector of document information, creates a document-feature matrix.
 }

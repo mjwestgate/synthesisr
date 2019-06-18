@@ -20,9 +20,10 @@ Imports:
     tm, 
     xml2
 Suggests:
-    xlsx
+    xlsx,
+    knitr
 RoxygenNote: 6.1.0
 VignetteBuilder: knitr
-Depend: R (>= 2.10)
+Depends: R (>= 2.10)
 Date: 2019-04-14
 Encoding: UTF-8

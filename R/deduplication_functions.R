@@ -59,7 +59,7 @@ deduplicate <- function(df, field, method=c("quick", "similarity", "fuzzy"),
   }
 
   if(method=="similarity"){
-    mydfm <- synthesisr::create_dfm(elements=df[,target], language)
+    mydfm <- synthesisr::create_dfm(elements=df[,target], type="tokens", language)
     mydist <- synthesisr::calculate_similarity(mydfm)
     df <- synthesisr::remove_similar(data=df, distance_data = mydist, id_column = 1, distance_column = 3, cutoff = cutoff_distance)
   }
@@ -74,6 +74,9 @@ return(df)
 #' Create a document-feature matrix
 #' @description Given a character vector of document information, creates a document-feature matrix.
 #' @param elements a character vector of document information (e.g. document titles or abstracts)
+#' @param type whether the dfm should be created based on document tokens or a restricted list of keywords
+#' @param language if type="tokens", the language to use for removing stopwords
+#' @param keywords if type="keywords", a character vector of keywords to use as document features
 #' @return a matrix with documents as rows and terms as columns
 create_dfm <- function(elements, type=c("tokens", "keywords"), language="English", keywords=NULL){
   if(type=="tokens"){
