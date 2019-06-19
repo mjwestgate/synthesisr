@@ -84,7 +84,7 @@ return(df)
 #' @param language if type="tokens", the language to use for removing stopwords
 #' @param keywords if type="keywords", a character vector of keywords to use as document features
 #' @return a matrix with documents as rows and terms as columns
-function(elements, type=c("tokens", "keywords"), language="English", keywords=NULL){
+create_dfm <- function(elements, type=c("tokens", "keywords"), language="English", keywords=NULL){
   if(type=="tokens"){
     corp <- tm::VCorpus(tm::VectorSource(elements))
     dfm <- tm::DocumentTermMatrix(corp)
