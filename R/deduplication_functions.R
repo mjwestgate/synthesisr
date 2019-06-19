@@ -4,7 +4,7 @@
 #' @return the input text with punctuation removed
 remove_punctuation <- function(text){
   punctuation <- c("\\!", "#", "$", "%", "&", "\\(", "\\)",
-                   ",", "-", "\\*", "\\.", "/", ":", ";",
+                   ",", "\\*", "\\.", "/", ":", ";",
                    "<", "=", ">", "\\?", "@", "\\[", "\\]",
                    "_", "`", "\\{", "\\|", "\\}", "~")
   for(i in 1:length(punctuation)){
@@ -84,28 +84,33 @@ return(df)
 #' @param language if type="tokens", the language to use for removing stopwords
 #' @param keywords if type="keywords", a character vector of keywords to use as document features
 #' @return a matrix with documents as rows and terms as columns
-create_dfm <- function(elements, type=c("tokens", "keywords"), language="English", keywords=NULL){
+function(elements, type=c("tokens", "keywords"), language="English", keywords=NULL){
   if(type=="tokens"){
-    all_tokens <- sapply(elements, synthesisr::get_tokens, language)
-    dictionary <- unique(strsplit(synthesisr::remove_punctuation(paste(all_tokens, collapse=";;")), "\"")[[1]])
-    dictionary <- gsub("\\\\", "", dictionary)
-    dictionary <- stringr::str_trim(dictionary)
-    if(any(nchar(dictionary)<4)){
-      dictionary <- dictionary[-which(nchar(dictionary)<4)]
+    corp <- tm::VCorpus(tm::VectorSource(elements))
+    dfm <- tm::DocumentTermMatrix(corp)
+  }
+  start <- Sys.time()
+  if(type=="keywords"){
+    elements <- tolower(elements)
+    my_dictionary <- keywords
+    dfm <- matrix(data=NA, nrow=length(elements),
+                  ncol=length(my_dictionary),
+                  byrow = TRUE,
+                  dimnames = list(1:length(elements), my_dictionary))
+
+    for(i in 1:length(keywords)){
+      detections <- sapply(elements, stringr::str_detect, my_dictionary[i])
+      names(detections) <- NULL
+      detections <- as.numeric(detections)
+
+      dfm[,i] <- detections
     }
   }
-
-  if(type=="keywords"){
-    dictionary <- keywords
-  }
-
-
-  corp <- tm::SimpleCorpus(tm::VectorSource(elements))
-  dfm <- tm::DocumentTermMatrix(corp, control = list(dictionary=dictionary))
+  end <- Sys.time()
+  runtime <- end-start
   dfm <- as.matrix(dfm)
   return(dfm)
 }
-
 #' Calculates similarity between documents
 #' @description Computes the distance between documents in a document-feature matrix based on shared word associations.
 #' @param dfm a document-feature matrix
