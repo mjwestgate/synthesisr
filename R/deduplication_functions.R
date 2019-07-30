@@ -3,17 +3,32 @@
 #' @param text the text from which to remove punctuation
 #' @return the input text with punctuation removed
 remove_punctuation <- function(text){
-  punctuation <- c("\\!", "#", "$", "%", "&", "\\(", "\\)",
+  punctuation <- c("\\!", "#", "\\$", "%", "&", "\\(", "\\)",
                    ",", "\\*", "\\.", "/", ":", ";",
                    "<", "=", ">", "\\?", "@", "\\[", "\\]",
                    "_", "`", "\\{", "\\|", "\\}", "~")
   for(i in 1:length(punctuation)){
     text <- gsub(punctuation[i], " ", text)
-    if(i==length(punctuation)){text <- gsub("  ", " ", text)}
+    if(i==length(punctuation)){
+    while(any(stringr::str_detect(text, "  ")==TRUE)){
+      text <- gsub("  ", " ", text)
+    }
+      }
   }
+  text <- stringr::str_trim(text)
   return(text)
 }
 
+#' Remove hyphens from text
+#' @description Replaces hyphens with a space
+#' @param text the text from which to remove hyphens
+#' @return the input text with hyphens replaced with spaces
+remove_hyphens <- function(text){
+  text <- gsub("-", " ", text)
+  text <- gsub("  ", " ", text)
+  text <- stringr::str_trim(text)
+  return(text)
+}
 
 #' Remove duplicate entries from a data frame
 #' @description Given a data frame and a field to check for duplicates, flags and removes duplicate entries with three optional methods.
@@ -37,6 +52,7 @@ deduplicate <- function(df, field, method=c("quick", "similarity", "fuzzy"),
 
   df[,target] <- synthesisr::remove_punctuation(df[,target])
   df[,target] <- stringr::str_trim(df[,target])
+  df[,target] <- stringr::str_trim(df[,target])
 
   if(any(df[,target]=="")){
     empty_fields <- which(df[,target]=="")
@@ -52,7 +68,7 @@ deduplicate <- function(df, field, method=c("quick", "similarity", "fuzzy"),
   }
 
   if(method=="quick"){
-    duplicates <- duplicated(df[,target])
+    duplicates <- duplicated(tolower(df[,target]))
     if(length(duplicates)>0){
       df <- df[-which(duplicates==TRUE),]
     }
@@ -217,6 +233,7 @@ remove_stopwords <- function(text, language){
 get_tokens <- function(text, language){
   text <- tolower(text)
   text <- synthesisr::remove_stopwords(text=text, language=language)
+  text <- synthesisr::remove_punctuation(text)
   tokens <- strsplit(text, " ")[[1]]
   if(any(is.na(tokens))){
     tokens <- tokens[-is.na(tokens)]
@@ -280,6 +297,5 @@ language_detect <- function(text){
   probable_language <- as.character(all_languages[which(all_languages[,2]==max(all_languages[,2])),1])
   if(length(probable_language)>2){stop("Language cannot be determined.")}
   return(probable_language)
-
 }
 
