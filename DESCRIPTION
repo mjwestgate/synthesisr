@@ -23,7 +23,7 @@ Description: Systematic review searches include multiple databases
     merges results into a standardized format. 
 License: GPL-3
 LazyData: true
-Imports: 
+Imports:
     stopwords, 
     stringr, 
     tm, 
