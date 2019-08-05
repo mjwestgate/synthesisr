@@ -315,18 +315,24 @@ import_ProQuest <- function(df){
   df$methods <- rep("", nrow(df))
   df$endpage <- rep("", nrow(df))
 
-  df$startpage <- as.character(df$startpage)
-  temp <- strsplit(as.character(df$startpage), "-")
-  if (length(temp) > 0) {
-    for (j in 1:length(temp)) {
-      if(length(temp[[j]])>0){
-        df$startpage[j] <- temp[[j]][1]
-      }
-      if (length(temp[[j]]) > 1) {
-        df$endpage[j] <- temp[[j]][2]
+  if(any(colnames(df)=="startpage")){
+    df$startpage <- as.character(df$startpage)
+    temp <- strsplit(as.character(df$startpage), "-")
+    if (length(temp) > 0) {
+      for (j in 1:length(temp)) {
+        if(length(temp[[j]])>0){
+          df$startpage[j] <- temp[[j]][1]
+        }
+        if (length(temp[[j]]) > 1) {
+          df$endpage[j] <- temp[[j]][2]
+        }
       }
     }
+  } else{
+    df$startpage <- rep("", nrow(df))
+    df$endpage <- rep("", nrow(df))
   }
+
 
   df$text <- paste(df$abstract, df$keywords, sep=" ")
   df$database <- rep("ProQuest_generic", nrow(df))
