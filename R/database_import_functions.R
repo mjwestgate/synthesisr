@@ -7,7 +7,7 @@ import_revtools <- function(df){
                             affiliation=df$institution, source=df$journal, year=df$year, volume=df$volume, issue=df$issue,
                             startpage=df$pages, doi=df$doi, language=df$language))
   df$methods <- rep("", length(df$id))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$startpage <- as.character(df$startpage)
   df$endpage <- as.character(df$startpage)
   temp <- strsplit(as.character(df$startpage), "-")
@@ -37,7 +37,7 @@ import_Zotero <- function(df){
                             type = df$Type, language=df$Language))
   df$methods <- rep("", nrow(df))
   df$affiliation <- rep("", nrow(df))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$startpage <- as.character(df$startpage)
   df$endpage <- df$startpage
   temp <- strsplit(as.character(df$startpage), "-")
@@ -67,7 +67,7 @@ import_Scopus <- function(df){
                             doi = df$DOI))
   df$methods <- rep("", length(df$id))
   df$language <- rep("", length(df$id))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$database <- rep("Scopus", nrow(df))
 
   return(df)
@@ -95,7 +95,7 @@ import_ZooRec <- function(df){
     }
   }
   df$methods <- rep("", length(df$id))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
 
   df$database <- rep("ZooRec", nrow(df))
 
@@ -113,7 +113,7 @@ import_BIOSIS <- function(df){
                             source = df$SO, year = df$PY, volume = df$VL,
                             issue = df$IS, startpage = df$BP, endpage = df$EP,
                             doi = df$DI, language = df$LA))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
 
   df$database <- rep("BIOSIS", nrow(df))
 
@@ -131,7 +131,7 @@ import_Core <- function(df){
                             source = df$SO, year = df$PY, volume = df$VL,
                             issue = df$IS, startpage = df$BP, endpage = df$EP,
                             doi = df$DI, language = df$LA))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$database <- rep("CoreCollections", nrow(df))
   return(df)
 }
@@ -148,7 +148,7 @@ import_OtherWoS <- function(df){
                             source = df$SO, year = df$PY, volume = df$VL,
                             issue = df$IS, startpage = df$BP, endpage = df$EP,
                             doi = df$DI, language = df$LA))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$methods <- rep("", nrow(df))
   df$affiliation <- rep("", nrow(df))
   df$database <- rep("Web_of_Science_generic", nrow(df))
@@ -165,7 +165,7 @@ import_MEDLINE <- function(df){
                             authors = df$AU, affiliation = df$C1, source = df$SO,
                             year = df$Y, volume = df$VL, issue = df$IS, startpage = df$PS,
                             doi = df$DI, language = df$LA))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$methods <- rep("", length(df$id))
   temp <- strsplit(as.character(df$startpage), "-")
   if (length(temp) > 0) {
@@ -192,7 +192,7 @@ import_EngVill <- function(df){
                             source = df$Source, year = df$Publication.year, volume = df$Volume,
                             issue = df$Issue, startpage = df$Pages,
                             doi = df$DOI, language = df$Language))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$methods <- rep("", nrow(df))
   df$startpage <- as.character(df$startpage)
   temp <- strsplit(as.character(df$startpage), "-")
@@ -224,7 +224,7 @@ import_EBSCO <- function(df){
   df$methods <- rep("", nrow(df))
   df$affiliation <- rep("", nrow(df))
   df$language <- rep("", nrow(df))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$database <- rep("EBSCO_generic", nrow(df))
   return(df)
 }
@@ -248,7 +248,7 @@ import_NDLTD <- function(df){
   df$methods <- rep("", nrow(df))
   df$affiliation <- rep("", nrow(df))
   df$language <- rep("", nrow(df))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$database <- rep("NDLTD", nrow(df))
   return(df)
 }
@@ -273,7 +273,7 @@ import_OATD <- function(df){
   df$affiliation <- rep("", nrow(df))
   df$language <- rep("", nrow(df))
   df$year <- rep("", nrow(df))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$database <- rep("OATD", nrow(df))
   return(df)
 }
@@ -298,7 +298,7 @@ import_OpenThesis <- function(df){
   df$methods <- rep("", nrow(df))
   df$affiliation <- rep("", nrow(df))
   df$language <- rep("", nrow(df))
-  df$text <- paste(df$abstract, df$keywords, sep = " ")
+  df$text <- paste(df$title, df$abstract, sep = " ")
   df$database <- rep("OpenThesis", nrow(df))
   return(df)
 }
@@ -334,7 +334,7 @@ import_ProQuest <- function(df){
   }
 
 
-  df$text <- paste(df$abstract, df$keywords, sep=" ")
+  df$text <- paste(df$title, df$abstract, sep=" ")
   df$database <- rep("ProQuest_generic", nrow(df))
   return(df)
 }
