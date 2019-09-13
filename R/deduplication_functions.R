@@ -70,7 +70,9 @@ deduplicate <- function(df, field, method=c("quick", "similarity", "fuzzy"),
   if(method=="quick"){
     duplicates <- duplicated(tolower(df[,target]))
     if(length(duplicates)>0){
-      df <- df[-which(duplicates==TRUE),]
+      if(any(duplicates==TRUE)){
+        df <- df[-which(duplicates == TRUE), ]
+      }
     }
   }
 
