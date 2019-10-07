@@ -22,6 +22,14 @@ import_revtools <- function(df){
   return(df)
 }
 
+#' Import preformatted results
+#' @description Imports a file that is already formatted in the synthesisr column order
+#' @param df the data frame to import
+#' @return the data frame with synthesisr formatted columns
+import_preformatted <- function(df){
+  df <- df
+  return(df)
+}
 
 #' Import .csv exported from Zotero
 #' @description Imports files to synthesis from a data frame. Intended primarily as a function to be called by import_results()
