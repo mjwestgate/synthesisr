@@ -141,7 +141,7 @@ detect_database <- function(df){
   database_signature <- paste(df[1,], collapse=" ")
 
   if(any(colnames(df)=="Number.Of.Volumes")){database <- "Zotero_unknown"
-  } else if(all.equal(colnames(df), expected_columns)){database <- "preformatted"} else if(any(stringr::str_detect(as.character(database_signature), as.character(synthesisr::databases$signature)))){
+  } else if(paste(colnames(df), collapse=" ")==paste(synthesisr::expected_columns, collapse=" ")){database <- "preformatted"} else if(any(stringr::str_detect(as.character(database_signature), as.character(synthesisr::databases$signature)))){
     database <- synthesisr::databases$database[which(stringr::str_detect(as.character(database_signature), as.character(synthesisr::databases$signature)))]
   } else {database <- "Unknown"}
 
