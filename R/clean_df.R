@@ -1,6 +1,5 @@
 # import csv in a format suitable for revtools apps
-revtools_csv <- function(filename){
-  data <- read.csv(filename, stringsAsFactors = FALSE)
+clean_df <- function(data){
   colnames(data) <- clean_names(colnames(data))
   if(colnames(data)[1] != "label"){
     if(
@@ -19,6 +18,8 @@ revtools_csv <- function(filename){
   }
   return(data)
 }
+
+
 
 # detect author delimiters
 clean_author_delimiters <- function(x){

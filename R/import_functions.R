@@ -1,70 +1,71 @@
-#' Checks directory files to see if they can be imported
-#' @description Checks files staged for import to ensure they are a matching filetype and removes unsupported filetypes or directories from the list.
-#' @param import_files a character vector with paths to files for import
-#' @return a character vector with paths to files for import with unsupported filetypes removed
-check_filetypes <- function(import_files){
-  allowed_filetypes <- c("csv", "txt", "xml", "xls", "bib", "nbib", "ris")
-  for(i in 1:length(import_files)){
-  if(i==1){removals <- c()}
-  filetype <- synthesisr::detect_filetype(import_files[i])
-  if(is.na(filetype)){filetype <- "nope"}
-  if(!any(allowed_filetypes==filetype)){
-    print(paste("File format is not recognized. Skipping", import_files[i]))
-    removals <- append(removals, i)
-  }
-  if(i==length(import_files)){
-    if(length(removals) > 0){
-      import_files <- import_files[-removals]
-    }
-  }
-  }
+# ' Checks directory files to see if they can be imported
+# ' @description Checks files staged for import to ensure they are a matching filetype and removes unsupported filetypes or directories from the list.
+# ' @param import_files a character vector with paths to files for import
+# ' @return a character vector with paths to files for import with unsupported filetypes removed
+# check_filetypes <- function(import_files){
+#   allowed_filetypes <- c("csv", "txt", "xml", "xls", "bib", "nbib", "ris")
+#   for(i in 1:length(import_files)){
+#   if(i==1){removals <- c()}
+#   filetype <- synthesisr::detect_filetype(import_files[i])
+#   if(is.na(filetype)){filetype <- "nope"}
+#   if(!any(allowed_filetypes==filetype)){
+#     print(paste("File format is not recognized. Skipping", import_files[i]))
+#     removals <- append(removals, i)
+#   }
+#   if(i==length(import_files)){
+#     if(length(removals) > 0){
+#       import_files <- import_files[-removals]
+#     }
+#   }
+#   }
+#
+#   return(import_files)
+# }
+# replaced by import_refs_internal
 
-  return(import_files)
-}
 
-
-#' Reads in files to import
-#' @description Given a path to a file, determines file type and reads it.
-#' @param file a path to a file of a supported type
-#' @return a dataframe with the contents of the file
-read_files <- function(file){
-  filetype <- synthesisr::detect_filetype(file)
-  readable <- synthesisr::check_filetypes(file)
-  if(length(readable)==0){stop("File type not recognized.")}
-  if(filetype=="csv"){
-    df <- utils::read.csv(file, header = TRUE, stringsAsFactors = FALSE)
-  }
-  if(filetype=="xml"){
-    df <- as.character(xml2::read_xml(file))
-  }
-  if(filetype=="txt") {
-    df <- utils::read.table(file, sep = "\t", header = TRUE,
-                     comment.char = "#", na.strings = ".", stringsAsFactors = FALSE,
-                     quote = "", fill = TRUE, row.names = NULL)
-    if(colnames(df)[1]=="row.names"){
-      colnames(df) <- append(colnames(df[2:length(df)]), "X")
-    }
-
-  }
-  if(filetype=="xls") {
-    df <- xlsx::read.xlsx(file, 1)
-    df[] <- lapply(df, function(x) if(is.factor(x)) as.character(x) else x)
-  }
-
-  if(any(c("bib", "nbib", "ris")==filetype)){
-    if (!requireNamespace("revtools", quietly = TRUE)){
-      stop("revtools needed to import .bib and .ris files. Please install it.",
-           call. = FALSE)
-    } else {
-
-    df <- revtools::read_bibliography(file)
-    }
-    }
-
-  return(df)
-
-}
-
+# ' Reads in files to import
+# ' @description Given a path to a file, determines file type and reads it.
+# ' @param file a path to a file of a supported type
+# ' @return a dataframe with the contents of the file
+# read_files <- function(file){
+#   filetype <- synthesisr::detect_filetype(file)
+#   readable <- synthesisr::check_filetypes(file)
+#   if(length(readable)==0){stop("File type not recognized.")}
+#   if(filetype=="csv"){
+#     df <- utils::read.csv(file, header = TRUE, stringsAsFactors = FALSE)
+#   }
+#   if(filetype=="xml"){
+#     df <- as.character(xml2::read_xml(file))
+#   }
+#   if(filetype=="txt") {
+#     df <- utils::read.table(file, sep = "\t", header = TRUE,
+#                      comment.char = "#", na.strings = ".", stringsAsFactors = FALSE,
+#                      quote = "", fill = TRUE, row.names = NULL)
+#     if(colnames(df)[1]=="row.names"){
+#       colnames(df) <- append(colnames(df[2:length(df)]), "X")
+#     }
+#
+#   }
+#   if(filetype=="xls") {
+#     df <- xlsx::read.xlsx(file, 1)
+#     df[] <- lapply(df, function(x) if(is.factor(x)) as.character(x) else x)
+#   }
+#
+#   if(any(c("bib", "nbib", "ris")==filetype)){
+#     if (!requireNamespace("revtools", quietly = TRUE)){
+#       stop("revtools needed to import .bib and .ris files. Please install it.",
+#            call. = FALSE)
+#     } else {
+#
+#     df <- revtools::read_bibliography(file)
+#     }
+#     }
+#
+#   return(df)
+#
+# }
+# replaced by import_refs_internal
 
 #' Convert dataframes to standard format
 #' @description Given a data frame, checks to see that it contains standard synthesisr fields and fills empty fields.
@@ -151,6 +152,7 @@ detect_database <- function(df){
 
 }
 
+
 #' Import results of a systematic review
 #' @description Given a file or directory, imports and assembles search results
 #' @param directory a path to a directory containing search results to import
@@ -178,6 +180,7 @@ import_results <- function(directory=NULL, filename=NULL, save_dataset = FALSE, 
     df <- synthesisr::read_files(filename)
 
     # I can't remember why this cleaning step is here, but I'm sure something broke without it
+    # replaced by clean_df()
       if (stringr::str_detect(paste(colnames(df), collapse=" "), "\\.\\.")){
       temp_cn <- strsplit(as.character(colnames(df)[1]), "\\.\\.")
       if (length(temp_cn[[1]]) > 1) {
@@ -188,6 +191,7 @@ import_results <- function(directory=NULL, filename=NULL, save_dataset = FALSE, 
     if(any(colnames(df)=="X")){df <- df[, -which(colnames(df)=="X")]}
 
     if(verbose==TRUE){print(paste("Importing file", import_files[i]))}
+    # ABOVE HERE THIS CODE HAS BEEN INCORPORATED INTO IMPORT_REFS
 
     if(any(c("bib", "nbib", "ris")==synthesisr::detect_filetype(import_files[i]))){
       database <- "revtools"
