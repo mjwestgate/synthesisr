@@ -251,24 +251,6 @@ get_tokens <- function(text, language){
 }
 
 
-#' Detect multilingual texts
-#' @description Detects texts that contain two languages in discrete blocks, such as a translation of a title
-#' @param text the text to check for chimeras
-#' @param overlap how large of a window to check for chimeras; an overlap of .5 will split the text into two chunks split at the middle, whereas higher levels of overlap will result in larger chunks to check
-#' @return if a chimera is detected, the language codes of contained languages
-chimera_detect <- function(text, overlap=.5){
-  tokens <- strsplit(text, " ")[[1]]
-  words <- length(tokens)
-  first_half <- paste(tokens[1:(ceiling(words*overlap))], collapse=" ")
-  second_half <- paste(tokens[floor((words-(words*overlap))):words], collapse=" ")
-  lang1 <- synthesisr::language_detect(first_half)
-  lang2 <- synthesisr::language_detect(second_half)
-  if(lang1!=lang2){chimera <- paste(lang1, lang2)} else {
-    chimera <- c()
-  }
-  return(chimera)
-}
-
 #' Detect the language of a text
 #' @description Uses common stopwords to assign probable language(s) to a text
 #' @param text the text to which to assign a language
