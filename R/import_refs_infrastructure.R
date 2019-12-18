@@ -1,9 +1,12 @@
 # This script contains files for importing common bibliographic formats in to R
 
+## note: still need to document these functions
+
 rollingsum <- function(a, n = 2L){
   tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
 }
 
+## can't we just use file naming conventions?
 # detect delimiters between references, starting with strings that start with "ER"
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
