@@ -1,4 +1,6 @@
 # function to rbind two or more data.frames with different column names/orders
+## AWESOME!! This solves all sorts of problems i had
+
 merge_columns <- function(
   x, # either a data.frame or a list of the same
   y # a data.frame, optional
@@ -21,6 +23,8 @@ merge_columns <- function(
       stop("x must only contain data.frames")
     }
   }
+
+  x <- lapply(x, remove_factors)
 
   col_names_all <- unique(unlist(lapply(x, colnames)))
 
