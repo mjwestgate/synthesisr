@@ -1,20 +1,20 @@
 # import csv in a format suitable for revtools apps
 clean_df <- function(data){
-  colnames(data) <- clean_names(colnames(data))
+  colnames(data) <- synthesisr::clean_names(colnames(data))
   if(colnames(data)[1] != "label"){
     if(
       length(unique(data[, 1])) < nrow(data) |
       any(c("author", "title", "year", "journal") == colnames(data)[1])
     ){
       data <- data.frame(
-        label = create_index("ref", nrow(data)),
+        label = synthesisr::create_index("ref", nrow(data)),
         data,
         stringsAsFactors = FALSE
       )
     }
   }
   if(any(colnames(data) == "author")){
-    data$author <- clean_author_delimiters(data$author)
+    data$author <- synthesisr::clean_author_delimiters(data$author)
   }
   return(data)
 }
