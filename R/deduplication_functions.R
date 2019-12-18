@@ -1,98 +1,3 @@
-#' Remove punctuation from text
-#' @description Removes common punctuation marks from a text
-#' @param text the text from which to remove punctuation
-#' @return the input text with punctuation removed
-remove_punctuation <- function(text){
-  punctuation <- c("\\!", "#", "\\$", "%", "&", "\\(", "\\)",
-                   ",", "\\*", "\\.", "/", ":", ";",
-                   "<", "=", ">", "\\?", "@", "\\[", "\\]",
-                   "_", "`", "\\{", "\\|", "\\}", "~")
-  for(i in 1:length(punctuation)){
-    text <- gsub(punctuation[i], " ", text)
-    if(i==length(punctuation)){
-    while(any(stringr::str_detect(text, "  ")==TRUE)){
-      text <- gsub("  ", " ", text)
-    }
-      }
-  }
-  text <- stringr::str_trim(text)
-  return(text)
-}
-
-#' Remove hyphens from text
-#' @description Replaces hyphens with a space
-#' @param text the text from which to remove hyphens
-#' @return the input text with hyphens replaced with spaces
-remove_hyphens <- function(text){
-  text <- gsub("-", " ", text)
-  text <- gsub("  ", " ", text)
-  text <- stringr::str_trim(text)
-  return(text)
-}
-
-#' Remove duplicate entries from a data frame
-#' @description Given a data frame and a field to check for duplicates, flags and removes duplicate entries with three optional methods.
-#' @param df the data frame to deduplicate
-#' @param field the name or index of the column to check for duplicate values
-#' @param method the manner of duplicate detection; quick removes exact text duplicates, similarity removes duplicates below a similarity threshold, and fuzzy uses fuzzdist matching
-#' @param language the language to use if method is set to similarity
-#' @param cutoff_distance the threshold below which articles are marked as duplicates by the similarity method
-#' @return a deduplicated data frame
-deduplicate <- function(df, field, method=c("quick", "similarity", "fuzzy"),
-                               language="English", cutoff_distance=2){
-  if(is.numeric(field)){
-    target <- field
-    field_name <- colnames(df)[field]
-  } else if(!any(colnames(df)==field)){
-    stop(print(paste(field), "does not match any column names in your data. Please use the exact column name and try again or specify a column number.", sep=" "))
-  } else {
-    target <- which(colnames(df)==field)
-    field_name <- field
-  }
-
-  df[,target] <- synthesisr::remove_punctuation(df[,target])
-  df[,target] <- stringr::str_trim(df[,target])
-  df[,target] <- stringr::str_trim(df[,target])
-
-  if(any(df[,target]=="")){
-    empty_fields <- which(df[,target]=="")
-    for(i in 1:length(empty_fields)){
-      df[empty_fields[i], target] <- paste("empty_field", i, sep="_")
-    }
-  }
-
-
-  if(stringr::str_detect(tolower(field_name), "doi")){
-    if(method=="similarity"){print("Note: it looks like your field contains DOIs so synthesisr switched the method to quick.")}
-    method <- "quick"
-  }
-
-  if(method=="quick"){
-    duplicates <- duplicated(tolower(df[,target]))
-    if(length(duplicates)>0){
-      df <- df[-which(duplicates==TRUE),]
-    }
-  }
-
-  if(method=="similarity"){
-    mydfm <- synthesisr::create_dfm(elements=df[,target], type="tokens", language)
-    mydist <- synthesisr::calculate_similarity(mydfm)
-    df <- synthesisr::remove_similar(data=df, distance_data = mydist, id_column = 1, distance_column = 3, cutoff = cutoff_distance)
-  }
-
-  if(method=="fuzzy"){
-    if (!requireNamespace("revtools", quietly = TRUE)){
-      stop("revtools needed for this function to work. Please install it.",
-           call. = FALSE)
-    } else {
-
-    df <- revtools::find_duplicates(data=df, match_variable = field, remove_punctuation = TRUE)
-    }
-  }
-
-return(df)
-}
-
 #' Create a document-feature matrix
 #' @description Given a character vector of document information, creates a document-feature matrix.
 #' @param elements a character vector of document information (e.g. document titles or abstracts)
@@ -115,7 +20,7 @@ create_dfm <- function(elements, type=c("tokens", "keywords"), language="English
                   dimnames = list(1:length(elements), my_dictionary))
 
     for(i in 1:length(keywords)){
-      detections <- sapply(elements, stringr::str_detect, my_dictionary[i])
+      detections <- sapply(elements, grep, my_dictionary[i])
       names(detections) <- NULL
       detections <- as.numeric(detections)
 
