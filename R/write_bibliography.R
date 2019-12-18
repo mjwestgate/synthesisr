@@ -11,6 +11,7 @@ write_bibliography <- function(x, filename, format = "ris"){
     x <- as.bibliography(x)
   }
 
+  # no longer supported?
   if(format == "bib"){
   	# process basic text
   	result <- lapply(x, function(a){
@@ -48,7 +49,8 @@ write_bibliography <- function(x, filename, format = "ris"){
   if(format == "ris"){
 
   	result <- lapply(x, function(a, lookup){
-
+# need to separate the new code_lookup tags from tag_lookup so that we can write .ris from non-.ris imports
+# for example, recognizing the ris equivalent for .txt inputs
   		# convert to tagged vector
   		b <- do.call(c, a)
   		b <- data.frame(
@@ -58,6 +60,8 @@ write_bibliography <- function(x, filename, format = "ris"){
       )
   		rownames(b) <- NULL
   		b$tag <- gsub("[[:digit:]]", "", b$tag)
+
+  		## we should split these into sub-functions and call them independently
 
   		# page information needs to be treated separately
   		if(any(b$tag == "pages")){

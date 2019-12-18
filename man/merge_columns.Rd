@@ -15,6 +15,5 @@ merge_columns(x, y)
 a data.frame
 }
 \description{
-Takes two or more data.frames with different column names or
-different column orders and binds them to a single data.frame.
+Takes two or more data.frames with different column names or different column orders and binds them to a single data.frame.
 }

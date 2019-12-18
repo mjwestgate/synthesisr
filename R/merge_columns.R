@@ -1,8 +1,6 @@
 #' Bind two or more data frames with different columns
 #'
-#' Takes two or more data.frames with different column names or
-#' different column orders and binds them to a single data.frame.
-#'
+#' @description Takes two or more data.frames with different column names or different column orders and binds them to a single data.frame.
 #' @param x either a data.frame or a list of data.frames
 #' @param y a data.frame, optional if x is a list
 #' @return a data.frame
