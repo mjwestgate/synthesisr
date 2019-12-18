@@ -100,6 +100,8 @@ import_refs_internal <- function(
   ## if it is something obvious, then import right away
   if(file_type=="bib"){
     df <- synthesisr::read_bib(readLines(filename))
+    df <- synthesisr::as.data.frame.bibliography(df)
+
   }
 
   if(file_type=="txt"){
@@ -116,8 +118,10 @@ import_refs_internal <- function(
     # import appropriate format
     if(any(z_dframe$ris == "PMID")){
       df <- synthesisr::read_medline(z_dframe)
+      df <- synthesisr::as.data.frame.bibliography(df)
     }else{
       df <- synthesisr::read_ris(z_dframe)
+      df <- synthesisr::as.data.frame.bibliography(df)
     }
   }
 if(file_type!="unknown"){
