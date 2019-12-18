@@ -4,7 +4,8 @@
 # http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
 
 fuzzdist <- function(a, b,
-  method = c("fuzz_m_ratio", "fuzz_partial_ratio", "fuzz_token_sort_ratio", "fuzz_token_set_ratio")
+  method = c("fuzz_m_ratio", "fuzz_partial_ratio",
+             "fuzz_token_sort_ratio", "fuzz_token_set_ratio")
 ){
   method <- match.arg(method)
   do.call(

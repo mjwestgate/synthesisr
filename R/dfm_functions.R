@@ -19,8 +19,9 @@ create_dfm <- function(elements, type=c("tokens", "keywords"), language="English
                   byrow = TRUE,
                   dimnames = list(1:length(elements), my_dictionary))
 
+# need to turn this into lapply or something much more efficient than it is
     for(i in 1:length(keywords)){
-      detections <- sapply(elements, grep, my_dictionary[i])
+      detections <- sapply(elements, grep, paste("\\b", my_dictionary[i], sep=""))
       names(detections) <- NULL
       detections <- as.numeric(detections)
 
@@ -31,49 +32,6 @@ create_dfm <- function(elements, type=c("tokens", "keywords"), language="English
   runtime <- end-start
   dfm <- as.matrix(dfm)
   return(dfm)
-}
-#' Calculates similarity between documents
-#' @description Computes the distance between documents in a document-feature matrix based on shared word associations.
-#' @param dfm a document-feature matrix
-#' @return a data frame with text distance scores for paired documents
-calculate_similarity <- function(dfm){
-  distance <- as.matrix(stats::dist(dfm))
-  sim_mat <- distance
-  sim_mat[lower.tri(sim_mat, diag=TRUE)] <- -999
-  sim_vec <- as.vector(sim_mat)
-  sim_vec <- sim_vec[which(sim_vec >= 0)]
-  sim_mat <- as.data.frame(sim_mat)
-
-  indices <- data.frame(ind = which(sim_mat >= 0, arr.ind=TRUE))
-  indices$similarity <- sim_vec
-
-  return(indices)
-}
-
-#' Removes similar documents based on text similarity
-#' @description Removes documents from a data frame that are highly similar to other documents in the same data frame.
-#' @param data the data frame containing all documents
-#' @param distance_data a data frame with document identification and distance information
-#' @param id_column the name or index of the column in the distance dataset that contains document IDs
-#' @param distance_column the name or index of the column in the distance dataset that contains distance scores
-#' @param cutoff the maximum distance at which documents should be considered duplicates
-#' @return the documents data frame with duplicate documents removed
-remove_similar <- function(data, distance_data, id_column, distance_column, cutoff){
-  if(is.numeric(id_column) & id_column <= ncol(distance_data)){target <- id_column
-  } else if(any(colnames(distance_data)==id_column)){
-    target <- which(colnames(distance_data)==id_column)
-  } else{stop("The provided id_column is not found in your distance data.")}
-
-  if(is.numeric(distance_column) & distance_column <= ncol(distance_data)){distcol <- distance_column
-  } else if(any(colnames(distance_data)==id_column)){
-    distcol <- which(colnames(distance_data)==distance_column)
-  } else{stop("The provided distance_column is not found in your distance data.")}
-
-  too_similar <- which(distance_data[,distcol] < cutoff)
-  removals <- unique(distance_data[too_similar, target])
-
-  data <- data[-removals,]
-  return(data)
 }
 
 #' Get short language codes
@@ -121,6 +79,7 @@ remove_stopwords <- function(text, language){
   stopwords <- synthesisr::get_stopwords(language)
   stopwords <- paste("\\b", stopwords, "\\b", sep="")
 
+# another for-loop that needs to be more efficient
   for(i in 1:length(stopwords)){
     text <- gsub(stopwords[i], " ", text)
   }
@@ -138,7 +97,7 @@ remove_stopwords <- function(text, language){
 get_tokens <- function(text, language){
   text <- tolower(text)
   text <- synthesisr::remove_stopwords(text=text, language=language)
-  text <- synthesisr::remove_punctuation(text)
+  text <- tm::remove_punctuation(text)
   tokens <- strsplit(text, " ")[[1]]
   if(any(is.na(tokens))){
     tokens <- tokens[-is.na(tokens)]
@@ -153,36 +112,5 @@ get_tokens <- function(text, language){
     tokens <- tokens[-which(tokens=="'")]
   }
   return(tokens)
-}
-
-
-#' Detect the language of a text
-#' @description Uses common stopwords to assign probable language(s) to a text
-#' @param text the text to which to assign a language
-#' @return a character vector of probable languages
-language_detect <- function(text){
-  tokens <- strsplit(synthesisr::remove_punctuation(text), " ")[[1]]
-  for(i in 1:length(stopwords::stopwords_getlanguages("stopwords-iso"))){
-    lang <- stopwords::stopwords_getlanguages("stopwords-iso")[i]
-    stops <- stopwords::stopwords(lang, source="stopwords-iso")
-    counter <- 0
-    for(j in 1:length(tokens)){
-    detected <- any(stops==tokens[j])
-    if(detected==TRUE){counter <- counter+1}
-    }
-
-    if(i==1){
-      all_languages <- cbind(lang, counter)
-    }
-    if(i>1){
-      current_lang <- cbind(lang, counter)
-      all_languages <- rbind(all_languages, current_lang)
-    }
-
-  }
-
-  probable_language <- as.character(all_languages[which(all_languages[,2]==max(all_languages[,2])),1])
-  if(length(probable_language)>2){stop("Language cannot be determined.")}
-  return(probable_language)
 }
 
