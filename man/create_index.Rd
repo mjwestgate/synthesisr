@@ -10,6 +10,8 @@ create_index(string, n, sep = "_")
 \item{string}{a character vector}
 
 \item{n}{the number of unique index values to create}
+
+\item{sep}{separator between string and number}
 }
 \value{
 a character vector
