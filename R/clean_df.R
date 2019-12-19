@@ -45,7 +45,7 @@ clean_author_delimiters <- function(x){
 #' @description Creates a string of named length in format "string_number" to index in correct order.
 #' @param string a character vector
 #' @param n the number of unique index values to create
-#' @sep separator between string and number
+#' @param sep separator between string and number
 #' @return a character vector
 create_index <- function(string, n, sep = "_"){
   if(missing(string)){
