@@ -5,7 +5,7 @@
 #' @param closure restrictions on how keywords are detected; left requires terms to start with a keyword (e.g "burn" matches "burning"), right requires terms to end with a keyword (e.g. "burn" matches "postburn" but not "postburning"), full requires exact matches (e.g. "burn" only matches "burn"), and none allows keywords to be embedded within terms.
 #' @param ignore_case if case be ignored when detecting features within documents
 #' @return a matrix with documents as rows and terms as columns
-create_dfm <- function(elements, features, closure=c("left", "right", "full", "none", to_lower=TRUE)){
+create_dfm <- function(elements, features, closure=c("left", "right", "full", "none", ignore_case=TRUE)){
   if(ignore_case==TRUE){
     elements <- tolower(elements)
     features <- tolower(features)
@@ -108,6 +108,7 @@ get_tokens <- function(text, language){
 #' Remove punctuation from text
 #' @description Removes common punctuation marks from a text
 #' @param text the text from which to remove punctuation
+#' @param remove_hyphens whether or not hyphens should be considered punctuation and removed
 #' @return the input text with punctuation removed
 remove_punctuation <- function(text, remove_hyphens=FALSE){
   if(remove_hyphens==TRUE){output <- gsub("[[:punct:]]", "\\1", text)}else{

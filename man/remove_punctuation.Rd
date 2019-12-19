@@ -8,6 +8,8 @@ remove_punctuation(text, remove_hyphens = FALSE)
 }
 \arguments{
 \item{text}{the text from which to remove punctuation}
+
+\item{remove_hyphens}{whether or not hyphens should be considered punctuation and removed}
 }
 \value{
 the input text with punctuation removed

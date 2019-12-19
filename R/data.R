@@ -8,6 +8,7 @@
 #'
 #' \describe{
 #'  \item{code}{code used in search results}
+#'  \item{description}{description of field from original source}
 #'  \item{field}{bibliographic field that codes correspond to}
 #'  \item{order}{the order in which to rank fields in assembled results}}
 #'
