@@ -6,15 +6,15 @@
 #' @param ignore_case if case be ignored when detecting features within documents
 #' @return a matrix with documents as rows and terms as columns
 create_dfm <- function(elements, features, closure=c("left", "right", "full", "none", to_lower=TRUE)){
-  if(ignore_case=TRUE){
+  if(ignore_case==TRUE){
     elements <- tolower(elements)
     features <- tolower(features)
   }
 
     my_dictionary <- switch (closure,
-      "left" = {my_dictionary <- paste("\\b", features, sep="")}
-      "right" = {my_dictionary <- paste(features, "\\b", sep="")}
-      "full" = {my_dictionary <- paste("\\b", features, "\\b", sep="")}
+      "left" = {my_dictionary <- paste("\\b", features, sep="")},
+      "right" = {my_dictionary <- paste(features, "\\b", sep="")},
+      "full" = {my_dictionary <- paste("\\b", features, "\\b", sep="")},
       "non" = {my_dictionary <- features}
     )
 
@@ -102,3 +102,21 @@ get_tokens <- function(text, language){
   return(tokens)
 }
 
+#' Remove punctuation from text
+#' @description Removes common punctuation marks from a text
+#' @param text the text from which to remove punctuation
+#' @return the input text with punctuation removed
+remove_punctuation <- function(text, remove_hyphens=FALSE){
+  if(remove_hyphens==TRUE){output <- gsub("[[:punct:]]", "\\1", text)}else{
+    output <- gsub("([-])|[[:punct:]]", "\\1", text)
+  }
+
+# replace double spaces introduced when removing pucntation
+    if(any(sapply("  " , grepl, output))){
+    while(sapply("  " , grepl, output)){
+      output <- gsub("  ", " ", output)
+    }
+  }
+  return(output)
+
+  }
