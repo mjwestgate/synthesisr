@@ -1,5 +1,108 @@
-# function to export data in .bib format
-write_bibliography <- function(x, filename, format = "ris"){
+#' Write a .bib file
+#' @description a subfunction of write_bibliography to convert a bibliography to .bib format
+#' @param x an object of class bibliography
+#' @return a character vector containing references in .bib format
+write_bib <- function(x){
+  # process basic text
+  result <- lapply(x, function(a){
+    if(any(names(a) == "author")){
+      a$author <- paste(a$author, collapse=" and ")
+    }
+    a <- lapply(a, function(b){ 	# ensure only one entry per value
+      if(length(b) > 1){
+        paste(b, collapse = "; ")
+      }else{
+        b
+      }
+    })
+    paste0(names(a), "={", a, "},") # format as text
+  })
+
+  # add article identifier info
+  export <- unlist(lapply(
+    seq_len(length(result)),
+    function(a, source, entry_names){
+      c(
+        paste0("@ARTICLE{", entry_names[a], ","),
+        source[a],
+        "}",
+        ""
+      )
+    },
+    source = result,
+    entry_names = names(x))
+  )
+  names(export) <- NULL
+  return(export)
+
+}
+
+
+#' Write a .ris file
+#' @description a subfunction of write_bibliography to convert a bibliography to .ris format
+#' @param x an object of class bibliography
+#' @return a character vector containing references in .ris format
+write_ris <- function(x){
+
+  result <- lapply(x, function(a, lookup){
+    # convert to tagged vector
+    b <- do.call(c, a)
+    b <- data.frame(
+      tag = c(names(b), "end"),
+      entry = c(b, ""),
+      stringsAsFactors = FALSE
+    )
+    rownames(b) <- NULL
+    b$tag <- gsub("[[:digit:]]", "", b$tag)
+
+
+    # page information needs to be treated separately
+    if(any(b$tag == "pages")){
+      page.row <- which(b$tag == "pages")
+      page.sep <- strsplit(b$entry[page.row], "-")[[1]]
+      if(length(page.sep) > 1){
+        new.rows <- data.frame(
+          tag = c("startpage", "endpage"),
+          entry = page.sep,
+          stringsAsFactors = FALSE
+        )
+        b <- as.data.frame(rbind(
+          b[c(1:(page.row-1)), ],
+          new.rows,
+          b[c((page.row+1):nrow(b)), ])
+        )
+      }}
+    b$order <- seq_len(nrow(b))
+
+    # substitute tags for ris format versions
+    b <- merge(lookup, b,
+               by.x = "bib",
+               by.y = "tag",
+               all.x = FALSE,
+               all.y = TRUE
+    )
+    b <- b[order(b$order), 2:3]
+    b <- b[which(!is.na(b$ris)), ]
+
+    # concatenate rows, return a vector of strings
+    c(paste(b$ris, b$entry, sep = "  - "), "")
+
+  },
+  lookup = tag_lookup(type = "ris_write")[, 1:2]
+  )
+
+  export <- do.call(c, result)
+  return(export)
+}
+
+#' Export data to a bibliographic format
+#' @description Exports data.frames containing bibliographic information to either a .ris or .bib file.
+#' @param x a data.frame containing bibliographic information or an object of class bibliography
+#' @param format what format to export data as; options are "ris" or "bib"
+#' @param write_file if TRUE, saves the result to a text file in the working directory
+#' @param filename if write_file is TRUE, the name of the file to be written
+#' @return a character vector containing bibliographic information in the specified format if write_file is FALSE
+write_bibliography <- function(x, format = "ris", write_file=FALSE, filename=NULL){
 
   if(missing(filename)){
     stop("argument 'filename' is missing, with no default")
@@ -11,102 +114,22 @@ write_bibliography <- function(x, filename, format = "ris"){
     x <- as.bibliography(x)
   }
 
-  # no longer supported?
   if(format == "bib"){
-  	# process basic text
-  	result <- lapply(x, function(a){
-  		if(any(names(a) == "author")){
-        a$author <- paste(a$author, collapse=" and ")
-      }
-  		a <- lapply(a, function(b){ 	# ensure only one entry per value
-  			if(length(b) > 1){
-          paste(b, collapse = "; ")
-  			}else{
-          b
-        }
-      })
-  		paste0(names(a), "={", a, "},") # format as text
-  	})
-
-  	# add article identifier info
-  	export <- unlist(lapply(
-      seq_len(length(result)),
-      function(a, source, entry_names){
-    		c(
-          paste0("@ARTICLE{", entry_names[a], ","),
-    			source[a],
-          "}",
-          ""
-        )
-  		},
-      source = result,
-      entry_names = names(x))
-  		)
-  	names(export) <- NULL
+export <- synthesisr::write_bib(x)
 
   }
 
   if(format == "ris"){
+export <- synthesisr::write_ris(x)
+  	}
 
-  	result <- lapply(x, function(a, lookup){
-# need to separate the new code_lookup tags from tag_lookup so that we can write .ris from non-.ris imports
-# for example, recognizing the ris equivalent for .txt inputs
-  		# convert to tagged vector
-  		b <- do.call(c, a)
-  		b <- data.frame(
-        tag = c(names(b), "end"),
-        entry = c(b, ""),
-        stringsAsFactors = FALSE
-      )
-  		rownames(b) <- NULL
-  		b$tag <- gsub("[[:digit:]]", "", b$tag)
-
-  		## we should split these into sub-functions and call them independently
-
-  		# page information needs to be treated separately
-  		if(any(b$tag == "pages")){
-  			page.row <- which(b$tag == "pages")
-  			page.sep <- strsplit(b$entry[page.row], "-")[[1]]
-  			if(length(page.sep) > 1){
-  				new.rows <- data.frame(
-            tag = c("startpage", "endpage"),
-  					entry = page.sep,
-            stringsAsFactors = FALSE
-          )
-  				b <- as.data.frame(rbind(
-  					b[c(1:(page.row-1)), ],
-  					new.rows,
-  					b[c((page.row+1):nrow(b)), ])
-          )
-  			}}
-  		b$order <- seq_len(nrow(b))
-
-  		# substitute tags for ris format versions
-  		b <- merge(lookup, b,
-        by.x = "bib",
-        by.y = "tag",
-        all.x = FALSE,
-        all.y = TRUE
-      )
-  		b <- b[order(b$order), 2:3]
-      b <- b[which(!is.na(b$ris)), ]
-
-  		# concatenate rows, return a vector of strings
-  		c(paste(b$ris, b$entry, sep = "  - "), "")
-
-  		},
-      lookup = tag_lookup(type = "ris_write")[, 1:2]
-    )
-
-  	export <- do.call(c, result)
-  	} # end ris
-
-  # export
+if(write_file==TRUE){
   write.table(
     export,
     filename,
     quote = FALSE,
     row.names = FALSE,
     col.names = FALSE)
+}else{return(export)}
 
-} #  end function
+}
