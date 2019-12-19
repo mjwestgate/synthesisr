@@ -106,7 +106,7 @@ find_duplicates <- function(
     data[, match_variable] <- tolower(data[, match_variable])
   }
   if(remove_punctuation){
-    data[, match_variable] <- synthesisr::removePunctuation(data[, match_variable])
+    data[, match_variable] <- synthesisr::remove_punctuation(data[, match_variable])
   }
 
   # run while loop
