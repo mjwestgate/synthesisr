@@ -1,4 +1,9 @@
-extract_unique_references <- function(
+#' Remove duplicates from a bibliiographic data set
+#' @description Given a list of duplicate entries and a data set, extracts only unique references
+#' @param x a data.frame in the format returned by make_reference_dataframe()
+#' @param matches a character vector showing which values are duplicates
+#' @return a data.frame of unique references
+deduplicate <- function(
 	x, # data.frame returned by make_reference_dataframe
   matches # vector showing which values are duplicates
 	){

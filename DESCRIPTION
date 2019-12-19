@@ -27,12 +27,9 @@ Imports:
     stopwords, 
     stringr, 
     tm, 
-    xml2
 Suggests:
-    xlsx,
     knitr,
-    revtools
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 Date: 2019-04-14
