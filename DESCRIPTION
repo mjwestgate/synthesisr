@@ -23,12 +23,9 @@ Description: Systematic review searches include multiple databases
     merges results into a standardized format. 
 License: GPL-3
 LazyData: true
-Imports:
-    stopwords, 
-    stringr, 
-    tm, 
 Suggests:
     knitr,
+    stopwords
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Depends: R (>= 2.10)

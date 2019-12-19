@@ -41,6 +41,9 @@ language_code <- function(language){
 #' @param language a character vector containing the name of the language for which to retrieve stopwords
 #' @return a character vector of stopwords
 get_stopwords <- function(language){
+  if(!requireNamespace("stopwords")){
+    stop("Package 'stopwords' needed for this function to work. Please install it.")
+  }
   if(!any(synthesisr::possible_langs$Language==language)){stop("The language you specified is not supported.")} else {
     la_code <- language_code(language)
   }
@@ -85,7 +88,7 @@ remove_stopwords <- function(text, language){
 get_tokens <- function(text, language){
   text <- tolower(text)
   text <- synthesisr::remove_stopwords(text=text, language=language)
-  text <- tm::remove_punctuation(text)
+  text <- synthesisr::remove_punctuation(text)
   tokens <- strsplit(text, " ")[[1]]
   if(any(is.na(tokens))){
     tokens <- tokens[-is.na(tokens)]
