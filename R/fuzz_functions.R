@@ -3,6 +3,12 @@
 # these functions coded by Martin Westgate on 4th June 2018 based on description given here:
 # http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
 
+#' Detect duplicates with fuzzy matching
+#' @description This is a wrapper function for the different fuzzy matching methods
+#' @param a a character vector of items to match to b
+#' @param b a character vector of items to match to a
+#' @param method the method to use for fuzzy matching
+#' @return a vector of distances
 fuzzdist <- function(a, b,
   method = c("fuzz_m_ratio", "fuzz_partial_ratio",
              "fuzz_token_sort_ratio", "fuzz_token_set_ratio")
