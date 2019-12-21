@@ -116,8 +116,8 @@ remove_punctuation <- function(text, remove_hyphens=FALSE){
   }
 
 # replace double spaces introduced when removing pucntation
-    if(any(sapply("  " , grepl, output))){
-    while(sapply("  " , grepl, output)){
+    if(any(sapply("  " , grep, output))){
+    while(sapply("  " , grep, output)){
       output <- gsub("  ", " ", output)
     }
   }
