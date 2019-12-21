@@ -5,7 +5,7 @@
 \title{Create a document-feature matrix}
 \usage{
 create_dfm(elements, features, closure = c("left", "right", "full",
-  "none", ignore_case = TRUE))
+  "none"), ignore_case = TRUE)
 }
 \arguments{
 \item{elements}{a character vector of document information (e.g. document titles or abstracts)}

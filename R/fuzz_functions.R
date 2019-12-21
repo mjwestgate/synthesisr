@@ -20,6 +20,7 @@ fuzzdist <- function(a, b,
   )
 }
 
+#' @describeIn fuzzdist Method simple ratio
 fuzz_m_ratio <- function(a, b){
   out <- lapply(b, function(b, a){
     z <- c(a, b)
@@ -45,6 +46,7 @@ fuzz_m_ratio <- function(a, b){
 }
 
 
+#' @describeIn fuzzdist Method partial ratio
 fuzz_partial_ratio <- function(a, b){
   out <- lapply(b, function(b, a){
     z <- c(a, b)
@@ -77,6 +79,7 @@ fuzz_partial_ratio <- function(a, b){
 }
 
 
+#' @describeIn fuzzdist Method token sort ratio
 fuzz_token_sort_ratio <- function(a, b){
   out <- lapply(b, function(b, a){
     z <- c(a, b)
@@ -96,7 +99,7 @@ fuzz_token_sort_ratio <- function(a, b){
   return(as.numeric(out))
 }
 
-
+#' @describeIn fuzzdist Method token set ratio
 fuzz_token_set_ratio <- function(a, b){
   out <- lapply(b, function(b, a){
     z <- c(a, b)

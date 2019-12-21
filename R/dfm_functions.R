@@ -5,7 +5,7 @@
 #' @param closure restrictions on how keywords are detected; left requires terms to start with a keyword (e.g "burn" matches "burning"), right requires terms to end with a keyword (e.g. "burn" matches "postburn" but not "postburning"), full requires exact matches (e.g. "burn" only matches "burn"), and none allows keywords to be embedded within terms.
 #' @param ignore_case if case be ignored when detecting features within documents
 #' @return a matrix with documents as rows and terms as columns
-create_dfm <- function(elements, features, closure=c("left", "right", "full", "none", ignore_case=TRUE)){
+create_dfm <- function(elements, features, closure=c("left", "right", "full", "none"), ignore_case=TRUE){
   if(ignore_case==TRUE){
     elements <- tolower(elements)
     features <- tolower(features)
@@ -15,7 +15,7 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
       "left" = {my_dictionary <- paste("\\b", features, sep="")},
       "right" = {my_dictionary <- paste(features, "\\b", sep="")},
       "full" = {my_dictionary <- paste("\\b", features, "\\b", sep="")},
-      "non" = {my_dictionary <- features}
+      "none" = {my_dictionary <- features}
     )
 
   dfm <- sapply(my_dictionary, grepl, x=elements)

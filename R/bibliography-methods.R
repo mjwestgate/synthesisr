@@ -1,3 +1,6 @@
+
+
+#' @describeIn as.bibliography Summarize a bibliography
 summary.bibliography <- function(object, ...){
 
 	# are any abstracts completely missing?
@@ -66,6 +69,7 @@ summary.bibliography <- function(object, ...){
 }
 
 
+#' @describeIn as.bibliography Print a bibliography
 print.bibliography <- function(x, n, ...){
 	length_tr <- length(x)
 	if(missing(n)){
@@ -79,7 +83,7 @@ print.bibliography <- function(x, n, ...){
 	cat(paste(unlist(text_tr), collapse = "\n\n"))
 }
 
-
+#' @describeIn as.bibliography Class bibliography
 '[.bibliography' <- function(x, n){
   class(x) <- "list"
   if(all(n %in% seq_len(length(x))) == FALSE){
@@ -90,7 +94,7 @@ print.bibliography <- function(x, n, ...){
   return(z)
 }
 
-
+#' @describeIn as.bibliography Class bibliography
 c.bibliography <- function(...){
   result <- lapply(list(...), function(a){
     class(a) <- "list"
@@ -101,8 +105,7 @@ c.bibliography <- function(...){
   return(result)
 }
 
-
-# function to convert an object of class 'bibliography' into a data.frame
+#' @describeIn as.bibliography Convert a data.frame to a bibliography
 as.data.frame.bibliography <- function(x, ...){
 
 	cols <- unique(unlist(lapply(x, names)))
@@ -142,7 +145,13 @@ as.data.frame.bibliography <- function(x, ...){
 	return(x_dframe)
 }
 
-
+#' Methods for class 'bibliography'
+#' @description This is a small number of standard methods for interacting with class 'bibliography'. More may be added later.
+#' @param x An object of class 'bibliography'
+#' @param object An object of class 'bibliography'
+#' @param n Number of items to select/print
+#' @param ... Any further information
+#' @aliases summary.bibliography, print.bibliography, c.bibliography, as.data.frame.bibliography
 as.bibliography <- function(x, ...){
 
 	if(class(x) != "data.frame"){

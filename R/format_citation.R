@@ -1,3 +1,12 @@
+#' Format a citation
+#' @description takes an object of class data.frame or bibliography and returns a formatted citation.
+#' @param data An object of class data.frame or bibliography.
+#' @param details Logical: Should identifying information such as author names & journal titles be displayed? Defaults to TRUE.
+#' @param abstract Logical: Should the abstract be shown (if available)? Defaults to FALSE.
+#' @param add_html Logical: Should the journal title be italicized using html codes? Defaults to FALSE.
+#' @param line_breaks Either logical, stating whether line breaks should be added, or numeric stating how many characters should separate consecutive line breaks. Defaults to FALSE.
+#' @param ... any other arguments.
+#' @return a string of length == length(x), containing formatted citations.
 format_citation <- function(
   data,
   details = TRUE,
@@ -10,7 +19,7 @@ format_citation <- function(
   }
 
 
-# Function to display bibliographic information on selected articles
+#' @describeIn format_citation Format citation from a list
 format_citation.list <- function(
 	data, # list of data from a standard import function
   details = TRUE, # whether to allow or suppress bibliographic details - name, year, journal
@@ -89,7 +98,7 @@ format_citation.list <- function(
 return(result)
 }
 
-
+#' @describeIn format_citation Format citation from a bibliography
 format_citation.bibliography <-  function(
 	data,
   details = TRUE,
@@ -108,7 +117,7 @@ format_citation.bibliography <-  function(
   )
 }
 
-# duplicate version for calling apply on a data.frame
+#' @describeIn format_citation Format citation from a data.frame
 format_citation.data.frame <- function(
   data,
   details = TRUE,
@@ -177,8 +186,12 @@ format_citation.data.frame <- function(
   return(data_out)
 }
 
-
-# now organize so that line breaks are added at word breaks every y characters
+#' Add line breaks to one or more strings
+#' @description This function takes a vector of strings and adds line breaks every n characters. Primarily built to be called internally by format_citation, this function has been made available as it can be useful in other contexts.
+#' @param data Either a string or a vector; if the vector is not of class character if will be coerced to one using as.character.
+#' @param n Numeric: The number of characters that should separate consecutive line breaks.
+#' @details Line breaks are only added between words, so the value of n is acutally a threshold value rather than being matched exactly.
+#' @return Returns the input vector unaltered except for the addition of line breaks.
 add_line_breaks <- function(data, n = 50){
 	split_text <- strsplit(as.character(data), " ")
   out_list <- lapply(split_text, function(a){

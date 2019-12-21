@@ -1,3 +1,8 @@
+^.*/.Rproj$
+^/.Rproj/.user$
+./synthesisr_hex.png
+./test_script.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
-.\synthsisr_hex.png
+synthesisr_hex.png
+test_script.R
