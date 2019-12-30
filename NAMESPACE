@@ -1,3 +1,21 @@
 exportPattern("^[[:alpha:]]+")
-importFrom("stats", "dist")
-importFrom("utils", "read.csv", "read.table", "write.csv")
+importFrom("stats", "dist", "xtabs")
+importFrom("utils", "read.csv", "read.table", "write.csv", "read.delim", "head", "tail", "write.table")
+
+export(as.bibliography, summary.bibliography,
+       print.bibliography, '[.bibliography', c.bibliography,
+tag_lookup,
+add_line_breaks, format_citation,
+format_citation.bibliography, format_citation.data.frame, format_citation.list,
+fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
+find_duplicates,
+merge_columns)
+
+S3method(format_citation, bibliography)
+S3method(format_citation, list)
+S3method(format_citation, data.frame)
+S3method(c, bibliography)
+S3method(print, bibliography)
+S3method(summary, bibliography)
+S3method(as.data.frame, bibliography)
+S3method('[', bibliography)

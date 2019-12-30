@@ -1,17 +1,18 @@
-#' Information about databases recognized by synthesisr
+#' Bibliographic code lookup for search results assembly
 #'
-#' A data frame containing databases, database signatures
-#' used to recognize databases, and which function should
-#' be called to import results from that database.
+#' A data frame containing that can be used to look up
+#' common codes for different bibliographic fields
+#' across databases and merge them to a common format
 #'
-#' @format A data frame with 18 obs of 3 variables
+#' @format A data frame with 207 obs of 3 variables
 #'
 #' \describe{
-#'  \item{database}{the name of the database}
-#'  \item{signature}{a unique signature that appears in search results from this database}
-#'  \item{import_function}{which import function to use if this database is detected}}
+#'  \item{code}{code used in search results}
+#'  \item{description}{description of field from original source}
+#'  \item{field}{bibliographic field that codes correspond to}
+#'  \item{order}{the order in which to rank fields in assembled results}}
 #'
-"databases"
+"code_lookup"
 
 #' Languages codes synthesisr can recognize
 #'
