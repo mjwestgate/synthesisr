@@ -19,6 +19,9 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
     )
 
   dfm <- sapply(my_dictionary, grepl, x=elements)
+  if(closure!="none"){
+    colnames(dfm) <- gsub("\\b", "", colnames(dfm))
+  }
   return(dfm)
 }
 
@@ -127,7 +130,25 @@ remove_punctuation <- function(text, remove_hyphens=FALSE){
     }
   }
 
-
   return(output)
 
   }
+
+
+
+#' Remove numbers from text
+#' @description Removes numbers from a text
+#' @param text the text from which to remove numbers
+#' @return the input text with numbers removed
+remove_numbers <- function(text){
+    output <- gsub("[[:digit:]]", "", text)
+
+  if(any(grepl("  ", output))){
+    while(any(grepl("  ", output))){
+      output <- gsub("  ", " ", output)
+    }
+  }
+
+  return(output)
+
+}
