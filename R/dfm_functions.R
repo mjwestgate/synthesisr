@@ -115,6 +115,19 @@ remove_punctuation <- function(text, remove_hyphens=FALSE){
     output <- gsub("([-])|[[:punct:]]", "\\1", text)
   }
 
+  if(any(grepl(" -", output))){
+    while(any(grepl(" -", output))){
+      output <- gsub(" -", "-", output)
+    }
+  }
+
+  if(any(grepl("  ", output))){
+    while(any(grepl("  ", output))){
+      output <- gsub("  ", " ", output)
+    }
+  }
+
+
   return(output)
 
   }
