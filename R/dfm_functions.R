@@ -20,7 +20,7 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
 
   dfm <- sapply(my_dictionary, grepl, x=elements)
   if(closure!="none"){
-    colnames(dfm) <- gsub("\\b", "", colnames(dfm))
+    colnames(dfm) <- gsub("\\\\b", "", colnames(dfm))
   }
   return(dfm)
 }
