@@ -17,3 +17,6 @@ the input text with punctuation removed
 \description{
 Removes common punctuation marks from a text
 }
+\examples{
+remove_punctuation("#<<<//e<v>!id&e^n$$c/>e\%-b&a$s#!++ed!//")
+}

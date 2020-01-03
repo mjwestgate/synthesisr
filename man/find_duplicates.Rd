@@ -17,7 +17,7 @@ find_duplicates(data, match_variable, group_variables = NULL,
 
 \item{match_function}{the duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches}
 
-\item{method}{the method to use for stringdist or fuzzdist; for stringdist, options are: XXXXXXXXXXx; for fuzzdist, options are: "fuzz_m_ratio", "fuzz_partial_ratio","fuzz_token_sort_ratio", or "fuzz_token_set_ratio"}
+\item{method}{the method to use for fuzzdist; options are: "fuzz_m_ratio", "fuzz_partial_ratio","fuzz_token_sort_ratio", or "fuzz_token_set_ratio"}
 
 \item{threshold}{the cutoff threshold for stringdist or fuzzdist}
 
@@ -25,6 +25,32 @@ find_duplicates(data, match_variable, group_variables = NULL,
 
 \item{remove_punctuation}{whether punctuation should be removed when detecting duplicates}
 }
+\value{
+a vector of duplicate matches and methods used
+}
 \description{
 Identifies duplicate bibliographic entries using different duplicate detection methods.
+}
+\examples{
+my_df <-
+  data.frame(
+    title = c(
+      "Morphological diversity and phenotypic plasticity in the threatened
+      British white‐clawed crayfish (Austropotamobius pallipes)",
+
+      "Predatory functional response and prey choice identify predation
+      differences between native/invasive and parasitised/unparasitised crayfish",
+
+      "Effect of pH on growth and survival in the freshwater
+      crayfish Austropotamobius pallipes",
+
+      "Morphological diversity and phenotypic plasticity in the threatened
+      British white clawed crayfish austropotamobius pallipes"
+    ),
+    year=c("2012", "2012", "2013", "2012"))
+
+
+dups <- find_duplicates(my_df, match_variable = "title", match_function = "stringdist")
+
+deduplicate(my_df, matches = dups)
 }

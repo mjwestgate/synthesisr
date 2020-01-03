@@ -19,3 +19,10 @@ a data frame of assembled search results
 \description{
 Imports common bibliographic reference formats (i.e. .bib, .ris, or .txt).
 }
+\examples{
+files <-
+  paste(system.file(package = "synthesisr"),
+        "/extdata/zoorec.txt",
+        sep = "")
+results <- import_refs(files)
+}

@@ -17,3 +17,6 @@ a number vector
 \description{
 Computes the rolling sum of detections; intended for use in detect_delimiter
 }
+\examples{
+rollingsum(c(1,1,2,3,5))
+}

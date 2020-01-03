@@ -15,3 +15,6 @@ a character vector with the likely file type based on the file extension
 \description{
 Given a file, determines the file extension
 }
+\examples{
+detect_filetype("scopus.ris")
+}

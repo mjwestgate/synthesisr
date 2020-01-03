@@ -4,6 +4,7 @@
 #' @param return_df if TRUE, returns a dataframe; if FALSE, returns a list
 #' @param verbose if TRUE, prints status updates
 #' @return a data frame of assembled search results
+#' @example inst/examples/import_refs.R
 import_refs <- function(
   filename,
   return_df = TRUE,
@@ -60,31 +61,6 @@ import_refs <- function(
   }
 }
 
-
-# underlying workhorse function
-## love it!! so much better than my clunky for-loops
-
-# the first section auto-detects some specialised import formats (xls, xml, csv)
-# and imports them using specialised code, as per litsearchr.
-# Anything else is treated as plain text and is imported via revtools code.
-# Any file that can't be imported as text is detected by tryCatch and skipped.
-
-## tryCatch led to errors for every plain text file type I tried
-## but I think I found a workaround so that shouldn't matter, and i am not too worried
-## because the code can recognize files converted in open source software (i.e. zotero)
-## for example, I have some .bib that won't read because they are one massive character vector, no breaks
-## but I can just convert them because zotero still recognizes them as .bib
-
-# Note: there is an open question here of how to import .txt.
-# At the moment this is passed to revtools code;
-# but it could quite easily be passed as a tab-delimited
-# basically as .txt can contain any kind of information there is no right answer
-
-## how I set it up now is that .txt gets checked to see if it is tab-delim
-## if it is, then it gets imported that way and columns are matched to a lookup system
-## if it is not, then it gets checked to see if it is bib or ris-like
-## if it is nothing sensible, then it just gets ignored
-
 #' Internal function called by import_refs for each file
 #'
 #' @description Workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
@@ -92,6 +68,7 @@ import_refs <- function(
 #' @param return_df if TRUE, returns a dataframe; if FALSE, returns a list
 #' @param verbose if TRUE, prints status updates
 #' @return a data frame of assembled search results
+#' @example inst/examples/import_refs.R
 import_refs_internal <- function(
   filename,
   return_df = TRUE,
@@ -139,6 +116,7 @@ if(file_type!="unknown"){
 #' @description Given a file, determines the file extension
 #' @param filename a path to a file
 #' @return a character vector with the likely file type based on the file extension
+#' @examples detect_filetype("scopus.ris")
 detect_filetype <- function(filename) {
   file_type <- ""
   file_extension_lookup <- regexpr(".[[:alnum:]]{2,}$", filename)
@@ -167,6 +145,7 @@ detect_filetype <- function(filename) {
 #' @description given a character vector, determines if the underlying file is more bib-like or ris-like
 #' @param z a character vector
 #' @return a file type: either bib, ris, or unknown
+#' @example inst/examples/bibvris.R
 bibvris <- function(z){
   nrows <- min(c(200, length(z)))
   n_brackets <- length(grep("\\{", z))
@@ -183,6 +162,7 @@ bibvris <- function(z){
 #' @description Takes an imported dataframe, rearranges it to match lookup codes, and removes redundant columns
 #' @param df a data frame that contains bibliographic information
 #' @return a data frame rearranged and coded to match standard bibliographic fields, with other fields appended
+#' @example inst/examples/match_columns.R
 match_columns <- function(df){
   # figure out which columns match known tags
   hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
@@ -208,6 +188,7 @@ match_columns <- function(df){
 #' @description converts factors to characters to avoid errors with levels
 #' @param z a data.frame
 #' @return a data.frame with all factors converted to character
+#' @examples remove_factors(list(as.factor(c("a", "b"))))
 remove_factors <- function(z){
   z[] <- lapply(z, function(x){
     if(is.factor(x)){as.character(x)}else{x}
@@ -221,6 +202,7 @@ remove_factors <- function(z){
 #' @param a a character vector
 #' @param n the number of previous detections to consider
 #' @return a number vector
+#' @examples rollingsum(c(1,1,2,3,5))
 rollingsum <- function(a, n = 2L){
   tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
 }
@@ -230,6 +212,7 @@ rollingsum <- function(a, n = 2L){
 #' @description Detects if the delimiter in a file is endrow, character, or space
 #' @param x a bibliographic file
 #' @return the delimiter type
+#' @examples inst/examples/detect_delimiter.R
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
     delimiter <- "endrow"
@@ -265,6 +248,7 @@ detect_delimiter <- function(x){
 #' @param z an character vector that contains RIS bibliographic information
 #' @param delimiter the type of delimiter separating entries
 #' @return a data.frame intended for import with read_ris
+#' @example inst/examples/prep_ris.R
 prep_ris <- function(
   z,
   delimiter
@@ -390,6 +374,7 @@ prep_ris <- function(
 #' @description Imports files using medline ris format.
 #' @param x a character vector containing bibliographic information in medline ris format
 #' @return an object of class bibliography
+#' @example inst/examples/read_medline.R
 read_medline <- function(x){
 
   names(x)[3] <- "order"
@@ -438,7 +423,8 @@ read_medline <- function(x){
 #' @description Creates a unique label for each bibliographic entry using as much author and year data as possible.
 #' @param x a list of bibliographic entires
 #' @return a character vector of unique names
-generate_bibliographic_names <- function(x){
+#' @examples generate_ids(c("title a", "title b"))
+generate_ids <- function(x){
   nonunique_names <- unlist(lapply(x, function(a){
     name_vector <- rep("", 3)
     if(any(names(a) == "author")){
@@ -481,6 +467,7 @@ generate_bibliographic_names <- function(x){
 #' @description Imports files using ris format.
 #' @param x a character vector containing bibliographic information in ris format
 #' @return an object of class bibliography
+#' @example inst/examples/read_medline.R
 read_ris <- function(x){
 
   # merge data with lookup info, to provide bib-style tags
@@ -663,7 +650,7 @@ read_ris <- function(x){
     return(final_result)
   })
 
-  names(x.final) <- generate_bibliographic_names(x.final)
+  names(x.final) <- generate_ids(x.final)
   class(x.final) <- "bibliography"
   return(x.final)
 }
@@ -675,6 +662,7 @@ read_ris <- function(x){
 #' @description Imports files using bib format.
 #' @param x a character vector containing bibliographic information in bib format
 #' @return an object of class bibliography
+#' @example inst/examples/read_bib.R
 read_bib <- function(x){
 
   # which lines start with @article?

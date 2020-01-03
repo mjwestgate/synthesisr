@@ -5,6 +5,7 @@
 #' @param closure restrictions on how keywords are detected; left requires terms to start with a keyword (e.g "burn" matches "burning"), right requires terms to end with a keyword (e.g. "burn" matches "postburn" but not "postburning"), full requires exact matches (e.g. "burn" only matches "burn"), and none allows keywords to be embedded within terms.
 #' @param ignore_case if case be ignored when detecting features within documents
 #' @return a matrix with documents as rows and terms as columns
+#' @example inst/examples/create_dfm.R
 create_dfm <- function(elements, features, closure=c("left", "right", "full", "none"), ignore_case=TRUE){
   if(ignore_case==TRUE){
     elements <- tolower(elements)
@@ -29,6 +30,7 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
 #' @description Returns the two-letter language code for specified language
 #' @param language a character vector containing the name of a language
 #' @return a character vector containing a two-letter language code
+#' @examples language_code("French")
 language_code <- function(language){
   if(nchar(language==2)){la_code <- language}
   if(nchar(language)>2){
@@ -43,6 +45,7 @@ language_code <- function(language){
 #' @description Returns a character vector of stopwords to use for a specified language
 #' @param language a character vector containing the name of the language for which to retrieve stopwords
 #' @return a character vector of stopwords
+#' @examples get_stopwords("English")
 get_stopwords <- function(language){
   if(!requireNamespace("stopwords")){
     stop("Package 'stopwords' needed for this function to work. Please install it.")
@@ -68,6 +71,7 @@ get_stopwords <- function(language){
 #' @param text the text from which to remove stopwords
 #' @param language the language of the text
 #' @return the text with stopwords removed
+#' @examples remove_stopwords("On the Origin of Species", language="English")
 remove_stopwords <- function(text, language){
 
   stopwords <- synthesisr::get_stopwords(language)
@@ -88,6 +92,7 @@ remove_stopwords <- function(text, language){
 #' @param text the text from which to remove stopwords
 #' @param language the language of the text
 #' @return a character vector of tokens from the text
+#' @examples get_tokens("On the Origin of Species", language = "English")
 get_tokens <- function(text, language){
   text <- tolower(text)
   text <- synthesisr::remove_stopwords(text=text, language=language)
@@ -113,6 +118,7 @@ get_tokens <- function(text, language){
 #' @param text the text from which to remove punctuation
 #' @param remove_hyphens whether or not hyphens should be considered punctuation and removed
 #' @return the input text with punctuation removed
+#' @examples remove_punctuation("#<<<//e<v>!id&e^n$$c/>e%-b&a$s#!++ed!//")
 remove_punctuation <- function(text, remove_hyphens=FALSE){
   if(remove_hyphens==TRUE){output <- gsub("[[:punct:]]", "\\1", text)}else{
     output <- gsub("([-])|[[:punct:]]", "\\1", text)
@@ -140,6 +146,7 @@ remove_punctuation <- function(text, remove_hyphens=FALSE){
 #' @description Removes numbers from a text
 #' @param text the text from which to remove numbers
 #' @return the input text with numbers removed
+#' @examples remove_numbers("11s0y6nt4he35si6sr")
 remove_numbers <- function(text){
     output <- gsub("[[:digit:]]", "", text)
 

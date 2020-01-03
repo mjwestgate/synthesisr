@@ -17,3 +17,6 @@ a character vector of tokens from the text
 \description{
 Removes stopwords and extracts tokens from text
 }
+\examples{
+get_tokens("On the Origin of Species", language = "English")
+}

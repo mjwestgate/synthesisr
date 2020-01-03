@@ -15,3 +15,6 @@ the delimiter type
 \description{
 Detects if the delimiter in a file is endrow, character, or space
 }
+\examples{
+inst/examples/detect_delimiter.R
+}

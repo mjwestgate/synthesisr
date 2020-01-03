@@ -17,3 +17,6 @@ the text with stopwords removed
 \description{
 Removes stopwords from text in user-specified language
 }
+\examples{
+remove_stopwords("On the Origin of Species", language="English")
+}

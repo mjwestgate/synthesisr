@@ -15,3 +15,13 @@ a data frame rearranged and coded to match standard bibliographic fields, with o
 \description{
 Takes an imported dataframe, rearranges it to match lookup codes, and removes redundant columns
 }
+\examples{
+files <-
+  paste(system.file(package = "synthesisr"),
+        "/extdata/zoorec.txt",
+        sep = "")
+
+df <- read.delim(files)
+formatted <- match_columns(df)
+colnames(formatted)
+}

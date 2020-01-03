@@ -1,5 +1,3 @@
-## where is stringdist? it did not get copied over from revtools code
-
 #' Detect duplicate values
 #'
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
@@ -7,10 +5,12 @@
 #' @param match_variable the column name of the field to check for duplicates as a character vector of length 1. If no variable is specified, the function will search for doi or title columns before
 #' @param group_variables a character vector of field names; duplicates will only be searched for within groups if not set to NULL
 #' @param match_function the duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches
-#' @param method the method to use for stringdist or fuzzdist; for stringdist, options are: XXXXXXXXXXx; for fuzzdist, options are: "fuzz_m_ratio", "fuzz_partial_ratio","fuzz_token_sort_ratio", or "fuzz_token_set_ratio"
+#' @param method the method to use for fuzzdist; options are: "fuzz_m_ratio", "fuzz_partial_ratio","fuzz_token_sort_ratio", or "fuzz_token_set_ratio"
 #' @param threshold the cutoff threshold for stringdist or fuzzdist
 #' @param to_lower whether all entries should be considered in lowercase when detecting duplicates
 #' @param remove_punctuation whether punctuation should be removed when detecting duplicates
+#' @return a vector of duplicate matches and methods used
+#' @example inst/examples/deduplicate.R
 find_duplicates <- function(
   data,
   match_variable,

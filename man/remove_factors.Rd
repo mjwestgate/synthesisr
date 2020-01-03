@@ -15,3 +15,6 @@ a data.frame with all factors converted to character
 \description{
 converts factors to characters to avoid errors with levels
 }
+\examples{
+remove_factors(list(as.factor(c("a", "b"))))
+}

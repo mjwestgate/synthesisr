@@ -3,6 +3,7 @@
 #' @param x a data.frame in the format returned by make_reference_dataframe()
 #' @param matches a character vector showing which values are duplicates
 #' @return a data.frame of unique references
+#' @example inst/examples/deduplicate.R
 deduplicate <- function(
 	x, # data.frame returned by make_reference_dataframe
   matches # vector showing which values are duplicates

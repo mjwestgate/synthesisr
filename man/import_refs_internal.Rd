@@ -19,3 +19,10 @@ a data frame of assembled search results
 \description{
 Workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
 }
+\examples{
+files <-
+  paste(system.file(package = "synthesisr"),
+        "/extdata/zoorec.txt",
+        sep = "")
+results <- import_refs(files)
+}

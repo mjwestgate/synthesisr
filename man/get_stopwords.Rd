@@ -15,3 +15,6 @@ a character vector of stopwords
 \description{
 Returns a character vector of stopwords to use for a specified language
 }
+\examples{
+get_stopwords("English")
+}

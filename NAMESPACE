@@ -1,7 +1,7 @@
 exportPattern("^[[:alpha:]]+")
 importFrom("stats", "dist", "xtabs")
 importFrom("utils", "read.csv", "read.table", "write.csv", "read.delim", "head", "tail", "write.table")
-
+importFrom("stringdist", "stringdist")
 export(as.bibliography, summary.bibliography,
        print.bibliography, '[.bibliography', c.bibliography,
 tag_lookup,

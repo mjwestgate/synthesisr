@@ -15,3 +15,6 @@ a character vector containing a two-letter language code
 \description{
 Returns the two-letter language code for specified language
 }
+\examples{
+language_code("French")
+}
