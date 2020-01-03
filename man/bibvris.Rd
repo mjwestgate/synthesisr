@@ -18,7 +18,8 @@ given a character vector, determines if the underlying file is more bib-like or 
 \examples{
 file <- c(
   "TY  - JOUR",
-  "TI  - Foods of feral house cats (Felis catus l.) in forest of the orongorongo valley, wellington",
+  "TI  - Foods of feral house cats (Felis catus l.)
+  in forest of the orongorongo valley, wellington",
   "T2  - New Zealand Journal of Zoology",
   "VL  - 6",
   "IS  - 1",

@@ -18,7 +18,8 @@ Imports files using ris format.
 \examples{
 file <- c(
   "TY  - JOUR",
-  "TI  - Foods of feral house cats (Felis catus l.) in forest of the orongorongo valley, wellington",
+  "TI  - Foods of feral house cats (Felis catus l.)
+  in forest of the orongorongo valley, wellington",
   "T2  - New Zealand Journal of Zoology",
   "VL  - 6",
   "IS  - 1",

@@ -212,7 +212,7 @@ rollingsum <- function(a, n = 2L){
 #' @description Detects if the delimiter in a file is endrow, character, or space
 #' @param x a bibliographic file
 #' @return the delimiter type
-#' @examples inst/examples/detect_delimiter.R
+#' @example inst/examples/detect_delimiter.R
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
     delimiter <- "endrow"

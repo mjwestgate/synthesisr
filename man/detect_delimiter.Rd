@@ -16,5 +16,41 @@ the delimiter type
 Detects if the delimiter in a file is endrow, character, or space
 }
 \examples{
-inst/examples/detect_delimiter.R
+file <- c(
+  "TY  - JOUR",
+  "TI  - Foods of feral house cats (Felis catus l.)
+  in forest of the orongorongo valley, wellington",
+  "T2  - New Zealand Journal of Zoology",
+  "VL  - 6",
+  "IS  - 1",
+  "SP  - 107",
+  "EP  - 126",
+  "PY  - 1979",
+  "DO  - 10.1080/03014223.1979.10428353",
+  "AU  - Fitzgerald, B.M.",
+  "AU  - Karl, B.J.",
+  "N1  - Cited By :112",
+  "N1  - Export Date: 1 January 2020",
+  "M3  - Article",
+  "DB  - Scopus",
+  "ER  -",
+
+  "TY  - JOUR",
+  "TI  - BOWER‐BIRDS",
+  "T2  - Biological Reviews",
+  "VL  - 29",
+  "IS  - 1",
+  "SP  - 1",
+  "EP  - 45",
+  "PY  - 1954",
+  "DO  - 10.1111/j.1469-185X.1954.tb01395.x",
+  "AU  - MARSHALL, A.J.",
+  "N1  - Cited By :9",
+  "N1  - Export Date: 1 January 2020",
+  "M3  - Article",
+  "DB  - Scopus",
+  "ER  - "
+)
+
+detect_delimiter(file)
 }
