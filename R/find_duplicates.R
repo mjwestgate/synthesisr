@@ -1,37 +1,44 @@
 #' Detect duplicate values
 #'
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
-#' @param data a dataset that contains duplicate bibliographic entries
-#' @param match_variable the column name of the field to check for duplicates as a character vector of length 1. If no variable is specified, the function will search for doi or title columns before
-#' @param group_variables a character vector of field names; duplicates will only be searched for within groups if not set to NULL
-#' @param match_function the duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches
-#' @param method the method to use for fuzzdist; options are: "fuzz_m_ratio", "fuzz_partial_ratio","fuzz_token_sort_ratio", or "fuzz_token_set_ratio"
-#' @param threshold the cutoff threshold for stringdist or fuzzdist
-#' @param to_lower whether all entries should be considered in lowercase when detecting duplicates
-#' @param remove_punctuation whether punctuation should be removed when detecting duplicates
-#' @return a vector of duplicate matches and methods used
+#' @param data A data.frame that contains duplicate bibliographic entries.
+#' @param match_variable A length-1 integer or string listing the column in which duplicates should be sought. Defaults to doi where available, followed by title. If neither are found the function will fail.
+#' @param group_vars An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.
+#' @param match_function The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches
+#' @param method A string indicating the method to use for fuzzdist.
+#' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
+#' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates?
+#' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates?
+#' @return Returns a vector of duplicate matches and methods used.
 #' @example inst/examples/deduplicate.R
 find_duplicates <- function(
   data,
   match_variable,
-  group_variables  = NULL,
+  group_vars  = NULL,
   match_function  = c("stringdist",  "fuzzdist", "exact"),
   method,
   threshold  = 5,
   to_lower = FALSE,
-  remove_punctuation = FALSE
+  rm_punctuation = FALSE
 ){
+
+  if(match_function=="stringdist"){
+    if(!requireNamespace("stringdist")){
+      match_function <- "fuzzdist"
+      print("Note: stringdist must be installed to use stringdist method. Using fuzzdist instead.")
+    }else{requireNamespace("stringdist")}
+  }
 
   # error catching
   # data
   if(missing(data)){
     stop("'data' is missing: Please provide a data.frame")
   }
-  if(missing(group_variables)){
-    group_variables <- NULL
+  if(missing(group_vars)){
+    group_vars <- NULL
   }else{
-    if(!all(group_variables %in% colnames(data))){
-      group_variables <- NULL
+    if(!all(group_vars %in% colnames(data))){
+      group_vars <- NULL
     }
   }
 
@@ -61,7 +68,7 @@ find_duplicates <- function(
   }
 
   # methods
-  if(missing(match_function)){match_function <- "stringdist"}
+  if(missing(match_function)){match_function <- "exact"}
   if(!any(c("fuzzdist", "stringdist", "exact") == match_function)){
     stop(
       paste0(
@@ -105,7 +112,7 @@ find_duplicates <- function(
   if(to_lower){
     data[, match_variable] <- tolower(data[, match_variable])
   }
-  if(remove_punctuation){
+  if(rm_punctuation){
     data[, match_variable] <- synthesisr::remove_punctuation(data[, match_variable])
   }
 
@@ -126,16 +133,16 @@ find_duplicates <- function(
       }else{
         # include only those entries in the same grouping categories as the current entry
         # plus any entries that are missing those values
-        if(is.null(group_variables)){
+        if(is.null(group_vars)){
           rows_tr <- remaining_rows
         }else{
-          match_list <- lapply(group_variables, function(a, data, row){
+          match_list <- lapply(group_vars, function(a, data, row){
             (data[, a] == data[row_start, a]) | is.na(data[, a])
             },
             data = data,
             row = row_start
           )
-          if(length(group_variables) == 1){
+          if(length(group_vars) == 1){
             rows_tr <- which(unlist(match_list))
           }else{
             rows_tr <- which(apply(
@@ -180,10 +187,10 @@ find_duplicates <- function(
   # add attributes
   result <- data$group
   attr(result, "match_variable") <- match_variable
-  if(is.null(group_variables)){
-    attr(result, "group_variables") <- NA
+  if(is.null(group_vars)){
+    attr(result, "group_vars") <- NA
   }else{
-    attr(result, "group_variables") <- group_variables
+    attr(result, "group_vars") <- group_vars
   }
   attr(result, "match_function") <- match_function
   attr(result, "method") <- method

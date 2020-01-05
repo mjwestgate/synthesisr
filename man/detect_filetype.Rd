@@ -7,14 +7,19 @@
 detect_filetype(filename)
 }
 \arguments{
-\item{filename}{a path to a file}
+\item{filename}{A path to a file.}
 }
 \value{
-a character vector with the likely file type based on the file extension
+Returns a character vector with the likely file type based on the file extension and content.
 }
 \description{
-Given a file, determines the file extension
+Because different file types require different import strategies, this function detects the input file type.
 }
 \examples{
-detect_filetype("scopus.ris")
+files <-
+  paste(system.file(package = "synthesisr"),
+        "/extdata/zoorec.txt",
+        sep = "")
+
+detect_filetype(files)
 }

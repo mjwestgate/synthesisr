@@ -1,9 +1,10 @@
 #' Bind two or more data frames with different columns
 #'
 #' @description Takes two or more data.frames with different column names or different column orders and binds them to a single data.frame.
-#' @param x either a data.frame or a list of data.frames
-#' @param y a data.frame, optional if x is a list
-#' @return a data.frame
+#' @param x Either a data.frame or a list of data.frames.
+#' @param y A data.frame, optional if x is a list.
+#' @return Returns a single data.frame with all the input data frames merged.
+#' @example inst/examples/merge_columns.R
 merge_columns <- function(
   x, # either a data.frame or a list of the same
   y # a data.frame, optional

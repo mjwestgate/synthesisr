@@ -7,13 +7,13 @@
 read_bib(x)
 }
 \arguments{
-\item{x}{a character vector containing bibliographic information in bib format}
+\item{x}{A character vector containing bibliographic information in bib format.}
 }
 \value{
-an object of class bibliography
+Returns an object of class bibliography.
 }
 \description{
-Imports files using bib format.
+This function reads in bibliographic data stored in .bib format.
 }
 \examples{
 bibfile <- c(
@@ -31,5 +31,7 @@ bibfile <- c(
 "}"
 )
 
-read_bib(bibfile)
+bib <- read_bib(bibfile)
+
+write_bibliography(bib, format = "bib")
 }

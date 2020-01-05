@@ -7,13 +7,13 @@
 language_code(language)
 }
 \arguments{
-\item{language}{a character vector containing the name of a language}
+\item{language}{A character vector containing the name of a language.}
 }
 \value{
-a character vector containing a two-letter language code
+Returns a character vector containing a two-letter language code.
 }
 \description{
-Returns the two-letter language code for specified language
+This is a lookup function that returns the two-letter language code for specified language.
 }
 \examples{
 language_code("French")

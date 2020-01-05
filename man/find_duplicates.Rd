@@ -4,53 +4,65 @@
 \alias{find_duplicates}
 \title{Detect duplicate values}
 \usage{
-find_duplicates(data, match_variable, group_variables = NULL,
+find_duplicates(data, match_variable, group_vars = NULL,
   match_function = c("stringdist", "fuzzdist", "exact"), method,
-  threshold = 5, to_lower = FALSE, remove_punctuation = FALSE)
+  threshold = 5, to_lower = FALSE, rm_punctuation = FALSE)
 }
 \arguments{
-\item{data}{a dataset that contains duplicate bibliographic entries}
+\item{data}{A data.frame that contains duplicate bibliographic entries.}
 
-\item{match_variable}{the column name of the field to check for duplicates as a character vector of length 1. If no variable is specified, the function will search for doi or title columns before}
+\item{match_variable}{A length-1 integer or string listing the column in which duplicates should be sought. Defaults to doi where available, followed by title. If neither are found the function will fail.}
 
-\item{group_variables}{a character vector of field names; duplicates will only be searched for within groups if not set to NULL}
+\item{group_vars}{An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.}
 
-\item{match_function}{the duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches}
+\item{match_function}{The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches}
 
-\item{method}{the method to use for fuzzdist; options are: "fuzz_m_ratio", "fuzz_partial_ratio","fuzz_token_sort_ratio", or "fuzz_token_set_ratio"}
+\item{method}{A string indicating the method to use for fuzzdist.}
 
-\item{threshold}{the cutoff threshold for stringdist or fuzzdist}
+\item{threshold}{Numeric: the cutoff threshold for stringdist or fuzzdist.}
 
-\item{to_lower}{whether all entries should be considered in lowercase when detecting duplicates}
+\item{to_lower}{Logical: Should all entries should be considered in lowercase when detecting duplicates?}
 
-\item{remove_punctuation}{whether punctuation should be removed when detecting duplicates}
+\item{rm_punctuation}{Logical: Should punctuation should be removed when detecting duplicates?}
 }
 \value{
-a vector of duplicate matches and methods used
+Returns a vector of duplicate matches and methods used.
 }
 \description{
 Identifies duplicate bibliographic entries using different duplicate detection methods.
 }
 \examples{
-my_df <-
-  data.frame(
-    title = c(
-      "Morphological diversity and phenotypic plasticity in the threatened
-      British white‐clawed crayfish (Austropotamobius pallipes)",
+my_df <-  data.frame(
+  title = c(
+    "EviAtlas: a tool for visualising evidence synthesis databases",
 
-      "Predatory functional response and prey choice identify predation
-      differences between native/invasive and parasitised/unparasitised crayfish",
+    "revtools: An R package to support article screening for evidence synthesis",
 
-      "Effect of pH on growth and survival in the freshwater
-      crayfish Austropotamobius pallipes",
+    "An automated approach to identifying search terms for
+    systematic reviews using keyword co‐occurrence networks",
 
-      "Morphological diversity and phenotypic plasticity in the threatened
-      British white clawed crayfish austropotamobius pallipes"
-    ),
-    year=c("2012", "2012", "2013", "2012"))
+    "Reproducible, flexible and high‐throughput data extraction
+    from primary literature: The metaDigitise r package",
 
+    "eviatlas:tool for visualizing evidence synthesis databases.",
 
-dups <- find_duplicates(my_df, match_variable = "title", match_function = "stringdist")
+    "REVTOOLS a package to support article-screening for evidence synthsis"
+  ),
+
+  year = c("2019", "2019", "2019", "2019", NA, NA),
+
+  authors = c("Haddaway et al", "Westgate",
+              "Grames et al", "Pick et al", NA, NA)
+)
+
+dups <-
+  find_duplicates(
+    my_df,
+    match_variable = "title",
+    match_function = "stringdist",
+    rm_punctuation = TRUE,
+    to_lower = TRUE
+  )
 
 deduplicate(my_df, matches = dups)
 }

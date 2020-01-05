@@ -20,3 +20,6 @@ This function takes a vector of strings and adds line breaks every n characters.
 \details{
 Line breaks are only added between words, so the value of n is acutally a threshold value rather than being matched exactly.
 }
+\examples{
+add_line_breaks(data=c("On the Origin of Species"), n=2)
+}

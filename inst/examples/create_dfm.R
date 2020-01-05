@@ -1,18 +1,23 @@
-my_df <-
-  data.frame(
-    title = c(
-      "Morphological diversity and phenotypic plasticity in the threatened
-      British white‐clawed crayfish (Austropotamobius pallipes)",
+my_df <-  data.frame(
+  title = c(
+    "EviAtlas: a tool for visualising evidence synthesis databases",
 
-      "Predatory functional response and prey choice identify predation
-      differences between native/invasive and parasitised/unparasitised crayfish",
+    "revtools: An R package to support article screening for evidence synthesis",
 
-      "Effect of pH on growth and survival in the freshwater
-      crayfish Austropotamobius pallipes"
-      ),
-    year=c("2012", "2012", "2013"))
+    "An automated approach to identifying search terms for
+    systematic reviews using keyword co‐occurrence networks",
 
-terms <- c("crayfish", "diversity", "plasticity",
-           "predation", "survival")
+    "Reproducible, flexible and high‐throughput data extraction
+    from primary literature: The metaDigitise r package"
+  ),
+
+  year = c("2019", "2019", "2019", "2019"),
+
+  authors = c("Haddaway et al", "Westgate",
+              "Grames et al", "Pick et al")
+)
+
+
+terms <- c("evidence synthesis", "package", "systematic")
 
 create_dfm(my_df$title, features = terms, closure = "none")

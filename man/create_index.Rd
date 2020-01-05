@@ -7,15 +7,18 @@
 create_index(string, n, sep = "_")
 }
 \arguments{
-\item{string}{a character vector}
+\item{string}{A string to precede numbers in the index.}
 
-\item{n}{the number of unique index values to create}
+\item{n}{Numeric: the number of unique index values to create.}
 
-\item{sep}{separator between string and number}
+\item{sep}{A string to serve as the separator between the input string and number.}
 }
 \value{
-a character vector
+A character vector in "string_number" format.
 }
 \description{
 Creates a string of named length in format "string_number" to index in correct order.
+}
+\examples{
+create_index(n=2)
 }

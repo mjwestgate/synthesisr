@@ -7,15 +7,15 @@
 get_tokens(text, language)
 }
 \arguments{
-\item{text}{the text from which to remove stopwords}
+\item{text}{A character vector containing text from which to extract tokens.}
 
-\item{language}{the language of the text}
+\item{language}{A string indicating the language of the text.}
 }
 \value{
-a character vector of tokens from the text
+Returns a character vector of tokens from the text.
 }
 \description{
-Removes stopwords and extracts tokens from text
+This function removes stopwords and extracts tokens from text.
 }
 \examples{
 get_tokens("On the Origin of Species", language = "English")

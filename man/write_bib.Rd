@@ -7,11 +7,31 @@
 write_bib(x)
 }
 \arguments{
-\item{x}{an object of class bibliography}
+\item{x}{An object of class bibliography.}
 }
 \value{
-a character vector containing references in .bib format
+Returns a character vector containing references in .bib format.
 }
 \description{
-a subfunction of write_bibliography to convert a bibliography to .bib format
+This is a subfunction of write_bibliography to convert an object of class bibliography to .bib text format.
+}
+\examples{
+bibfile <- c(
+  "@article{haddaway2019eviatlas,",
+  "title={EviAtlas: a tool for visualising evidence synthesis databases},",
+  "author={Haddaway, Neal R and Feierman, Andrew and Grainger, Matthew J
+  and Gray, Charles T and Tanriver-Ayder, Ezgi and Dhaubanjar, Sanita
+  and Westgate, Martin J},",
+  "journal={Environmental Evidence},",
+  "volume={8},",
+  "number={1},",
+  "pages={22},",
+  "year={2019},",
+  "publisher={BioMed Central}",
+"}"
+)
+
+bib <- read_bib(bibfile)
+
+write_bibliography(bib, format = "bib")
 }

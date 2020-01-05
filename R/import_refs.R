@@ -1,9 +1,10 @@
 #' Import bibliographic search results
+#'
 #' @description Imports common bibliographic reference formats (i.e. .bib, .ris, or .txt).
-#' @param filename a path to a filename or vector of filenames containing search results to import
-#' @param return_df if TRUE, returns a dataframe; if FALSE, returns a list
-#' @param verbose if TRUE, prints status updates
-#' @return a data frame of assembled search results
+#' @param filename A path to a filename or vector of filenames containing search results to import.
+#' @param return_df If TRUE, returns a data.frame; if FALSE, returns a list.
+#' @param verbose If TRUE, prints status updates.
+#' @return Returns a data.frame or list of assembled search results.
 #' @example inst/examples/import_refs.R
 import_refs <- function(
   filename,
@@ -63,11 +64,11 @@ import_refs <- function(
 
 #' Internal function called by import_refs for each file
 #'
-#' @description Workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
-#' @param filename a path to a filename containing search results to import
-#' @param return_df if TRUE, returns a dataframe; if FALSE, returns a list
-#' @param verbose if TRUE, prints status updates
-#' @return a data frame of assembled search results
+#' @description This is the underlying workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
+#' @param filename A path to a filename containing search results to import.
+#' @param return_df If TRUE, returns a data.frame; if FALSE, returns a list.
+#' @param verbose If TRUE, prints status updates.
+#' @return Returns a data.frame or list of assembled search results.
 #' @example inst/examples/import_refs.R
 import_refs_internal <- function(
   filename,
@@ -113,10 +114,11 @@ if(file_type!="unknown"){
 }
 
 #' Detects file types
-#' @description Given a file, determines the file extension
-#' @param filename a path to a file
-#' @return a character vector with the likely file type based on the file extension
-#' @examples detect_filetype("scopus.ris")
+#'
+#' @description Because different file types require different import strategies, this function detects the input file type.
+#' @param filename A path to a file.
+#' @return Returns a character vector with the likely file type based on the file extension and content.
+#' @example inst/examples/filetype.R
 detect_filetype <- function(filename) {
   file_type <- ""
   file_extension_lookup <- regexpr(".[[:alnum:]]{2,}$", filename)
@@ -129,7 +131,7 @@ detect_filetype <- function(filename) {
 
   if (!any(c("ris", "bib") == file_type)) {
     if (ncol(read.delim(filename, sep = "\t", row.names = NULL)) == 1) {
-      file_type <- synthesisr::bibvris(readLines(filename))
+      file_type <- synthesisr::detect_format(readLines(filename))
     } else{
       file_type <- "txt"
     }
@@ -141,15 +143,16 @@ detect_filetype <- function(filename) {
   return(file_type)
 }
 
-#' Detects if a file is bib or ris
-#' @description given a character vector, determines if the underlying file is more bib-like or ris-like
-#' @param z a character vector
-#' @return a file type: either bib, ris, or unknown
+#' Detects if a file is bib-like or ris-like
+#'
+#' @description Because bibliographic data  can be stored in multiple file types, this function determines if the format of text is more bib-like or ris-like.
+#' @param x A character vector containing bibliographic data.
+#' @return Returns the format of a file: either bib, ris, or unknown.
 #' @example inst/examples/bibvris.R
-bibvris <- function(z){
-  nrows <- min(c(200, length(z)))
-  n_brackets <- length(grep("\\{", z))
-  n_dashes <- length(grep(" - ", z))
+detect_format <- function(x){
+  nrows <- min(c(200, length(x)))
+  n_brackets <- length(grep("\\{", x))
+  n_dashes <- length(grep(" - ", x))
   if(n_brackets > nrows/3 | n_dashes>nrows/3){
     if(n_brackets>n_dashes){
       file_type <- "bib"
@@ -158,10 +161,11 @@ bibvris <- function(z){
   return(file_type)
 }
 
-#' Match imported data to reference codes
-#' @description Takes an imported dataframe, rearranges it to match lookup codes, and removes redundant columns
-#' @param df a data frame that contains bibliographic information
-#' @return a data frame rearranged and coded to match standard bibliographic fields, with other fields appended
+#' Matches imported data to reference codes
+#'
+#' @description Takes an imported data.frame and rearranges it to match lookup codes.
+#' @param df A data.frame that contains bibliographic information.
+#' @return Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
 #' @example inst/examples/match_columns.R
 match_columns <- function(df){
   # figure out which columns match known tags
@@ -185,9 +189,10 @@ match_columns <- function(df){
 
 
 #' Remove factors from an object
-#' @description converts factors to characters to avoid errors with levels
-#' @param z a data.frame
-#' @return a data.frame with all factors converted to character
+#'
+#' @description This function converts factors to characters to avoid errors with levels.
+#' @param z A data.frame
+#' @return Returns the input data.frame with all factors converted to character.
 #' @examples remove_factors(list(as.factor(c("a", "b"))))
 remove_factors <- function(z){
   z[] <- lapply(z, function(x){
@@ -198,10 +203,11 @@ remove_factors <- function(z){
 
 
 #' Computes a rolling sum
-#' @description Computes the rolling sum of detections; intended for use in detect_delimiter
-#' @param a a character vector
-#' @param n the number of previous detections to consider
-#' @return a number vector
+#'
+#' @description This function computes the rolling sum of detections; intended for use in detect_delimiter.
+#' @param a A string or character vector.
+#' @param n Numeric: the window of previous detections to consider.
+#' @return Returns a vector of numbers passed to detect_delimiter.
 #' @examples rollingsum(c(1,1,2,3,5))
 rollingsum <- function(a, n = 2L){
   tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
@@ -209,9 +215,9 @@ rollingsum <- function(a, n = 2L){
 
 #' Detect delimiter type in bibliographic files
 #'
-#' @description Detects if the delimiter in a file is endrow, character, or space
-#' @param x a bibliographic file
-#' @return the delimiter type
+#' @description The delimiter in bibliographic files is often an endrow, a special character, or a space. This function detects which delimiter, if any, a file uses.
+#' @param x A character vector containing bibliographic data.
+#' @return Returns the delimiter type used in a file.
 #' @example inst/examples/detect_delimiter.R
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
@@ -242,12 +248,12 @@ detect_delimiter <- function(x){
   return(delimiter)
 }
 
-#' Clean an RIS file for import
+#' Clean an ris file for import
 #'
-#' @description Preps RIS files by cleaning common issues and converting to a common format
-#' @param z an character vector that contains RIS bibliographic information
-#' @param delimiter the type of delimiter separating entries
-#' @return a data.frame intended for import with read_ris
+#' @description This function preps RIS files for import by cleaning common issues.
+#' @param z A character vector that contains bibliographic information in ris format.
+#' @param delimiter The type of delimiter separating entries.
+#' @return Returns a data.frame prepped for import with read_ris.
 #' @example inst/examples/prep_ris.R
 prep_ris <- function(
   z,
@@ -372,8 +378,8 @@ prep_ris <- function(
 #' Read medline-formatted ris files
 #'
 #' @description Imports files using medline ris format.
-#' @param x a character vector containing bibliographic information in medline ris format
-#' @return an object of class bibliography
+#' @param x A character vector containing bibliographic information in medline ris format.
+#' @return Returns an object of class bibliography.
 #' @example inst/examples/read_medline.R
 read_medline <- function(x){
 
@@ -421,9 +427,9 @@ read_medline <- function(x){
 #' Generate unique labels for entires
 #'
 #' @description Creates a unique label for each bibliographic entry using as much author and year data as possible.
-#' @param x a list of bibliographic entires
-#' @return a character vector of unique names
-#' @examples generate_ids(c("title a", "title b"))
+#' @param x A list of bibliographic entires.
+#' @return Returns a character vector of unique names.
+#' @example inst/examples/generate_ids.R
 generate_ids <- function(x){
   nonunique_names <- unlist(lapply(x, function(a){
     name_vector <- rep("", 3)
@@ -465,8 +471,8 @@ generate_ids <- function(x){
 #' Read ris files
 #'
 #' @description Imports files using ris format.
-#' @param x a character vector containing bibliographic information in ris format
-#' @return an object of class bibliography
+#' @param x A character vector containing bibliographic information in ris format.
+#' @return Returns an object of class bibliography.
 #' @example inst/examples/read_medline.R
 read_ris <- function(x){
 
@@ -659,9 +665,9 @@ read_ris <- function(x){
 
 #' Read bib files
 #'
-#' @description Imports files using bib format.
-#' @param x a character vector containing bibliographic information in bib format
-#' @return an object of class bibliography
+#' @description This function reads in bibliographic data stored in .bib format.
+#' @param x A character vector containing bibliographic information in bib format.
+#' @return Returns an object of class bibliography.
 #' @example inst/examples/read_bib.R
 read_bib <- function(x){
 

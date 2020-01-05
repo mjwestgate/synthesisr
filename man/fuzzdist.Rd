@@ -20,17 +20,17 @@ fuzz_token_sort_ratio(a, b)
 fuzz_token_set_ratio(a, b)
 }
 \arguments{
-\item{a}{a character vector of items to match to b}
+\item{a}{A character vector of items to match to b.}
 
-\item{b}{a character vector of items to match to a}
+\item{b}{A character vector of items to match to a.}
 
-\item{method}{the method to use for fuzzy matching}
+\item{method}{The method to use for fuzzy matching.}
 }
 \value{
-a vector of distances
+Returns a score of same length as b, giving the proportional dissimilarity between a and b.
 }
 \description{
-This is a wrapper function for the different fuzzy matching methods
+This is a wrapper function for the different fuzzy matching methods.
 }
 \section{Functions}{
 \itemize{
@@ -43,3 +43,17 @@ This is a wrapper function for the different fuzzy matching methods
 \item \code{fuzz_token_set_ratio}: Method token set ratio
 }}
 
+\note{
+fuzz_m_ratio is a measure of the number of letters that match between two strings. It is calculated as one minus two times the number of matched characters, divided by the number of characters in both strings.
+
+fuzz_partial_ratio calculates the extent to which one string is a subset of the other. If one string is a perfect subset, then this will be zero.
+
+fuzz_token_sort_ratio sorts the words in both strings into alphabetical order, and checks their similarity using fuzz_m_ratio.
+
+fuzz_token_set_ratio is similar to fuzz_token_sort_ratio, but compares both sorted strings to each other, and to a third group made of words common to both strings. It then returns the maximum value of fuzz_m_ratio from these comparisons.
+
+fuzzdist is a wrapper function, for compatability with stringdist.
+}
+\examples{
+fuzzdist("On the Origin of Species", "Of the Original Specs", method="fuzz_m_ratio")
+}

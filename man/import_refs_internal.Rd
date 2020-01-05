@@ -7,17 +7,17 @@
 import_refs_internal(filename, return_df = TRUE, verbose = TRUE)
 }
 \arguments{
-\item{filename}{a path to a filename containing search results to import}
+\item{filename}{A path to a filename containing search results to import.}
 
-\item{return_df}{if TRUE, returns a dataframe; if FALSE, returns a list}
+\item{return_df}{If TRUE, returns a data.frame; if FALSE, returns a list.}
 
-\item{verbose}{if TRUE, prints status updates}
+\item{verbose}{If TRUE, prints status updates.}
 }
 \value{
-a data frame of assembled search results
+Returns a data.frame or list of assembled search results.
 }
 \description{
-Workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
+This is the underlying workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
 }
 \examples{
 files <-

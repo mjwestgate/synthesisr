@@ -13,4 +13,6 @@ bibfile <- c(
 "}"
 )
 
-read_bib(bibfile)
+bib <- read_bib(bibfile)
+
+write_bibliography(bib, format = "bib")

@@ -7,16 +7,16 @@
 remove_punctuation(text, remove_hyphens = FALSE)
 }
 \arguments{
-\item{text}{the text from which to remove punctuation}
+\item{text}{A character vector from which to remove punctuation.}
 
-\item{remove_hyphens}{whether or not hyphens should be considered punctuation and removed}
+\item{remove_hyphens}{Logical: Should hyphens be considered punctuation and removed?}
 }
 \value{
-the input text with punctuation removed
+Returns the input text with punctuation removed.
 }
 \description{
-Removes common punctuation marks from a text
+Removes common punctuation marks from a text.
 }
 \examples{
-remove_punctuation("#<<<//e<v>!id&e^n$$c/>e\%-b&a$s#!++ed!//")
+remove_punctuation("#s<<<//<y>!&^n$$t/>h\%e&s$is#!++r!//")
 }

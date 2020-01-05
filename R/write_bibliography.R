@@ -1,7 +1,9 @@
 #' Write a .bib file
-#' @description a subfunction of write_bibliography to convert a bibliography to .bib format
-#' @param x an object of class bibliography
-#' @return a character vector containing references in .bib format
+#'
+#' @description This is a subfunction of write_bibliography to convert an object of class bibliography to .bib text format.
+#' @param x An object of class bibliography.
+#' @return Returns a character vector containing references in .bib format.
+#' @example inst/examples/read_bib.R
 write_bib <- function(x){
   # process basic text
   result <- lapply(x, function(a){
@@ -39,9 +41,11 @@ write_bib <- function(x){
 
 
 #' Write a .ris file
-#' @description a subfunction of write_bibliography to convert a bibliography to .ris format
-#' @param x an object of class bibliography
-#' @return a character vector containing references in .ris format
+#'
+#' @description This is a subfunction of write_bibliography to convert an object of class bibliography to .ris text format.
+#' @param x An object of class bibliography.
+#' @return Returns a character vector containing references in .ris format.
+#' @example inst/examples/read_medline.R
 write_ris <- function(x){
 
   result <- lapply(x, function(a, lookup){
@@ -96,17 +100,21 @@ write_ris <- function(x){
 }
 
 #' Export data to a bibliographic format
-#' @description Exports data.frames containing bibliographic information to either a .ris or .bib file.
-#' @param x a data.frame containing bibliographic information or an object of class bibliography
-#' @param format what format to export data as; options are "ris" or "bib"
-#' @param write_file if TRUE, saves the result to a text file in the working directory
-#' @param filename if write_file is TRUE, the name of the file to be written
-#' @return a character vector containing bibliographic information in the specified format if write_file is FALSE
+#'
+#' @description This function exports data.frames containing bibliographic information to either a .ris or .bib file.
+#' @param x Either a data.frame containing bibliographic information or an object of class bibliography.
+#' @param format What format should the data be exported as? Options are ris or bib.
+#' @param write_file If TRUE, saves the result to a text file in the working directory.
+#' @param filename If write_file is TRUE, the name of the file to be written.
+#' @return Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
+#' @example inst/examples/read_bib.R
 write_bibliography <- function(x, format = "ris", write_file=FALSE, filename=NULL){
 
+if(write_file==TRUE){
   if(missing(filename)){
     stop("argument 'filename' is missing, with no default")
   }
+}
   if(!any(c("bibliography", "data.frame") == class(x))){
     stop("write_bibliography only accepts objects of class 'data.frame' or 'bibliography'")
   }

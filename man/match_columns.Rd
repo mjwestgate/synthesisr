@@ -2,18 +2,18 @@
 % Please edit documentation in R/import_refs.R
 \name{match_columns}
 \alias{match_columns}
-\title{Match imported data to reference codes}
+\title{Matches imported data to reference codes}
 \usage{
 match_columns(df)
 }
 \arguments{
-\item{df}{a data frame that contains bibliographic information}
+\item{df}{A data.frame that contains bibliographic information.}
 }
 \value{
-a data frame rearranged and coded to match standard bibliographic fields, with other fields appended
+Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
 }
 \description{
-Takes an imported dataframe, rearranges it to match lookup codes, and removes redundant columns
+Takes an imported data.frame and rearranges it to match lookup codes.
 }
 \examples{
 files <-

@@ -1,12 +1,14 @@
 #' Format a citation
-#' @description takes an object of class data.frame or bibliography and returns a formatted citation.
+#'
+#' @description This function takes an object of class data.frame or bibliography and returns a formatted citation.
 #' @param data An object of class data.frame or bibliography.
 #' @param details Logical: Should identifying information such as author names & journal titles be displayed? Defaults to TRUE.
 #' @param abstract Logical: Should the abstract be shown (if available)? Defaults to FALSE.
 #' @param add_html Logical: Should the journal title be italicized using html codes? Defaults to FALSE.
 #' @param line_breaks Either logical, stating whether line breaks should be added, or numeric stating how many characters should separate consecutive line breaks. Defaults to FALSE.
 #' @param ... any other arguments.
-#' @return a string of length == length(x), containing formatted citations.
+#' @return Returns a string of length equal to length(x) that contains formatted citations.
+#' @example inst/examples/format_citation.R
 format_citation <- function(
   data,
   details = TRUE,
@@ -192,6 +194,7 @@ format_citation.data.frame <- function(
 #' @param n Numeric: The number of characters that should separate consecutive line breaks.
 #' @details Line breaks are only added between words, so the value of n is acutally a threshold value rather than being matched exactly.
 #' @return Returns the input vector unaltered except for the addition of line breaks.
+#' @examples add_line_breaks(data=c("On the Origin of Species"), n=2)
 add_line_breaks <- function(data, n = 50){
 	split_text <- strsplit(as.character(data), " ")
   out_list <- lapply(split_text, function(a){

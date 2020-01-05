@@ -18,16 +18,16 @@ Authors@R: c(
 Description: Systematic review searches include multiple databases
     that export results in a variety of formats with overlap in 
     coverage between databases. To streamline the process of importing,
-    assembling, and deduplicating results, synthesisr recognizes the
-    file output of commonly used databases for systematic reviews and
-    merges results into a standardized format. 
+    assembling, and deduplicating results, synthesisr recognizes 
+    bibliographic files exported from databases commonly used for
+    systematic reviews and merges results into a standardized format. 
 License: GPL-3
 LazyData: true
-Imports:
+Imports: 
     stringdist
 Suggests:
     knitr,
-    stopwords,
+    stopwords
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Depends: R (>= 2.10)

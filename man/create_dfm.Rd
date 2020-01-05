@@ -8,37 +8,45 @@ create_dfm(elements, features, closure = c("left", "right", "full",
   "none"), ignore_case = TRUE)
 }
 \arguments{
-\item{elements}{a character vector of document information (e.g. document titles or abstracts)}
+\item{elements}{A character vector of document information (e.g. document titles or abstracts)}
 
-\item{features}{a character vector of terms to use as document features}
+\item{features}{A character vector of terms to use as document features (e.g. keywords)}
 
-\item{closure}{restrictions on how keywords are detected; left requires terms to start with a keyword (e.g "burn" matches "burning"), right requires terms to end with a keyword (e.g. "burn" matches "postburn" but not "postburning"), full requires exact matches (e.g. "burn" only matches "burn"), and none allows keywords to be embedded within terms.}
+\item{closure}{Any restrictions on if terms should be closed when detecting matches.}
 
-\item{ignore_case}{if case be ignored when detecting features within documents}
+\item{ignore_case}{Logical: Should case be ignored when detecting features within documents?}
 }
 \value{
-a matrix with documents as rows and terms as columns
+Returns a matrix with documents as rows and terms as columns.
 }
 \description{
 Given a character vector of document information, creates a document-feature matrix.
 }
+\note{
+When matching with closure, left requires terms to start with a keyword (e.g "burn" matches "burning"), right requires terms to end with a keyword (e.g. "burn" matches "postburn" but not "postburning"), full requires exact matches (e.g. "burn" only matches "burn"), and none allows keywords to be embedded within terms (e.g. "burn" matches "postburning").
+}
 \examples{
-my_df <-
-  data.frame(
-    title = c(
-      "Morphological diversity and phenotypic plasticity in the threatened
-      British white‐clawed crayfish (Austropotamobius pallipes)",
+my_df <-  data.frame(
+  title = c(
+    "EviAtlas: a tool for visualising evidence synthesis databases",
 
-      "Predatory functional response and prey choice identify predation
-      differences between native/invasive and parasitised/unparasitised crayfish",
+    "revtools: An R package to support article screening for evidence synthesis",
 
-      "Effect of pH on growth and survival in the freshwater
-      crayfish Austropotamobius pallipes"
-      ),
-    year=c("2012", "2012", "2013"))
+    "An automated approach to identifying search terms for
+    systematic reviews using keyword co‐occurrence networks",
 
-terms <- c("crayfish", "diversity", "plasticity",
-           "predation", "survival")
+    "Reproducible, flexible and high‐throughput data extraction
+    from primary literature: The metaDigitise r package"
+  ),
+
+  year = c("2019", "2019", "2019", "2019"),
+
+  authors = c("Haddaway et al", "Westgate",
+              "Grames et al", "Pick et al")
+)
+
+
+terms <- c("evidence synthesis", "package", "systematic")
 
 create_dfm(my_df$title, features = terms, closure = "none")
 }

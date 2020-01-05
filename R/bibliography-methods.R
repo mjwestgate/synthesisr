@@ -1,7 +1,7 @@
 
 
 #' @describeIn as.bibliography Summarize a bibliography
-summary.bibliography <- function(object, ...){
+  summary.bibliography <- function(object, ...){
 
 	# are any abstracts completely missing?
 	null_check <- unlist(lapply(
@@ -146,6 +146,7 @@ as.data.frame.bibliography <- function(x, ...){
 }
 
 #' Methods for class 'bibliography'
+#'
 #' @description This is a small number of standard methods for interacting with class 'bibliography'. More may be added later.
 #' @param x An object of class 'bibliography'
 #' @param object An object of class 'bibliography'

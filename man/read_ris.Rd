@@ -7,10 +7,10 @@
 read_ris(x)
 }
 \arguments{
-\item{x}{a character vector containing bibliographic information in ris format}
+\item{x}{A character vector containing bibliographic information in ris format.}
 }
 \value{
-an object of class bibliography
+Returns an object of class bibliography.
 }
 \description{
 Imports files using ris format.
@@ -18,37 +18,24 @@ Imports files using ris format.
 \examples{
 file <- c(
   "TY  - JOUR",
-  "TI  - Foods of feral house cats (Felis catus l.)
-  in forest of the orongorongo valley, wellington",
-  "T2  - New Zealand Journal of Zoology",
-  "VL  - 6",
+  "AU  - Haddaway, Neal R.",
+  "AU  - Feierman, Andrew",
+  "AU  - Grainger, Matthew J.",
+  "AU  - Gray, Charles T.",
+  "AU  - Tanriver-Ayder, Ezgi",
+  "AU  - Dhaubanjar, Sanita",
+  "AU  - Westgate, Martin J.",
+  "PY  - 2019",
+  "DA  - 2019/06/04",
+  "TI  - EviAtlas: a tool for visualising evidence synthesis databases",
+  "JO  - Environmental Evidence",
+  "SP  - 22",
+  "VL  - 8",
   "IS  - 1",
-  "SP  - 107",
-  "EP  - 126",
-  "PY  - 1979",
-  "DO  - 10.1080/03014223.1979.10428353",
-  "AU  - Fitzgerald, B.M.",
-  "AU  - Karl, B.J.",
-  "N1  - Cited By :112",
-  "N1  - Export Date: 1 January 2020",
-  "M3  - Article",
-  "DB  - Scopus",
-  "ER  -",
-
-  "TY  - JOUR",
-  "TI  - BOWER‐BIRDS",
-  "T2  - Biological Reviews",
-  "VL  - 29",
-  "IS  - 1",
-  "SP  - 1",
-  "EP  - 45",
-  "PY  - 1954",
-  "DO  - 10.1111/j.1469-185X.1954.tb01395.x",
-  "AU  - MARSHALL, A.J.",
-  "N1  - Cited By :9",
-  "N1  - Export Date: 1 January 2020",
-  "M3  - Article",
-  "DB  - Scopus",
+  "SN  - 2047-2382",
+  "UR  - https://doi.org/10.1186/s13750-019-0167-1",
+  "DO  - 10.1186/s13750-019-0167-1",
+  "ID  - Haddaway2019",
   "ER  - "
 )
 
@@ -56,5 +43,7 @@ delim <- detect_delimiter(file)
 
 read_medline(prep_ris(file, delim))
 
-read_ris(prep_ris(file, delim))
+ris <- read_ris(prep_ris(file, delim))
+
+write_ris(ris)
 }

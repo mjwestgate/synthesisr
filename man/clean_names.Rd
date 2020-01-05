@@ -7,11 +7,14 @@
 clean_names(x)
 }
 \arguments{
-\item{x}{a vector of column names}
+\item{x}{A string or vector of column names.}
 }
 \value{
-a cleaned vector of column names
+Returns the input vector with common issues resolved.
 }
 \description{
-Cleans messy column names from .csv imports such as extra punctuation.
+Cleans column names from imports such as extra punctuation.
+}
+\examples{
+clean_names(c(".title...", "X..YEAR", "authors.."))
 }

@@ -8,17 +8,37 @@ write_bibliography(x, format = "ris", write_file = FALSE,
   filename = NULL)
 }
 \arguments{
-\item{x}{a data.frame containing bibliographic information or an object of class bibliography}
+\item{x}{Either a data.frame containing bibliographic information or an object of class bibliography.}
 
-\item{format}{what format to export data as; options are "ris" or "bib"}
+\item{format}{What format should the data be exported as? Options are ris or bib.}
 
-\item{write_file}{if TRUE, saves the result to a text file in the working directory}
+\item{write_file}{If TRUE, saves the result to a text file in the working directory.}
 
-\item{filename}{if write_file is TRUE, the name of the file to be written}
+\item{filename}{If write_file is TRUE, the name of the file to be written.}
 }
 \value{
-a character vector containing bibliographic information in the specified format if write_file is FALSE
+Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
 }
 \description{
-Exports data.frames containing bibliographic information to either a .ris or .bib file.
+This function exports data.frames containing bibliographic information to either a .ris or .bib file.
+}
+\examples{
+bibfile <- c(
+  "@article{haddaway2019eviatlas,",
+  "title={EviAtlas: a tool for visualising evidence synthesis databases},",
+  "author={Haddaway, Neal R and Feierman, Andrew and Grainger, Matthew J
+  and Gray, Charles T and Tanriver-Ayder, Ezgi and Dhaubanjar, Sanita
+  and Westgate, Martin J},",
+  "journal={Environmental Evidence},",
+  "volume={8},",
+  "number={1},",
+  "pages={22},",
+  "year={2019},",
+  "publisher={BioMed Central}",
+"}"
+)
+
+bib <- read_bib(bibfile)
+
+write_bibliography(bib, format = "bib")
 }

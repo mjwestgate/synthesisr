@@ -15,8 +15,8 @@
 possible_langs
 }
 \description{
-A dataset of the languages that searches can be recognized
-by synthesisr along with their short form, character encoding,
+A dataset of the languages that can be recognized by
+synthesisr along with their short form, character encoding,
 and whether a scientific journal indexed in ulrich uses them.
 }
 \keyword{datasets}

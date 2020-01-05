@@ -33,10 +33,10 @@ format_citation(data, details = TRUE, abstract = FALSE,
 \item{...}{any other arguments.}
 }
 \value{
-a string of length == length(x), containing formatted citations.
+Returns a string of length equal to length(x) that contains formatted citations.
 }
 \description{
-takes an object of class data.frame or bibliography and returns a formatted citation.
+This function takes an object of class data.frame or bibliography and returns a formatted citation.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -47,3 +47,31 @@ takes an object of class data.frame or bibliography and returns a formatted cita
 \item \code{data.frame}: Format citation from a data.frame
 }}
 
+\examples{
+file <- c(
+  "TY  - JOUR",
+  "AU  - Haddaway, Neal R.",
+  "AU  - Feierman, Andrew",
+  "AU  - Grainger, Matthew J.",
+  "AU  - Gray, Charles T.",
+  "AU  - Tanriver-Ayder, Ezgi",
+  "AU  - Dhaubanjar, Sanita",
+  "AU  - Westgate, Martin J.",
+  "PY  - 2019",
+  "DA  - 2019/06/04",
+  "TI  - EviAtlas: a tool for visualising evidence synthesis databases",
+  "JO  - Environmental Evidence",
+  "SP  - 22",
+  "VL  - 8",
+  "IS  - 1",
+  "SN  - 2047-2382",
+  "UR  - https://doi.org/10.1186/s13750-019-0167-1",
+  "DO  - 10.1186/s13750-019-0167-1",
+  "ID  - Haddaway2019",
+  "ER  - "
+)
+
+delim <- detect_delimiter(file)
+citation <- read_ris(prep_ris(file, delim))
+format_citation(citation)
+}

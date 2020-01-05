@@ -7,13 +7,13 @@
 get_stopwords(language)
 }
 \arguments{
-\item{language}{a character vector containing the name of the language for which to retrieve stopwords}
+\item{language}{A character vector containing the name of the language for which to retrieve stopwords.}
 }
 \value{
-a character vector of stopwords
+Returns a character vector of stopwords.
 }
 \description{
-Returns a character vector of stopwords to use for a specified language
+This function retrieves stopwords to use for a specified language.
 }
 \examples{
 get_stopwords("English")

@@ -7,15 +7,15 @@
 rollingsum(a, n = 2L)
 }
 \arguments{
-\item{a}{a character vector}
+\item{a}{A string or character vector.}
 
-\item{n}{the number of previous detections to consider}
+\item{n}{Numeric: the window of previous detections to consider.}
 }
 \value{
-a number vector
+Returns a vector of numbers passed to detect_delimiter.
 }
 \description{
-Computes the rolling sum of detections; intended for use in detect_delimiter
+This function computes the rolling sum of detections; intended for use in detect_delimiter.
 }
 \examples{
 rollingsum(c(1,1,2,3,5))

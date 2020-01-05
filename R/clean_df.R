@@ -1,8 +1,9 @@
-#' Cleans data.frames into revtools format
+#' Cleans data.frames into synthesisr format
 #'
-#' @description Cleans column names and labels in data.frames into a format suitable for revtools applications.
-#' @param data a data.frame with bibliographic information
-#' @return a data.frame
+#' @description Cleans column names and labels in data.frames into a format suitable for synthesisr applications.
+#' @param data A data.frame with bibliographic information.
+#' @return Returns the input data.frame cleaned and standardized.
+#' @example inst/examples/clean_df.R
 clean_df <- function(data){
   colnames(data) <- synthesisr::clean_names(colnames(data))
   if(colnames(data)[1] != "label"){
@@ -18,35 +19,41 @@ clean_df <- function(data){
     }
   }
   if(any(colnames(data) == "author")){
-    data$author <- synthesisr::clean_author_delimiters(data$author)
+    data$author <- synthesisr::clean_authors(data$author)
   }
   return(data)
 }
 
 
-#' Detect author delimiters
+#' Standardize author delimiters
 #'
-#' @description Standardizes delimiters between author names.
-#' @param x a character vector of author names
-#' @return a cleaned up character vector of author names
-clean_author_delimiters <- function(x){
-  if(all(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
-    x <- gsub("\\sAND\\s|\\s&\\s", "\\sand\\s", x)
+#' @description This function standardizes delimiters between author names.
+#' @param x Either a string or a vector of author names.
+#' @return Returns the input vector with standardized delimiters.
+#' @examples clean_authors(c("Pullin AND Knight",  "Pullin & Knight"))
+clean_authors <- function(x){
+  if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
+    x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)
   }else{
-    x <- gsub(",(?=\\s[[:alpha:]]{2,})", " and", x, perl = TRUE)
+    x <- gsub(",(?=\\s[[:alpha:]]{2,})", " and ", x, perl = TRUE)
+  }
+  x <- gsub("\\s", " ", x)
+  if(any(grepl("  ", x))){
+    while(grepl("  ", x)){
+      x <- gsub("  ", " ", x)
+    }
   }
   return(x)
 }
 
-# function to create a string of named length in format "string_number" that sorts in correct order
-
 #' Create a string to sort in correct order
 #'
 #' @description Creates a string of named length in format "string_number" to index in correct order.
-#' @param string a character vector
-#' @param n the number of unique index values to create
-#' @param sep separator between string and number
-#' @return a character vector
+#' @param string A string to precede numbers in the index.
+#' @param n Numeric: the number of unique index values to create.
+#' @param sep A string to serve as the separator between the input string and number.
+#' @return A character vector in "string_number" format.
+#' @examples create_index(n=2)
 create_index <- function(string, n, sep = "_"){
   if(missing(string)){
     string <- "V"
@@ -74,9 +81,10 @@ create_index <- function(string, n, sep = "_"){
 
 #' Clean common issues with column names
 #'
-#' @description Cleans messy column names from .csv imports such as extra punctuation.
-#' @param x a vector of column names
-#' @return a cleaned vector of column names
+#' @description Cleans column names from imports such as extra punctuation.
+#' @param x A string or vector of column names.
+#' @return Returns the input vector with common issues resolved.
+#' @examples clean_names(c(".title...", "X..YEAR", "authors.."))
 clean_names <- function(
   x # colnames
 ){

@@ -7,13 +7,13 @@
 remove_numbers(text)
 }
 \arguments{
-\item{text}{the text from which to remove numbers}
+\item{text}{A character vector from which to remove numbers.}
 }
 \value{
-the input text with numbers removed
+Returns the input text with numbers removed.
 }
 \description{
-Removes numbers from a text
+Removes numbers from a text.
 }
 \examples{
 remove_numbers("11s0y6nt4he35si6sr")

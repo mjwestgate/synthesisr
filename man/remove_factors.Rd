@@ -7,13 +7,13 @@
 remove_factors(z)
 }
 \arguments{
-\item{z}{a data.frame}
+\item{z}{A data.frame}
 }
 \value{
-a data.frame with all factors converted to character
+Returns the input data.frame with all factors converted to character.
 }
 \description{
-converts factors to characters to avoid errors with levels
+This function converts factors to characters to avoid errors with levels.
 }
 \examples{
 remove_factors(list(as.factor(c("a", "b"))))

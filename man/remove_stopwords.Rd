@@ -7,15 +7,15 @@
 remove_stopwords(text, language)
 }
 \arguments{
-\item{text}{the text from which to remove stopwords}
+\item{text}{A character vector containing text from which to remove stopwords.}
 
-\item{language}{the language of the text}
+\item{language}{A string indicating the language of the text.}
 }
 \value{
-the text with stopwords removed
+Returns the input text with stopwords removed.
 }
 \description{
-Removes stopwords from text in user-specified language
+Removes stopwords from text in whichever language is specified.
 }
 \examples{
 remove_stopwords("On the Origin of Species", language="English")

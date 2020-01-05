@@ -1,10 +1,10 @@
 #' Bibliographic code lookup for search results assembly
 #'
-#' A data frame containing that can be used to look up
-#' common codes for different bibliographic fields
-#' across databases and merge them to a common format
+#' A data frame that can be used to look up common
+#' codes for different bibliographic fields across
+#' databases and merge them to a common format.
 #'
-#' @format A data frame with 207 obs of 3 variables
+#' @format A data frame with 207 obs of 4 variables
 #'
 #' \describe{
 #'  \item{code}{code used in search results}
@@ -16,8 +16,8 @@
 
 #' Languages codes synthesisr can recognize
 #'
-#' A dataset of the languages that searches can be recognized
-#' by synthesisr along with their short form, character encoding,
+#' A dataset of the languages that can be recognized by
+#' synthesisr along with their short form, character encoding,
 #' and whether a scientific journal indexed in ulrich uses them.
 #'
 #' @format A database with 53 rows of 4 variables:

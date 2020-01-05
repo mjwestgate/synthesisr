@@ -4,7 +4,7 @@
 \name{code_lookup}
 \alias{code_lookup}
 \title{Bibliographic code lookup for search results assembly}
-\format{A data frame with 207 obs of 3 variables
+\format{A data frame with 207 obs of 4 variables
 
 \describe{
  \item{code}{code used in search results}
@@ -15,8 +15,8 @@
 code_lookup
 }
 \description{
-A data frame containing that can be used to look up
-common codes for different bibliographic fields
-across databases and merge them to a common format
+A data frame that can be used to look up common
+codes for different bibliographic fields across
+databases and merge them to a common format.
 }
 \keyword{datasets}
