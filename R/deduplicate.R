@@ -1,4 +1,4 @@
-#' Remove duplicates from a bibliiographic data set
+#' Remove duplicates from a bibliographic data set
 #'
 #' @description Given a list of duplicate entries and a data set, this function extracts only unique references.
 #' @param x A data.frame containing bibliographic data.

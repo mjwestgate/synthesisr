@@ -108,7 +108,7 @@ write_ris <- function(x){
 #' @param filename If write_file is TRUE, the name of the file to be written.
 #' @return Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
 #' @example inst/examples/read_bib.R
-write_bibliography <- function(x, format = "ris", write_file=FALSE, filename=NULL){
+write_refs <- function(x, format = "ris", write_file=FALSE, filename=NULL){
 
 if(write_file==TRUE){
   if(missing(filename)){

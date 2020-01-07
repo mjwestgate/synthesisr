@@ -5,7 +5,7 @@
 #' @param match_variable A length-1 integer or string listing the column in which duplicates should be sought. Defaults to doi where available, followed by title. If neither are found the function will fail.
 #' @param group_vars An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.
 #' @param match_function The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches
-#' @param method A string indicating the method to use for fuzzdist.
+#' @param method A string indicating the method to use for fuzzdist or stringdist.
 #' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
 #' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates?
 #' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates?

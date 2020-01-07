@@ -4,9 +4,16 @@
 \alias{find_duplicates}
 \title{Detect duplicate values}
 \usage{
-find_duplicates(data, match_variable, group_vars = NULL,
-  match_function = c("stringdist", "fuzzdist", "exact"), method,
-  threshold = 5, to_lower = FALSE, rm_punctuation = FALSE)
+find_duplicates(
+  data,
+  match_variable,
+  group_vars = NULL,
+  match_function = c("stringdist", "fuzzdist", "exact"),
+  method,
+  threshold = 5,
+  to_lower = FALSE,
+  rm_punctuation = FALSE
+)
 }
 \arguments{
 \item{data}{A data.frame that contains duplicate bibliographic entries.}
@@ -17,7 +24,7 @@ find_duplicates(data, match_variable, group_vars = NULL,
 
 \item{match_function}{The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches}
 
-\item{method}{A string indicating the method to use for fuzzdist.}
+\item{method}{A string indicating the method to use for fuzzdist or stringdist.}
 
 \item{threshold}{Numeric: the cutoff threshold for stringdist or fuzzdist.}
 

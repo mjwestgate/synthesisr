@@ -1,3 +1,73 @@
+#' synthesisr: Import, Assemble, and Deduplicate Bibiliographic Datasets
+#'
+#' A description goes here
+#'
+#' @section Functions:
+#' \strong{Importing and cleaning bibliographic data}
+#' \itemize{
+#'  \item Import bibliographic datasets via \code{\link{read_refs}}
+#'    \itemize{
+#'      \item \code{\link{detect_filetype}} Detects file types
+#'      \item \code{\link{detect_format}} Detects if a file is bib-like or ris-like
+#'      \item \code{\link{detect_delimiter}} Detect delimiter type in ris files
+#'      \item \code{\link{read_ref}} Import an individual bibliographic dataset
+#'      \item \code{\link{parse_ris}} Parse a vector in ris format
+#'      \item \code{\link{parse_bib}} Parse a vector in bib format
+#'      \item \code{\link{parse_medline}} Parse a vector in medline format
+#'    }
+#'  \item Tag replacement for ris files
+#'    \itemize{
+#'      \item \code{\link{code_lookup}} provided as a data.frame
+#'      \item \code{\link{tag_lookup}} provided as a list
+#'    }
+#'  \item Clean column and author names via \code{\link{clean_df}}
+#'    \itemize{
+#'      \item \code{\link{clean_names}} Clean column names
+#'      \item \code{\link{clean_authors}} Clean author names
+#'    }
+#'  \item Indexing
+#'    \itemize{
+#'      \item \code{\link{create_index}} Create an ordered string
+#'      \item \code{\link{generate_ids}} Generate unique row IDs from bibliographic data
+#'   }
+#' }
+#'
+#' \strong{Internal data structures}
+#' \itemize{
+#'  \item \code{\link{as.bibliography}} Print, summary, as.bibliography, as.data.frame and [ methods for class 'bibliography'
+#'}
+#'
+#' \strong{Data manipulation}
+#' \itemize{
+#'  \item \code{\link{merge_columns}} rbind two data.frames with different numbers of columns
+#'  \item \code{\link{remove_factors}} Remove factors from a data.frame
+#'}
+#'
+#' \strong{Formatting}
+#' \itemize{
+#'  \item \code{\link{format_citation}} Return a clean citation from a bibliography or data.frame
+#'  \item \code{\link{add_line_breaks}} Set a maximum character width for strings in a vector
+#'}
+#'
+#'\strong{Text mining and duplicate detection}
+#'\itemize{
+#'  \item \code{\link{fuzz_functions}} Fuzzy string matching
+#'  \item \code{\link{find_duplicates}} Locate potentially duplicated references
+#'  \item \code{\link{deduplicate}} Return a data.frame with only 'unique' references
+#'}
+#'
+#'\strong{Export}
+#'\itemize{
+#'  \item \code{\link{write_refs}} Export bibliographic data. Bundles:
+#'    \itemize{
+#'      \item \code{\link{write_ris}} Export as ris
+#'      \item \code{\link{write_bib}} Export as bib
+#'  }
+#'}
+#'
+#' @docType package
+#' @name synthesisr
+
 # quiet no visible binding NOTEs
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
 

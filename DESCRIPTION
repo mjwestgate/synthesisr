@@ -1,6 +1,6 @@
 Package: synthesisr
 Type: Package
-Title: Import, Assemble, and Deduplicate Systematic Review Search Results
+Title: Import, Assemble, and Deduplicate Bibiliographic Datasets
 Version: 0.2.0
 Authors@R: c(
      person(
@@ -16,19 +16,19 @@ Authors@R: c(
     email = "martinjwestgate@gmail.com",
     comment = c(ORCID = "0000-0003-0854-2034")))
 Description: Systematic review searches include multiple databases
-    that export results in a variety of formats with overlap in 
+    that export results in a variety of formats with overlap in
     coverage between databases. To streamline the process of importing,
-    assembling, and deduplicating results, synthesisr recognizes 
+    assembling, and deduplicating results, synthesisr recognizes
     bibliographic files exported from databases commonly used for
-    systematic reviews and merges results into a standardized format. 
+    systematic reviews and merges results into a standardized format.
 License: GPL-3
 LazyData: true
-Imports: 
+Imports:
     stringdist
 Suggests:
     knitr,
     stopwords
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.1
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 Date: 2019-04-14

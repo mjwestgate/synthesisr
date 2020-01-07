@@ -3,6 +3,7 @@
 #' @description Cleans column names and labels in data.frames into a format suitable for synthesisr applications.
 #' @param data A data.frame with bibliographic information.
 #' @return Returns the input data.frame cleaned and standardized.
+#' @seealso [clean_authors()] and [clean_names()] for underlying functions.
 #' @example inst/examples/clean_df.R
 clean_df <- function(data){
   colnames(data) <- synthesisr::clean_names(colnames(data))
