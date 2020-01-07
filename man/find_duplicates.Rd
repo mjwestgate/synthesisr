@@ -7,10 +7,10 @@
 find_duplicates(
   data,
   match_variable,
-  group_vars = NULL,
-  match_function = c("stringdist", "fuzzdist", "exact"),
+  group_variables,
+  match_function,
   method,
-  threshold = 5,
+  threshold,
   to_lower = FALSE,
   rm_punctuation = FALSE
 )
@@ -20,7 +20,7 @@ find_duplicates(
 
 \item{match_variable}{A length-1 integer or string listing the column in which duplicates should be sought. Defaults to doi where available, followed by title. If neither are found the function will fail.}
 
-\item{group_vars}{An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.}
+\item{group_variables}{An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.}
 
 \item{match_function}{The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches}
 

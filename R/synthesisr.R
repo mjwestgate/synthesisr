@@ -10,15 +10,12 @@
 #'      \item \code{\link{detect_filetype}} Detects file types
 #'      \item \code{\link{detect_format}} Detects if a file is bib-like or ris-like
 #'      \item \code{\link{detect_delimiter}} Detect delimiter type in ris files
+#'      \item \code{\link{code_lookup}} Tag replacement for ris files
 #'      \item \code{\link{read_ref}} Import an individual bibliographic dataset
 #'      \item \code{\link{parse_ris}} Parse a vector in ris format
 #'      \item \code{\link{parse_bib}} Parse a vector in bib format
 #'      \item \code{\link{parse_medline}} Parse a vector in medline format
-#'    }
-#'  \item Tag replacement for ris files
-#'    \itemize{
-#'      \item \code{\link{code_lookup}} provided as a data.frame
-#'      \item \code{\link{tag_lookup}} provided as a list
+#'      \item \code{\link{as.bibliography}} Methods for class 'bibliography'
 #'    }
 #'  \item Clean column and author names via \code{\link{clean_df}}
 #'    \itemize{
@@ -32,11 +29,6 @@
 #'   }
 #' }
 #'
-#' \strong{Internal data structures}
-#' \itemize{
-#'  \item \code{\link{as.bibliography}} Print, summary, as.bibliography, as.data.frame and [ methods for class 'bibliography'
-#'}
-#'
 #' \strong{Data manipulation}
 #' \itemize{
 #'  \item \code{\link{merge_columns}} rbind two data.frames with different numbers of columns
@@ -49,7 +41,7 @@
 #'  \item \code{\link{add_line_breaks}} Set a maximum character width for strings in a vector
 #'}
 #'
-#'\strong{Text mining and duplicate detection}
+#'\strong{Deduplication}
 #'\itemize{
 #'  \item \code{\link{fuzz_functions}} Fuzzy string matching
 #'  \item \code{\link{find_duplicates}} Locate potentially duplicated references
