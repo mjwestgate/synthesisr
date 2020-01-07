@@ -14,12 +14,12 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
     features <- tolower(features)
   }
 
-    my_dictionary <- switch (closure,
-      "left" = {my_dictionary <- paste("\\b", features, sep="")},
-      "right" = {my_dictionary <- paste(features, "\\b", sep="")},
-      "full" = {my_dictionary <- paste("\\b", features, "\\b", sep="")},
-      "none" = {my_dictionary <- features}
-    )
+  my_dictionary <- switch (closure,
+                           "left" = {my_dictionary <- paste("\\b", features, sep="")},
+                           "right" = {my_dictionary <- paste(features, "\\b", sep="")},
+                           "full" = {my_dictionary <- paste("\\b", features, "\\b", sep="")},
+                           "none" = {my_dictionary <- features}
+  )
 
   dfm <- sapply(my_dictionary, grepl, x=elements)
   if(closure!="none"){
@@ -60,12 +60,12 @@ get_stopwords <- function(language){
 
   if(length(la_code) > 0){
 
-  if(la_code=="en"){stopwords <- stopwords::stopwords("en", source="smart")
-  } else if(any(stopwords::stopwords_getlanguages("snowball")==la_code)){
-    stopwords <- stopwords::stopwords(la_code, source="snowball")
-  } else if (any(stopwords::stopwords_getlanguages("stopwords-iso")==la_code)){
-    stopwords <- stopwords::stopwords(la_code, source="stopwords-iso")
-  } else {stop("The language you specified is not supported.")}
+    if(la_code=="en"){stopwords <- stopwords::stopwords("en", source="smart")
+    } else if(any(stopwords::stopwords_getlanguages("snowball")==la_code)){
+      stopwords <- stopwords::stopwords(la_code, source="snowball")
+    } else if (any(stopwords::stopwords_getlanguages("stopwords-iso")==la_code)){
+      stopwords <- stopwords::stopwords(la_code, source="stopwords-iso")
+    } else {stop("The language you specified is not supported.")}
   }
   return(stopwords)
 }
@@ -82,7 +82,7 @@ remove_stopwords <- function(text, language){
   stopwords <- synthesisr::get_stopwords(language)
   stopwords <- paste("\\b", stopwords, "\\b", sep="")
 
-# another for-loop that needs to be more efficient
+  # another for-loop that needs to be more efficient
   for(i in 1:length(stopwords)){
     text <- gsub(stopwords[i], " ", text)
   }
@@ -145,7 +145,7 @@ remove_punctuation <- function(text, remove_hyphens=FALSE){
 
   return(output)
 
-  }
+}
 
 
 
@@ -156,7 +156,7 @@ remove_punctuation <- function(text, remove_hyphens=FALSE){
 #' @return Returns the input text with numbers removed.
 #' @examples remove_numbers("11s0y6nt4he35si6sr")
 remove_numbers <- function(text){
-    output <- gsub("[[:digit:]]", "", text)
+  output <- gsub("[[:digit:]]", "", text)
 
   if(any(grepl("  ", output))){
     while(any(grepl("  ", output))){
