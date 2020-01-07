@@ -24,6 +24,10 @@ Description: Systematic review searches include multiple databases
 License: GPL-3
 LazyData: true
 Imports:
+    tm,
+    udpipe,
+    ngram,
+    slam,
     stringdist
 Suggests:
     knitr,
