@@ -90,7 +90,7 @@ read_ref <- function(
   )
 
   if(!inherits(df, "data.frame") & return_df){
-    df <- synthesisr::as.data.frame(df)
+    df <- as.data.frame(df)
     df <- synthesisr::clean_df(df)
   }
 
@@ -447,11 +447,11 @@ generate_ids <- function(x){
 #' @example inst/examples/read_medline.R
 parse_ris <- function(x){
 
-  x <- prep_ris(x, detect_delimiter(x))
+  x <- prep_ris(x, synthesisr::detect_delimiter(x))
 
   # merge data with lookup info, to provide bib-style tags
   x_merge <- merge(x,
-    code_lookup, # tag_lookup(type = "medline"),
+    synthesisr::code_lookup, # tag_lookup(type = "medline"),
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,

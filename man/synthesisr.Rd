@@ -3,6 +3,7 @@
 \docType{package}
 \name{synthesisr}
 \alias{synthesisr}
+\alias{synthesisr-package}
 \title{synthesisr: Import, Assemble, and Deduplicate Bibiliographic Datasets}
 \description{
 A description goes here

@@ -92,7 +92,7 @@ write_ris <- function(x){
     c(paste(b$ris, b$entry, sep = "  - "), "")
 
   },
-  lookup = tag_lookup(type = "ris_write")[, 1:2]
+  lookup = synthesisr::code_lookup[, c(1,3)]
   )
 
   export <- do.call(c, result)
