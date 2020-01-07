@@ -47,10 +47,10 @@ language_code <- function(language){
 #' Retrieve stopwords for a given language
 #'
 #' @description This function retrieves stopwords to use for a specified language.
-#' @param language A character vector containing the name of the language for which to retrieve stopwords.
+#' @param language A character vector containing the name of the language for which to retrieve stopwords. Defaults to "English"
 #' @return Returns a character vector of stopwords.
 #' @examples get_stopwords("English")
-get_stopwords <- function(language){
+get_stopwords <- function(language = "English"){
   if(!requireNamespace("stopwords")){
     stop("Package 'stopwords' needed for this function to work. Please install it.")
   }
