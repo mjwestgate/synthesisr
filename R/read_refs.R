@@ -81,35 +81,18 @@ read_ref <- function(
 
   file_type <- synthesisr::detect_filetype(filename)
 
-  if(file_type == "unknown"){
-    stop("File type not recognized")
-  }else{
-
-    ## if it is something obvious, then import right away
-    if(file_type == "bib"){
-      df <- synthesisr::parse_bib(readLines(filename))
-      # df <- synthesisr::as.data.frame.bibliography(df)
-    }
-
-    if(file_type == "txt"){
-      df <- read.delim(filename, row.names = NULL)
-      df <- synthesisr::match_columns(df)
-      df <- synthesisr::clean_df(df)
-    }
-
-    ## if it is ris, then clean and prep it first
-    if(file_type == "ris"){
-      z <- readLines(filename)
-
-      if(length(which(grepl("PMID", z))) > 0){
-        df <- parse_medline(z)
-      }else{
-        df <- parse_ris(file_type)
-      }
-    }
+    df <- switch(file_type,
+      "txt" = {synthesisr::match_columns(read.delim(filename, row.names = NULL))},
+      "bib" = {synthesisr::parse_bib(readLines(filename))},
+      "nbib" = {synthesisr::parse_medline(readLines(filename))},
+      "ris" = {synthesisr::parse_ris(readLines(filename, tag_type = "ris"))},
+      "ciw" = {synthesisr::parse_ris(readLines(filename, tag_type = "wos"))},
+      "unknown" = {stop("File type not recognized")}
+    )
 
     if(!inherits(df, "data.frame") & return_df){
       df <- synthesisr::as.data.frame(df)
+      df <- synthesisr::clean_df(df)
     }
 
     return(df)
@@ -126,12 +109,7 @@ read_ref <- function(
 detect_filetype <- function(filename) {
   file_type <- ""
   file_extension_lookup <- regexpr(".[[:alnum:]]{2,}$", filename)
-  file_type <-
-    substr(filename, file_extension_lookup + 1, nchar(filename))
-
-  if(file_type == "nbib") {
-    file_type <- "ris"
-  }
+  file_type <- substr(filename, file_extension_lookup + 1, nchar(filename))
 
   if(!any(c("ris", "bib") == file_type)) {
     if(ncol(read.delim(filename, sep = "\t", row.names = NULL)) == 1) {
@@ -140,7 +118,7 @@ detect_filetype <- function(filename) {
       file_type <- "txt"
     }
   }
-  if(!any(c("ris", "bib", "txt") == file_type)) {
+  if(!any(c("ris", "bib", "txt", "ciw", "nbib") == file_type)) {
     file_type <- "unknown"
     print(paste("Note: file type for", filename, "not recognized."))
   }
@@ -158,7 +136,7 @@ detect_format <- function(x){
   n_brackets <- length(grep("\\{", x))
   n_dashes <- length(grep(" - ", x))
   if(n_brackets > nrows/3 | n_dashes>nrows/3){
-    if(n_brackets>n_dashes){
+    if(n_brackets > n_dashes){
       file_type <- "bib"
     }else{file_type <- "ris"}
   }else{file_type <- "unknown"}
@@ -252,7 +230,7 @@ prep_ris <- function(
 ){
   # detect tags
   tags <- regexpr(
-    "^([[:upper:]]{2,4}|[[:upper:]]{1}[[:digit:]]{1})\\s{1,}-\\s{0,}",
+    "^([[:upper:]]{2,4}|[[:upper:]]{1}[[:digit:]]{1})\\s{0,}-{0,2}\\s{0,}",
     perl = TRUE,
     z
   )
@@ -274,7 +252,7 @@ prep_ris <- function(
       )
     }else{
       result <- data.frame(
-        ris = sub("\\s{1,}-\\s{0,}", "", substr(a$text, 1, n)),
+        ris = sub("\\s{0,}-\\s{0,}|^\\s+|\\s+$", "", substr(a$text, 1, n)),
         text = gsub("^\\s+|\\s+$", "", substr(a$text, n+1, nchar(a$text))),
         row_order = a$row,
         stringsAsFactors = FALSE
@@ -342,6 +320,7 @@ prep_ris <- function(
   ) # split by reference
   z_dframe <- z_dframe[which(z_dframe$text != ""), ] # remove empty rows
   z_dframe <- z_dframe[which(z_dframe$ris != "ER"), ] # remove end rows
+  z_dframe$text <- trimws(z_dframe$text)
 
   # fill missing tags
   z_split <- split(z_dframe, z_dframe$ref)
@@ -374,15 +353,15 @@ prep_ris <- function(
 #' @example inst/examples/read_medline.R
 parse_medline <- function(x){
 
-  x <- prep_ris(x)
-  names(x)[3] <- "order"
+  x <- prep_ris(x, detect_delimiter(x))
+
   x_merge <- merge(x,
                    tag_lookup(type = "medline"),
                    by = "ris",
                    all.x = TRUE,
                    all.y = FALSE
   )
-  x_merge <- x_merge[order(x_merge$order), ]
+  x_merge <- x_merge[order(x_merge$row_order), ]
 
   # convert into a list, where each reference is a separate entry
   x_split <- split(x_merge[c("bib", "text")], x_merge$ref)
@@ -466,27 +445,28 @@ generate_ids <- function(x){
 #' @param x A character vector containing bibliographic information in ris format.
 #' @return Returns an object of class bibliography.
 #' @example inst/examples/read_medline.R
-parse_ris <- function(x){
+parse_ris <- function(x, tag_type = "ris"){
 
-  x <- prep_ris(x)
+  x <- prep_ris(x, detect_delimiter(x))
 
   # merge data with lookup info, to provide bib-style tags
-  x_merge <- merge(x, tag_lookup(type = "ris"),
-                   by = "ris",
-                   all.x = TRUE,
-                   all.y = FALSE)
+  x_merge <- merge(x,
+    tag_lookup(type = tag_type),
+    by = "ris",
+    all.x = TRUE,
+    all.y = FALSE)
   x_merge <- x_merge[order(x_merge$row_order), ]
 
   # find a way to store missing .bib data rather than discard
   if(any(is.na(x_merge$bib))){
     rows_tr <- which(is.na(x_merge$bib))
     x_merge$bib[rows_tr] <- x_merge$ris[rows_tr]
-    if(all(is.na(x_merge$order))){
+    if(all(is.na(x_merge$row_order))){
       start_val <- 0
     }else{
-      start_val <- max(x_merge$order, na.rm = TRUE)
+      start_val <- max(x_merge$row_order, na.rm = TRUE)
     }
-    x_merge$order[rows_tr] <- as.numeric(
+    x_merge$row_order[rows_tr] <- as.numeric(
       as.factor(x_merge$ris[rows_tr])
     ) + start_val
   }
@@ -529,7 +509,7 @@ parse_ris <- function(x){
         year_tag <- tag_frequencies$tag[which.max(tag_frequencies$prop)]
         rows.tr <- which(x_merge$ris == year_tag)
         x_merge$bib[rows.tr] <- "year"
-        x_merge$order[rows.tr] <- 3
+        x_merge$row_order[rows.tr] <- 3
         # the following code was necessary when string >4 characters long were detected
         # x_merge$text[rows.tr] <- substr(
         #   x = x_merge$text[rows.tr],
@@ -547,7 +527,7 @@ parse_ris <- function(x){
   # if(any(doi_check > 0)){
   # 	check_rows <- which(doi_check > 0)
   # 	x_merge$bib[check_rows] <- "doi"
-  # 	x_merge$order[check_rows] <- 11
+  # 	x_merge$row_order[check_rows] <- 11
   # 	x_merge$text[check_rows] <- substr(
   #     x = x_merge$text[check_rows],
   # 		start = doi_check[check_rows]+1,
@@ -562,12 +542,12 @@ parse_ris <- function(x){
       replace_tags <- names(which(lookup.tags < max(lookup.tags)))
       replace_rows <- which(x_merge$ris %in% replace_tags)
       x_merge$bib[replace_rows] <- x_merge$ris[replace_rows]
-      if(all(is.na(x_merge$order))){
+      if(all(is.na(x_merge$row_order))){
         start_val <- 0
       }else{
-        start_val <- max(x_merge$order, na.rm = TRUE)
+        start_val <- max(x_merge$row_order, na.rm = TRUE)
       }
-      x_merge$order[replace_rows] <- start_val + as.numeric(
+      x_merge$row_order[replace_rows] <- start_val + as.numeric(
         as.factor(x_merge$ris[replace_rows])
       )
     }
