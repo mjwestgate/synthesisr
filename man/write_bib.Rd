@@ -16,22 +16,30 @@ Returns a character vector containing references in .bib format.
 This is a subfunction of write_bibliography to convert an object of class bibliography to .bib text format.
 }
 \examples{
-bibfile <- c(
-  "@article{haddaway2019eviatlas,",
-  "title={EviAtlas: a tool for visualising evidence synthesis databases},",
-  "author={Haddaway, Neal R and Feierman, Andrew and Grainger, Matthew J
-  and Gray, Charles T and Tanriver-Ayder, Ezgi and Dhaubanjar, Sanita
-  and Westgate, Martin J},",
-  "journal={Environmental Evidence},",
-  "volume={8},",
-  "number={1},",
-  "pages={22},",
-  "year={2019},",
-  "publisher={BioMed Central}",
-"}"
+file <- c(
+  "TY  - JOUR",
+  "AU  - Haddaway, Neal R.",
+  "AU  - Feierman, Andrew",
+  "AU  - Grainger, Matthew J.",
+  "AU  - Gray, Charles T.",
+  "AU  - Tanriver-Ayder, Ezgi",
+  "AU  - Dhaubanjar, Sanita",
+  "AU  - Westgate, Martin J.",
+  "PY  - 2019",
+  "DA  - 2019/06/04",
+  "TI  - EviAtlas: a tool for visualising evidence synthesis databases",
+  "JO  - Environmental Evidence",
+  "SP  - 22",
+  "VL  - 8",
+  "IS  - 1",
+  "SN  - 2047-2382",
+  "UR  - https://doi.org/10.1186/s13750-019-0167-1",
+  "DO  - 10.1186/s13750-019-0167-1",
+  "ID  - Haddaway2019",
+  "ER  - "
 )
 
-bib <- read_bib(bibfile)
-
-write_bibliography(bib, format = "bib")
+detect_format(file) # = "parse_ris"
+df <- as.data.frame(parse_ris(file))
+write_refs(df)
 }
