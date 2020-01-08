@@ -94,3 +94,5 @@ remove_factors <- function(z){
 rollingsum <- function(a, n = 2L){
   tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
 }
+
+

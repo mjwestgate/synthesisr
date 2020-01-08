@@ -84,8 +84,6 @@ get_stopwords <- function(language = "English"){
   return(stopwords)
 }
 
-dumb_function <- function(x){print("why arent functions building")}
-
 #' Remove stopwords from text
 #'
 #' @description Removes stopwords from text in whichever language is specified.
