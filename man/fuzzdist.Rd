@@ -8,8 +8,12 @@
 \alias{fuzz_token_set_ratio}
 \title{Detect duplicates with fuzzy matching}
 \usage{
-fuzzdist(a, b, method = c("fuzz_m_ratio", "fuzz_partial_ratio",
-  "fuzz_token_sort_ratio", "fuzz_token_set_ratio"))
+fuzzdist(
+  a,
+  b,
+  method = c("fuzz_m_ratio", "fuzz_partial_ratio", "fuzz_token_sort_ratio",
+    "fuzz_token_set_ratio")
+)
 
 fuzz_m_ratio(a, b)
 

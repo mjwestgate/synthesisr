@@ -21,7 +21,21 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
                            "none" = {my_dictionary <- features}
   )
 
-  dfm <- sapply(my_dictionary, grepl, x=elements)
+  count_detections <- function(x, words) {
+    detections <- sapply(words, grepl, x = unlist(strsplit(x, " ")))
+
+    if(!is.null(dim(detections))){
+      counts <- colSums(detections)
+    }else{
+      counts <- as.numeric(detections)
+      names(counts) <- names(detections)
+    }
+    return(counts)
+  }
+  dfm <- t(sapply(lapply(elements, count_detections, words=my_dictionary), rbind))
+  colnames(dfm) <- my_dictionary
+  rownames(dfm) <- synthesisr::generate_ids(elements)
+
   if(closure!="none"){
     colnames(dfm) <- gsub("\\\\b", "", colnames(dfm))
   }
@@ -70,6 +84,8 @@ get_stopwords <- function(language){
   return(stopwords)
 }
 
+dumb_function <- function(x){print("why arent functions building")}
+
 #' Remove stopwords from text
 #'
 #' @description Removes stopwords from text in whichever language is specified.
@@ -102,7 +118,6 @@ remove_stopwords <- function(text, language){
 get_tokens <- function(text, language){
   text <- tolower(text)
   text <- synthesisr::remove_stopwords(text=text, language=language)
-  text <- synthesisr::remove_punctuation(text)
   tokens <- strsplit(text, " ")[[1]]
   if(any(is.na(tokens))){
     tokens <- tokens[-is.na(tokens)]
@@ -128,7 +143,7 @@ get_tokens <- function(text, language){
 #' @examples remove_punctuation("#s<<<//<y>!&^n$$t/>h%e&s$is#!++r!//")
 remove_punctuation <- function(text, remove_hyphens=FALSE){
   if(remove_hyphens==TRUE){output <- gsub("[[:punct:]]", "\\1", text)}else{
-    output <- gsub("([-])|[[:punct:]]", "\\1", text)
+    output <- gsub("([-‐])|[[:punct:]]", "\\1", text)
   }
 
   if(any(grepl(" -", output))){
@@ -167,3 +182,57 @@ remove_numbers <- function(text){
   return(output)
 
 }
+
+
+get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words){
+
+  if (missing(stop_words)) {stop_words <- stopwords::stopwords(source="stopwords-iso")}
+
+    ngram_x <- x[!is.na(x)]
+    ngram_x <- ngram_x[unlist(lapply(ngram_x, ngram::wordcount)) >= n]
+    if (length(ngram_x) > 0) {
+      ngrams <- ngram::get.phrasetable(ngram::ngram(ngram_x))
+
+      if(!is.null(min_freq)){
+        ngrams <- ngrams[ngrams$freq >= min_freq,]
+      }else if(!is.null(ngram_quantile)){
+        ngrams <- ngrams[ngrams$freq > stats::quantile(ngrams$freq,
+                                                       ngram_quantile),]
+      }
+
+      ##!!! some kind of cutoff method switch
+
+      if (nrow(ngrams) > 0) {
+        ngram_list <- strsplit(ngrams$ngrams, " ")
+
+        ngram_df <- as.data.frame(do.call(rbind, ngram_list),
+                                  stringsAsFactors = FALSE)
+
+        keep_rows <- apply(ngram_df[, 1:2], 1, function(a,
+                                                        sw) {
+          all(nchar(a) > 4) & !any(a %in% sw)
+        }, sw = stop_words)
+        if (any(keep_rows)) {
+          ngram_df <- ngram_df[keep_rows,]
+          }
+        }
+    }
+    ngrams <- apply(ngram_df, 1, function(a) {
+      paste(a, collapse = " ")
+    })
+    ngrams <- synthesisr::remove_punctuation(ngrams, remove_hyphens = FALSE)
+    return(ngrams)
+    }
+
+
+replace_ngrams <- function(x, ngrams){
+  replacement_text <- gsub(" ", "_", ngrams)
+  for (i in seq_along(ngrams)) {
+    x <- gsub(ngrams[i], replacement_text[i],
+              x)
+  }
+  return(x)
+}
+
+
+

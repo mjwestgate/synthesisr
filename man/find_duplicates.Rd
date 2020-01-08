@@ -4,8 +4,16 @@
 \alias{find_duplicates}
 \title{Detect duplicate values}
 \usage{
-find_duplicates(data, match_variable, group_variables, match_function,
-  method, threshold, to_lower = FALSE, rm_punctuation = FALSE)
+find_duplicates(
+  data,
+  match_variable,
+  group_variables,
+  match_function,
+  method,
+  threshold,
+  to_lower = FALSE,
+  rm_punctuation = FALSE
+)
 }
 \arguments{
 \item{data}{A data.frame that contains duplicate bibliographic entries.}
