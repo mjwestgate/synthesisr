@@ -3,7 +3,7 @@
 #' @description This is a subfunction of write_bibliography to convert an object of class bibliography to .bib text format.
 #' @param x An object of class bibliography.
 #' @return Returns a character vector containing references in .bib format.
-#' @example inst/examples/read_bib.R
+#' @example inst/examples/parse_ris.R
 write_bib <- function(x){
   # process basic text
   result <- lapply(x, function(a){
@@ -45,7 +45,7 @@ write_bib <- function(x){
 #' @description This is a subfunction of write_bibliography to convert an object of class bibliography to .ris text format.
 #' @param x An object of class bibliography.
 #' @return Returns a character vector containing references in .ris format.
-#' @example inst/examples/read_medline.R
+#' @example inst/examples/parse_ris.R
 write_ris <- function(x){
 
   result <- lapply(x, function(a, lookup){
@@ -107,7 +107,7 @@ write_ris <- function(x){
 #' @param write_file If TRUE, saves the result to a text file in the working directory.
 #' @param filename If write_file is TRUE, the name of the file to be written.
 #' @return Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
-#' @example inst/examples/read_bib.R
+#' @example inst/examples/parse_ris.R
 write_refs <- function(x, format = "ris", write_file=FALSE, filename=NULL){
 
 if(write_file==TRUE){

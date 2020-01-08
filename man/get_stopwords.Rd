@@ -4,10 +4,10 @@
 \alias{get_stopwords}
 \title{Retrieve stopwords for a given language}
 \usage{
-get_stopwords(language)
+get_stopwords(language = "English")
 }
 \arguments{
-\item{language}{A character vector containing the name of the language for which to retrieve stopwords.}
+\item{language}{A character vector containing the name of the language for which to retrieve stopwords. Defaults to "English"}
 }
 \value{
 Returns a character vector of stopwords.

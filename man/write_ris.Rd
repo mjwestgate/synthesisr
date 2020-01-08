@@ -39,11 +39,7 @@ file <- c(
   "ER  - "
 )
 
-delim <- detect_delimiter(file)
-
-read_medline(prep_ris(file, delim))
-
-ris <- read_ris(prep_ris(file, delim))
-
-write_ris(ris)
+detect_format(file) # = "parse_ris"
+df <- as.data.frame(parse_ris(file))
+write_refs(df)
 }

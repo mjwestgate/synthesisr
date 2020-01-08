@@ -12,8 +12,6 @@ read_refs <- function(
   verbose = TRUE
 ){
 
-  # the following code is an exact duplicate of 'read_bibliography'
-  # It allows import of a single file or multiple files.
   invisible(Sys.setlocale("LC_ALL", "C"))
   on.exit(invisible(Sys.setlocale("LC_ALL", "")))
 
@@ -33,10 +31,11 @@ read_refs <- function(
     )
     names(result_list) <- filename
 
-  # drop any unrecognized file types
-  if(any(unlist(lapply(result_list, is.null)))){
-    result_list <- result_list[-which(unlist(lapply(result_list, is.null)))]
-  }
+    # drop any unrecognized file types
+    null_check <- unlist(lapply(result_list, is.null))
+    if(any(null_check)){
+      result_list <- result_list[-which(null_check)]
+    }
 
     if(return_df){
       result <- synthesisr::merge_columns(result_list)
@@ -55,7 +54,8 @@ read_refs <- function(
       result <- do.call(c, result_list)
       return(result)
     }
-  }else{
+
+  }else{ # i.e. if onely one filename given
     return(
       synthesisr::read_ref(filename, return_df)
     )
@@ -76,126 +76,32 @@ read_ref <- function(
   verbose = TRUE
 	){
 
-  # start by detecting file extension
-  ## converted this to a function that also wraps up detecting bib vs ris and ignoring unrecognizable things
-  file_type <- synthesisr::detect_filetype(filename)
+  if(verbose){cat(paste0("Reading file ", filename, " ... "))}
+  x <- readLines(filename, warn = FALSE)
 
-  df <- switch(file_type,
-    "txt" = {synthesisr::match_columns(read.delim(filename, row.names = NULL))},
-    "bib" = {synthesisr::parse_bib(readLines(filename))},
-    "nbib" = {synthesisr::parse_medline(readLines(filename))},
-    "ris" = {synthesisr::parse_ris(readLines(filename))},
-    "ciw" = {synthesisr::parse_ris(readLines(filename))},
-    "unknown" = {stop("File type not recognized")}
-  )
-
+<<<<<<< HEAD
   if(!inherits(df, "data.frame") & return_df){
     df <- as.data.frame(df)
     df <- synthesisr::clean_df(df)
   }
+=======
+  parse_function <- detect_format(x[1:min(c(length(x), 200))])
+>>>>>>> 4164f915b33f617b23397c61a6f20ae795e526cc
 
-  return(df)
-}
+  if(parse_function != "unknown"){
 
+    df <- do.call(parse_function, list(x = x))
 
-#' Detects file types
-#'
-#' @description Because different file types require different import strategies, this function detects the input file type.
-#' @param filename A path to a file.
-#' @return Returns a character vector with the likely file type based on the file extension and content.
-#' @example inst/examples/filetype.R
-detect_filetype <- function(filename) {
-  file_type <- ""
-  file_extension_lookup <- regexpr(".[[:alnum:]]{2,}$", filename)
-  file_type <- substr(filename, file_extension_lookup + 1, nchar(filename))
-
-  if(!any(c("ris", "bib") == file_type)) {
-    if(ncol(read.delim(filename, sep = "\t", row.names = NULL)) == 1) {
-      file_type <- synthesisr::detect_format(readLines(filename))
-    }else{
-      file_type <- "txt"
+    if(!inherits(df, "data.frame") & return_df){
+      df <- as.data.frame(df)
+      df <- synthesisr::clean_df(df)
     }
-  }
-  if(!any(c("ris", "bib", "txt", "ciw", "nbib") == file_type)) {
-    file_type <- "unknown"
-    print(paste("Note: file type for", filename, "not recognized."))
-  }
-  return(file_type)
-}
 
-#' Detects if a file is bib-like or ris-like
-#'
-#' @description Because bibliographic data  can be stored in multiple file types, this function determines if the format of text is more bib-like or ris-like.
-#' @param x A character vector containing bibliographic data.
-#' @return Returns the format of a file: either bib, ris, or unknown.
-#' @example inst/examples/bibvris.R
-detect_format <- function(x){
-  nrows <- min(c(200, length(x)))
-  n_brackets <- length(grep("\\{", x))
-  n_dashes <- length(grep(" - ", x))
-  if(n_brackets > nrows/3 | n_dashes>nrows/3){
-    if(n_brackets > n_dashes){
-      file_type <- "bib"
-    }else{file_type <- "ris"}
-  }else{file_type <- "unknown"}
-  return(file_type)
-}
+    if(verbose){cat("done\n")}
 
-#' Matches imported data to reference codes
-#'
-#' @description Takes an imported data.frame and rearranges it to match lookup codes.
-#' @param df A data.frame that contains bibliographic information.
-#' @return Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
-#' @example inst/examples/match_columns.R
-match_columns <- function(df){
-  # figure out which columns match known tags
-  hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
-
-  # rearrange data in standard(ish) order
-  if(any(is.na(hits))){
-    newdat <- df[, hits[!is.na(hits)]]
-  }else{newdat <- df[,hits]}
-
-  # retain columns even if they did not match lookup
-  newcolnames <- synthesisr::code_lookup$field[match(colnames(newdat), synthesisr::code_lookup$code)]
-  newcolnames[which(is.na(newcolnames) | newcolnames=="")] <- colnames(newdat)[which(is.na(newcolnames) | newcolnames=="")]
-  colnames(newdat) <- newcolnames
-
-  # drop duplicate columns that matched more than one tag
-  newdat <- newdat[,-which(duplicated(colnames(newdat)))]
-
-  return(newdat)
-}
-
-
-#' Remove factors from an object
-#'
-#' @description This function converts factors to characters to avoid errors with levels.
-#' @param z A data.frame
-#' @return Returns the input data.frame with all factors converted to character.
-#' @examples remove_factors(list(as.factor(c("a", "b"))))
-remove_factors <- function(z){
-  z[] <- lapply(z, function(x){
-    if(is.factor(x)){as.character(x)}else{x}
-  })
-  return(z)
-}
-
-# This function computes the rolling sum of detections; intended for use in detect_delimiter.
-rollingsum <- function(a, n = 2L){
-  tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
-}
-
-#' Detect delimiter type in bibliographic files
-#'
-#' @description The delimiter in bibliographic files is often an endrow, a special character, or a space. This function detects which delimiter, if any, a file uses.
-#' @param x A character vector containing bibliographic data.
-#' @return Returns the delimiter type used in a file.
-#' @example inst/examples/detect_delimiter.R
-detect_delimiter <- function(x){
-  if(any(grepl("^ER", x))){
-    delimiter <- "endrow"
+    return(df)
   }else{
+<<<<<<< HEAD
     # special break: same character repeated >6 times, no other characters
     char_list <- strsplit(x, "")
     char_break_test <- unlist(
@@ -472,294 +378,9 @@ parse_ris <- function(x){
     x_merge$row_order[rows_tr] <- as.numeric(
       as.factor(x_merge$ris[rows_tr])
     ) + start_val
+=======
+    warning(paste("file type not recognised for ", filename, " - skipping"))
+>>>>>>> 4164f915b33f617b23397c61a6f20ae795e526cc
   }
-
-  # method to systematically search for year data
-  year_check <- regexpr("^\\d{4}$", x_merge$text)
-  if(any(year_check > 0)){
-    check_rows <- which(year_check > 0)
-    year_strings <- as.numeric(x_merge$text[check_rows])
-
-    # for entries with a bib entry labelled year, check that there arent multiple years
-    if(any(x_merge$description[check_rows] == "year", na.rm = TRUE)){
-      # check for repeated year information
-      year_freq <- xtabs(~ ref, data = x_merge[which(x_merge$description == "year"), ])
-      if(any(year_freq > 1)){
-        year_df <- x_merge[which(x_merge$description == "year"), ]
-        year_list <- split(nchar(year_df$text), year_df$ris)
-        year_4 <- sqrt((4 - unlist(lapply(year_list, mean))) ^ 2)
-        # rename bib entries that have >4 characters to 'year_additional'
-        incorrect_rows <- which(
-          x_merge$ris != names(which.min(year_4)[1]) &
-            x_merge$description == "year"
-        )
-        x_merge$description[incorrect_rows] <- "year_additional"
-      }
-    }else{
-      possible_rows <- which(
-        year_strings > 0 &
-          year_strings <= as.numeric(format(Sys.Date(), "%Y")) + 1
-      )
-      tag_frequencies <- as.data.frame(
-        xtabs(~ x_merge$ris[check_rows[possible_rows]]),
-        stringsAsFactors = FALSE
-      )
-      colnames(tag_frequencies) <- c("tag", "n")
-      # now work out what proportion of each tag contain year data
-      # compare against number of references to determine likelihood of being 'the' year tag
-      tag_frequencies$prop <- tag_frequencies$n/(max(x_merge$ref)+1) # number of references
-      if(any(tag_frequencies$prop > 0.9)){
-        year_tag <- tag_frequencies$tag[which.max(tag_frequencies$prop)]
-        rows.tr <- which(x_merge$ris == year_tag)
-        x_merge$description[rows.tr] <- "year"
-        x_merge$row_order[rows.tr] <- 3
-        # the following code was necessary when string >4 characters long were detected
-        # x_merge$text[rows.tr] <- substr(
-        #   x = x_merge$text[rows.tr],
-        #   start = year_check[rows.tr],
-        #   stop = year_check[rows.tr]+3
-        # )
-      }
-    }
-  }
-
-  # use code from blog.datacite.org for doi detection
-  # then return a consistent format - i.e. no www.dx.doi.org/ etc.
-  # regexpr("/^10.d{4,9}/[-._;()/:A-Z0-9]+$/i", test) # original code
-  # doi_check <- regexpr("/10.\\d{4,9}/", x_merge$text) # my version
-  # if(any(doi_check > 0)){
-  # 	check_rows <- which(doi_check > 0)
-  # 	x_merge$description[check_rows] <- "doi"
-  # 	x_merge$row_order[check_rows] <- 11
-  # 	x_merge$text[check_rows] <- substr(
-  #     x = x_merge$text[check_rows],
-  # 		start = doi_check[check_rows]+1,
-  # 		stop = nchar(x_merge$text[check_rows])
-  #   )
-  # }
-
-  # ensure author data from a single ris tag
-  if(any(x_merge$description == "author")){
-    lookup.tags <- xtabs( ~ x_merge$ris[which(x_merge$description == "author")])
-    if(length(lookup.tags) > 1){
-      replace_tags <- names(which(lookup.tags < max(lookup.tags)))
-      replace_rows <- which(x_merge$ris %in% replace_tags)
-      x_merge$description[replace_rows] <- x_merge$ris[replace_rows]
-      if(all(is.na(x_merge$row_order))){
-        start_val <- 0
-      }else{
-        start_val <- max(x_merge$row_order, na.rm = TRUE)
-      }
-      x_merge$row_order[replace_rows] <- start_val + as.numeric(
-        as.factor(x_merge$ris[replace_rows])
-      )
-    }
-  }
-
-  # convert into a list, where each reference is a separate entry
-  x_split <- split(x_merge[c("description", "ris", "text", "order")], x_merge$ref)
-
-  # convert to list format
-  x_final <- lapply(x_split, function(a){
-    result <- split(a$text, a$description)
-    # YEAR
-    if(any(names(result) == "year")){
-      if(any(nchar(result$year) >= 4)){
-        year_check <- regexpr("\\d{4}", result$year)
-        if(any(year_check > 0)){
-          result$year <- substr(
-            x = result$year[which(year_check>0)],
-            start = year_check[1],
-            stop = year_check[1]+3
-          )
-        }else{
-          result$year <- ""
-        }
-      }else{
-        result$year <- ""
-      }
-    }
-    # TITLE
-    if(any(names(result) == "title")){
-      if(length(result$title) > 1){
-        if(result$title[1] == result$title[2]){
-          result$title <- result$title[1]
-        }else{
-          result$title <- paste(result$title, collapse = " ")
-        }
-      }
-      result$title <- gsub("\\s+", " ", result$title) # remove multiple spaces
-      result$title <- sub("\\.$", "", result$title) # remove final full stops
-    }
-    # JOURNAL
-    if(any(names(result) == "journal")){
-      unique_journals <- unique(result$journal)
-      if(length(unique_journals)>1){
-        unique_journals <- unique_journals[order(
-          nchar(unique_journals),
-          decreasing = FALSE
-        )]
-        result$journal <- unique_journals[1]
-        result$journal_secondary <- paste(
-          unique_journals[c(2:length(unique_journals))],
-          collapse = "; "
-        )
-      }else{
-        result$journal <- unique_journals
-      }
-      result$journal <-gsub("  ", " ", result$journal)
-      result$journal <-sub("\\.$", "", result$journal)
-    }
-    # ABSTRACT
-    if(length(result$abstract > 1)){
-      result$abstract <- paste(result$abstract, collapse = " ")
-      result$abstract <- gsub("\\s+", " ", result$abstract) # remove multiple spaces
-    }
-    # PAGE NUMBER
-    if(any(names(result) == "pages")){
-      if(length(result$pages) > 1){
-        result$pages <- paste(sort(result$pages), collapse = "-")
-      }
-    }
-    entry_order <- unlist(lapply(
-      names(result),
-      function(b, order){
-        order$order[which(order$description == b)[1]]
-      },
-      order = a
-    ))
-    final_result <- result[order(entry_order)]
-
-    return(final_result)
-  })
-
-  names(x_final) <- generate_ids(x_final)
-  class(x_final) <- "bibliography"
-  return(x_final)
-}
-
-
-
-#' Read bib files
-#'
-#' @description This function reads in bibliographic data stored in .bib format.
-#' @param x A character vector containing bibliographic information in bib format.
-#' @return Returns an object of class bibliography.
-#' @example inst/examples/read_bib.R
-parse_bib <- function(x){
-
-  # which lines start with @article?
-  group_vec <- rep(0, length(x))
-  row_id <- which(regexpr("^@", x) == 1)
-  group_vec[row_id] <- 1
-  group_vec <- cumsum(group_vec)
-
-  # work out row names
-  ref_names <- gsub(".*\\{|,$", "", x[row_id])
-  ref_type <- gsub(".*@|\\{.*", "", x[row_id])
-
-  # split by reference
-  x_split <- split(x[-row_id], group_vec[-row_id])
-  length_vals <- unlist(lapply(x_split, length))
-  x_split <- x_split[which(length_vals > 3)]
-
-  x_final <- lapply(x_split, function(z){
-
-    # first use a stringent lookup term to locate only tagged rows
-    delimiter_lookup <- regexpr(
-      "^[[:blank:]]*([[:alnum:]]|[[:punct:]])+[[:blank:]]*=[[:blank:]]*\\{+",
-      z
-    )
-    delimiter_rows <- which(delimiter_lookup != -1)
-    other_rows <- which(delimiter_lookup == -1)
-    delimiters <- data.frame(
-      row = delimiter_rows,
-      location = regexpr("=", z[delimiter_rows])
-    )
-    split_tags <- apply(delimiters, 1, function(a, lookup){
-      c(
-        row = as.numeric(a[1]),
-        tag = substr(
-          x = lookup[a[1]],
-          start = 1,
-          stop = a[2] - 1
-        ),
-        value = substr(
-          x = lookup[a[1]],
-          start = a[2] + 1,
-          stop = nchar(lookup[a[1]])
-        )
-      )
-    },
-    lookup = z
-    )
-    entry_dframe <- rbind(
-      as.data.frame(
-        t(split_tags),
-        stringsAsFactors = FALSE
-      ),
-      data.frame(
-        row = other_rows,
-        tag = NA,
-        value = z[other_rows],
-        stringsAsFactors = FALSE
-      )
-    )
-    entry_dframe$row <- as.numeric(entry_dframe$row)
-    entry_dframe <- entry_dframe[order(entry_dframe$row), c("tag", "value")]
-
-    if(any(entry_dframe$value == "}")){
-      entry_dframe <- entry_dframe[seq_len(which(entry_dframe$value == "}")[1]-1), ]
-    }
-    if(any(entry_dframe$value == "")){
-      entry_dframe <- entry_dframe[-which(entry_dframe$value == ""), ]
-    }
-
-    # remove whitespace
-    entry_dframe <- as.data.frame(
-      lapply(entry_dframe, trimws),
-      stringsAsFactors = FALSE
-    )
-    # remove 1 or more opening brackets
-    entry_dframe$value <- gsub("^\\{+", "", entry_dframe$value)
-    # remove 1 or more closing brackets followed by zero or more punctuation marks
-    entry_dframe$value <- gsub("\\}+[[:punct:]]*$", "", entry_dframe$value)
-
-    # convert each entry to a list
-    label_group <- rep(0, nrow(entry_dframe))
-    tag_rows <- which(entry_dframe$tag != "")
-    label_group[tag_rows] <- 1
-    tag_names <- entry_dframe$tag[tag_rows]
-    entry_list <- split(
-      entry_dframe$value,
-      cumsum(label_group)+1
-    )
-    names(entry_list) <- tolower(
-      gsub("^\\s+|\\s+$",  "", tag_names)
-    )
-    entry_list <- lapply(entry_list,
-                         function(a){paste(a, collapse = " ")}
-    )
-    if(any(names(entry_list) == "author")){
-      if(length(entry_list$author) == 1){
-        entry_list$author <- strsplit(entry_list$author, " and ")[[1]]
-      }
-    }
-    return(entry_list)
-  })
-
-  # add type
-  x_final <- lapply(
-    seq_len(length(x_final)),
-    function(a, type, data){
-      c(type = type[a], data[[a]])
-    },
-    type = ref_type,
-    data = x_final
-  )
-
-  names(x_final) <- ref_names
-  class(x_final) <- "bibliography"
-  return(x_final)
 
 }
