@@ -80,10 +80,9 @@ read_ref <- function(
   x <- readLines(filename, warn = FALSE)
 
   parse_function <- detect_format(x[1:min(c(length(x), 200))])
-  
+
   if(parse_function != "unknown"){
 
-    x <- readLines(filename, warn = FALSE)
     df <- do.call(parse_function, list(x = x))
 
     if(!inherits(df, "data.frame") & return_df){
