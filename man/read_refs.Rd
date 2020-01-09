@@ -4,7 +4,7 @@
 \alias{read_refs}
 \title{Import bibliographic search results}
 \usage{
-read_refs(filename, return_df = TRUE, verbose = TRUE)
+read_refs(filename, return_df = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{filename}{A path to a filename or vector of filenames containing search results to import.}

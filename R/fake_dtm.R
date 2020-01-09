@@ -3,8 +3,9 @@ fake_dtm <-
             stop_words,
             bigram_check = TRUE,
             bigram_quantile = 0.8,
-            retain_empty_rows = FALSE,
-            stem_collapse=TRUE) {
+            min_freq=NULL,
+            stem_collapse=TRUE,
+            language="English") {
     if (!(class(x) %in% c("character", "data.frame"))) {
       stop("make_dtm only accepts arguments of class 'data.frame' or 'character'")
     }
@@ -15,7 +16,8 @@ fake_dtm <-
     }
     n <- length(x)
     if (missing(stop_words)) {
-      stop_words <- stopwords::stopwords(source = "stopwords-iso")
+      if(missing(language)){language <- "English"}
+      stop_words <- synthesisr::get_stopwords(language = language)
     }
     else {
       stop_words <- unique(tolower(stop_words))
@@ -28,7 +30,7 @@ fake_dtm <-
       #ngrams <-  unique(synthesisr::get_ngrams(x, min_freq=1))
 
       only_some <- function(entry){
-        internal_ngrams <- synthesisr::get_ngrams(entry, min_freq = NULL, ngram_quantile = bigram_quantile)
+        internal_ngrams <- synthesisr::get_ngrams(entry, min_freq = min_freq, ngram_quantile = bigram_quantile)
         synthesisr::replace_ngrams(entry, internal_ngrams)
       }
 

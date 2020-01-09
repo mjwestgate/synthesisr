@@ -2,21 +2,21 @@
 % Please edit documentation in R/generic_functions.R
 \name{get_tokens}
 \alias{get_tokens}
-\title{Retrieves tokens from a text}
+\title{Remove stopwords from text}
 \usage{
 get_tokens(text, language)
 }
 \arguments{
-\item{text}{A character vector containing text from which to extract tokens.}
+\item{text}{A character vector containing text from which to remove stopwords.}
 
 \item{language}{A string indicating the language of the text.}
 }
 \value{
-Returns a character vector of tokens from the text.
+Returns the input text with stopwords removed.
 }
 \description{
-This function removes stopwords and extracts tokens from text.
+Removes stopwords from text in whichever language is specified.
 }
 \examples{
-get_tokens("On the Origin of Species", language = "English")
+remove_stopwords("On the Origin of Species", language="English")
 }

@@ -1,48 +1,3 @@
-#' Create a document-feature matrix
-#'
-#' @description Given a character vector of document information, creates a document-feature matrix.
-#' @param elements A character vector of document information (e.g. document titles or abstracts)
-#' @param features A character vector of terms to use as document features (e.g. keywords)
-#' @param closure Any restrictions on if terms should be closed when detecting matches.
-#' @param ignore_case Logical: Should case be ignored when detecting features within documents?
-#' @return Returns a matrix with documents as rows and terms as columns.
-#' @note When matching with closure, left requires terms to start with a keyword (e.g "burn" matches "burning"), right requires terms to end with a keyword (e.g. "burn" matches "postburn" but not "postburning"), full requires exact matches (e.g. "burn" only matches "burn"), and none allows keywords to be embedded within terms (e.g. "burn" matches "postburning").
-#' @example inst/examples/create_dfm.R
-create_dfm <- function(elements, features, closure=c("left", "right", "full", "none"), ignore_case=TRUE){
-  if(ignore_case==TRUE){
-    elements <- tolower(elements)
-    features <- tolower(features)
-  }
-
-  my_dictionary <- switch (closure,
-                           "left" = {my_dictionary <- paste("\\b", features, sep="")},
-                           "right" = {my_dictionary <- paste(features, "\\b", sep="")},
-                           "full" = {my_dictionary <- paste("\\b", features, "\\b", sep="")},
-                           "none" = {my_dictionary <- features}
-  )
-
-  count_detections <- function(x, words) {
-    detections <- sapply(words, grepl, x = x)
-
-    if(!is.null(dim(detections))){
-      counts <- colSums(detections)
-    }else{
-      counts <- as.numeric(detections)
-      names(counts) <- names(detections)
-    }
-    return(counts)
-  }
-
-  elements <- strsplit(elements, " ")
-  dfm <- t(sapply(lapply(elements, count_detections, words=my_dictionary), rbind))
-
-
-  if(closure!="none"){
-    colnames(dfm) <- gsub("\\\\b", "", colnames(dfm))
-  }
-  return(dfm)
-}
-
 #' Get short language codes
 #'
 #' @description This is a lookup function that returns the two-letter language code for specified language.
@@ -221,18 +176,6 @@ remove_punctuation <- function(text, preserve_punctuation=NULL){
     }
     return(ngrams)
   }
-
-
-  replace_ngrams <- function(x, ngrams){
-    replacement_text <- gsub(" ", "_", ngrams)
-    for (i in seq_along(ngrams)) {
-      x <- gsub(ngrams[i], replacement_text[i],
-                x)
-    }
-    return(x)
-  }
-
-
 
 
 

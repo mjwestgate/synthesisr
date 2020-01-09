@@ -4,7 +4,7 @@
 \alias{remove_punctuation}
 \title{Remove punctuation from text}
 \usage{
-remove_punctuation(text, remove_hyphens = FALSE)
+remove_punctuation(text, preserve_punctuation = NULL)
 }
 \arguments{
 \item{text}{A character vector from which to remove punctuation.}
