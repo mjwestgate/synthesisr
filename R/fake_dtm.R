@@ -25,58 +25,36 @@ fake_dtm <-
     x <- synthesisr::remove_punctuation(x, preserve_punctuation = "-")
 
     if (bigram_check) {
-      ngrams <-  synthesisr::get_ngrams(x, min_freq=NULL, ngram_quantile = bigram_quantile)
-      x <- synthesisr::replace_ngrams(x, synthesisr::get_ngrams(x))
-      x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("_", "-"))
+      #ngrams <-  unique(synthesisr::get_ngrams(x, min_freq=1))
 
-      new_ngrams <- gsub(" ", "_",
-             synthesisr::remove_punctuation(ngrams, preserve_punctuation = c("_", "-")))
-
-      all_terms <-
-        unique(unlist(
-          lapply(x, synthesisr::get_tokens, language = "English")
-        ))
-
-    }else{
-      all_terms <-
-        unique(unlist(
-          lapply(x, synthesisr::get_tokens, language = "English")
-        ))
+      only_some <- function(entry){
+        internal_ngrams <- synthesisr::get_ngrams(entry, min_freq = NULL, ngram_quantile = bigram_quantile)
+        synthesisr::replace_ngrams(entry, internal_ngrams)
       }
-    dtm <- synthesisr::create_dfm(x, all_terms, closure = "none")
 
-      dfm <- list()
-      length(dfm) <- 6
-      names(dfm) <- c("i", "j", "v", "nrow", "ncol", "dimnames")
-      locations <- function(z) {
-        which(z > 0)
-      }
-      tmp <- apply(dtm, 1, locations)
+      x <- unlist(lapply(x, only_some))
 
-      dfm$i <- rep(seq(1, length(tmp)), lapply(tmp, length))
-      dfm$j <- as.numeric(unlist(tmp))
-      dfm$v <- dtm[dtm > 0]
-      dfm$nrow <- dim(dtm)[1]
-      dfm$ncol <- dim(dtm)[2]
+      #x <- synthesisr::replace_ngrams(x, ngrams)
+      #x <- sapply(ngrams, gsub, x=x, replacement="__")
+      #x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("_", "-"))
 
-      dfm$dimnames$Docs <- synthesisr::generate_ids(x)
-      dfm$dimnames$Terms <- all_terms
+      #new_ngrams <- gsub(" ", "_",
+      #       synthesisr::remove_punctuation(ngrams, preserve_punctuation = c("_", "-")))
+    }
+
+      x <- lapply(x, get_tokens, language="English")
+      x <- unlist(lapply(x, paste, collapse=" "))
+
+      dfm <- tm::DocumentTermMatrix(x = tm::Corpus(tm::VectorSource(tmpx2)),
+                             control = list(wordLengths = c(4, Inf)))
+
 
       class(dfm) <- "simple_triplet_matrix"
-      ## all good to here!
 
-      # making a new function to check stemmed duplicates
       if(stem_collapse){
         dfm <- merge_stems(dfm)
       }
 
-      # gotta sort out the empty rows issue
-      if(retain_empty_rows==FALSE){
-        nil <- which(rowSums(as.matrix(dfm))==0)
-        dfm$nrow <- dfm$nrow-length(nil)
-        dfm$dimnames$Docs <- dfm$dimnames$Docs[-nil]
-        dfm$i <- as.integer(as.factor(dfm$i))
-        }
     return(dfm)
   }
 
@@ -89,9 +67,9 @@ merge_stems <- function(dfm) {
 
   stem_terms <- SnowballC::wordStem(dfm$dimnames$Terms)
   lookup <- data.frame(
-    initial_n = seq_along(dimnames(dtm)$Terms),
-    initial = (dimnames(dtm)$Terms),
-    stemmed = SnowballC::wordStem(dimnames(dtm)$Terms),
+    initial_n = seq_along(dfm$dimnames$Terms),
+    initial = (dfm$dimnames$Terms),
+    stemmed = SnowballC::wordStem(dfm$dimnames$Terms),
     stringsAsFactors = FALSE
   )
   dtm_df <- data.frame(i = dfm$i, j = dfm$j, v = dfm$v)
@@ -140,6 +118,5 @@ merge_stems <- function(dfm) {
     dfm$v <- dtm_df2$v
     dfm$ncol <- length(unique(dfm$j))
   }
-
   return(dfm)
 }

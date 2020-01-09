@@ -22,7 +22,7 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
   )
 
   count_detections <- function(x, words) {
-    detections <- sapply(words, grepl, x = unlist(strsplit(x, " ")))
+    detections <- sapply(words, grepl, x = x)
 
     if(!is.null(dim(detections))){
       counts <- colSums(detections)
@@ -32,6 +32,8 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
     }
     return(counts)
   }
+
+  elements <- strsplit(elements, " ")
   dfm <- t(sapply(lapply(elements, count_detections, words=my_dictionary), rbind))
 
 
@@ -90,20 +92,19 @@ get_stopwords <- function(language = "English"){
 #' @param language A string indicating the language of the text.
 #' @return Returns the input text with stopwords removed.
 #' @examples remove_stopwords("On the Origin of Species", language="English")
-remove_stopwords <- function(text, language){
+get_tokens <- function(text, language){
 
-  stopwords <- synthesisr::get_stopwords(language)
+  stop_words <- stopwords::stopwords("en", "stopwords-iso")
 
   # another for-loop that needs to be more efficient
   text <- strsplit(text, " ")
 
       whichin <- function(x){
-        x <- x[-which(x %in% stopwords)]
-        x <- paste(x, collapse = " ")
+        x <- x[-which(x %in% stop_words)]
         return(x)
       }
 
-      new_text <- lapply(text, whichin)
+      new_text <- unlist(lapply(text, whichin))
 
 while(any(grepl("  ", new_text))){
   new_text <- gsub("  ", " ", new_text)
@@ -111,31 +112,6 @@ while(any(grepl("  ", new_text))){
   return(new_text)
 }
 
-#' Retrieves tokens from a text
-#'
-#' @description This function removes stopwords and extracts tokens from text.
-#' @param text A character vector containing text from which to extract tokens.
-#' @param language A string indicating the language of the text.
-#' @return Returns a character vector of tokens from the text.
-#' @examples get_tokens("On the Origin of Species", language = "English")
-get_tokens <- function(text, language){
-  text <- tolower(text)
-  text <- synthesisr::remove_stopwords(text=text, language=language)
-  tokens <- strsplit(text, " ")[[1]]
-  if(any(is.na(tokens))){
-    tokens <- tokens[-is.na(tokens)]
-  }
-  if(any(tokens=="")){
-    tokens <- tokens[-which(tokens=="")]
-  }
-  if(any(tokens=="")){
-    tokens <- tokens[-which(tokens==" ")]
-  }
-  if(any(tokens=="'")){
-    tokens <- tokens[-which(tokens=="'")]
-  }
-  return(tokens)
-}
 
 #' Remove punctuation from text
 #'
