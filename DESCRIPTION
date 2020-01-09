@@ -32,7 +32,7 @@ Imports:
 Suggests:
     knitr,
     stopwords
-RoxygenNote: 7.0.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 Date: 2019-04-14

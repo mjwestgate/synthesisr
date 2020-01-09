@@ -79,7 +79,14 @@ read_ref <- function(
   if(verbose){cat(paste0("Reading file ", filename, " ... "))}
   x <- readLines(filename, warn = FALSE)
 
-  parse_function <- detect_format(x[1:min(c(length(x), 200))])
+#<<<<<<< HEAD
+#  if(!inherits(df, "data.frame") & return_df){
+#    df <- as.data.frame(df)
+#    df <- synthesisr::clean_df(df)
+#  }
+#=======
+#  parse_function <- detect_format(x[1:min(c(length(x), 200))])
+#>>>>>>> 4164f915b33f617b23397c61a6f20ae795e526cc
 
   if(parse_function != "unknown"){
 

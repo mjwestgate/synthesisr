@@ -1,49 +1,15 @@
-export(
-read_refs,
-  read_ref,
-  detect_format,
-  detect_delimiter,
-  parse_bibtex,
-  parse_csv,
-  parse_medline,
-  parse_ris,
-  parse_tsv,
-  write_ris,
-  create_index,
-  generate_ids,
-clean_df,
-  clean_names,
-  clean_authors,
-as.bibliography,
-  as.data.frame.bibliography,
-  summary.bibliography,
-  print.bibliography,
-  '[.bibliography',
-  c.bibliography,
-format_citation,
-  format_citation.bibliography,
-  format_citation.data.frame,
-  format_citation.list,
-  add_line_breaks,
-fuzzdist,
-  fuzz_m_ratio,
-  fuzz_partial_ratio,
-  fuzz_token_sort_ratio,
-  fuzz_token_set_ratio,
-create_dtm,
-deduplicate,
-  find_duplicates,
-merge_columns,
-remove_factors,
-write_refs,
-  write_ris,
-  write_bib
-)
+exportPattern("^[[:alpha:]]+")
 importFrom("stats", "dist", "xtabs")
-importFrom("utils",
-  "read.csv", "read.table", "write.csv", "read.delim",
-  "head", "tail", "write.table")
+importFrom("utils", "read.csv", "read.table", "write.csv", "read.delim", "head", "tail", "write.table")
 importFrom("stringdist", "stringdist")
+export(as.bibliography, summary.bibliography,
+       print.bibliography, '[.bibliography', c.bibliography,
+add_line_breaks, format_citation,
+format_citation.bibliography, format_citation.data.frame, format_citation.list,
+fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
+find_duplicates,
+merge_columns)
+
 S3method(format_citation, bibliography)
 S3method(format_citation, list)
 S3method(format_citation, data.frame)

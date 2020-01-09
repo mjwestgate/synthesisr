@@ -76,23 +76,23 @@ write_ris <- function(x){
           b[c((page.row+1):nrow(b)), ])
         )
       }}
-    b$order <- seq_len(nrow(b))
+  #  b$order <- seq_len(nrow(b))
 
     # substitute tags for ris format versions
     b <- merge(lookup, b,
-               by.x = "bib",
+               by.x = "field",
                by.y = "tag",
                all.x = FALSE,
                all.y = TRUE
     )
-    b <- b[order(b$order), 2:3]
-    b <- b[which(!is.na(b$ris)), ]
+  #  b <- b[order(b$order), 2:3]
+    b <- b[which(!is.na(b$code)), ]
 
     # concatenate rows, return a vector of strings
-    c(paste(b$ris, b$entry, sep = "  - "), "")
+    c(paste(b$code, b$entry, sep = "  - "), "")
 
   },
-  lookup = tag_lookup(type = "ris_write")[, 1:2]
+  lookup = synthesisr::code_lookup[, c(1,3:4)]
   )
 
   export <- do.call(c, result)
