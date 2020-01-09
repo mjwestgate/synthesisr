@@ -33,8 +33,7 @@ create_dfm <- function(elements, features, closure=c("left", "right", "full", "n
     return(counts)
   }
   dfm <- t(sapply(lapply(elements, count_detections, words=my_dictionary), rbind))
-  colnames(dfm) <- my_dictionary
-  rownames(dfm) <- synthesisr::generate_ids(elements)
+
 
   if(closure!="none"){
     colnames(dfm) <- gsub("\\\\b", "", colnames(dfm))
@@ -94,16 +93,22 @@ get_stopwords <- function(language = "English"){
 remove_stopwords <- function(text, language){
 
   stopwords <- synthesisr::get_stopwords(language)
-  stopwords <- paste("\\b", stopwords, "\\b", sep="")
 
   # another for-loop that needs to be more efficient
-  for(i in 1:length(stopwords)){
-    text <- gsub(stopwords[i], " ", text)
-  }
-  text <- gsub("  ", " ", text)
-  text <- gsub("  ", " ", text)
+  text <- strsplit(text, " ")
 
-  return(text)
+      whichin <- function(x){
+        x <- x[-which(x %in% stopwords)]
+        x <- paste(x, collapse = " ")
+        return(x)
+      }
+
+      new_text <- lapply(text, whichin)
+
+while(any(grepl("  ", new_text))){
+  new_text <- gsub("  ", " ", new_text)
+}
+  return(new_text)
 }
 
 #' Retrieves tokens from a text
