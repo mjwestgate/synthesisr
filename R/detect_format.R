@@ -22,7 +22,7 @@ detect_format <- function(x){
       "bibtex" = "parse_bibtex",
       "ris" = {
         if(length(which(grepl("PMID", x))) > 0){
-          "parse_medline"
+          "parse_pubmed"
         }else{
           "parse_ris"
         }

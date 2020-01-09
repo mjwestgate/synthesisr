@@ -9,7 +9,7 @@
 read_refs <- function(
   filename,
   return_df = TRUE,
-  verbose = TRUE
+  verbose = FALSE
 ){
 
   invisible(Sys.setlocale("LC_ALL", "C"))
@@ -73,21 +73,12 @@ read_refs <- function(
 read_ref <- function(
   filename,
   return_df = TRUE,
-  verbose = TRUE
+  verbose = FALSE
 	){
-
   if(verbose){cat(paste0("Reading file ", filename, " ... "))}
   x <- readLines(filename, warn = FALSE)
 
-#<<<<<<< HEAD
-#  if(!inherits(df, "data.frame") & return_df){
-#    df <- as.data.frame(df)
-#    df <- synthesisr::clean_df(df)
-#  }
-#=======
-#  parse_function <- detect_format(x[1:min(c(length(x), 200))])
-#>>>>>>> 4164f915b33f617b23397c61a6f20ae795e526cc
-
+  parse_function <- detect_format(x[1:min(c(length(x), 200))])
   if(parse_function != "unknown"){
 
     df <- do.call(parse_function, list(x = x))
@@ -100,8 +91,8 @@ read_ref <- function(
     if(verbose){cat("done\n")}
 
     return(df)
+
   }else{
     warning(paste("file type not recognised for ", filename, " - skipping"))
   }
-
 }

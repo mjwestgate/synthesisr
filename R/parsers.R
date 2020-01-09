@@ -120,12 +120,12 @@ prep_ris <- function(
 }
 
 #' @describeIn parse_ris Parse bibliographic text
-parse_medline <- function(x){
+parse_pubmed <- function(x){
 
   x <- prep_ris(x, detect_delimiter(x))
 
   x_merge <- merge(x,
-    code_lookup,
+    code_lookup[, c("code", "order", "field")],
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
@@ -134,10 +134,6 @@ parse_medline <- function(x){
   x_merge <- x_merge[order(x_merge$row_order), ]
 
   # find a way to store missing .bib data rather than discard
-  blank_fields <- x_merge$field == ""
-  if(any(blank_fields)){
-    x_merge$field[which(blank_fields)] <- NA
-  }
   if(any(is.na(x_merge$field))){
     rows_tr <- which(is.na(x_merge$field))
     x_merge$field[rows_tr] <- x_merge$ris[rows_tr]
@@ -151,13 +147,18 @@ parse_medline <- function(x){
     x_merge$order[rows_tr] <- as.numeric(as.factor(x_merge$ris[rows_tr])) + start_val
   }
 
-
   # convert into a list, where each reference is a separate entry
-  x_split <- split(x_merge[c("field", "text")], x_merge$ref)
+  x_split <- split(x_merge[c("field", "text", "order")], x_merge$ref)
   x_final <- lapply(x_split, function(a){
     result <- split(a$text, a$field)
     if(any(names(result) == "abstract")){
       result$abstract <- paste(result$abstract, collapse = " ")
+    }
+    if(any(names(result) == "address")){
+      result$address <- strsplit(
+        paste(result$address, collapse = " "),
+        "\\.\\s"
+      )[[1]]
     }
     if(any(names(result) == "title")){
       if(length(result$title) > 1){
@@ -176,10 +177,15 @@ parse_medline <- function(x){
         result$doi <- strsplit(result$article_id[which(doi_check)], " ")[[1]][1]
       }
     }
-    return(result)
+
+    # ensure result is returned in the correct order
+    result_order <- order(
+      unlist(lapply(split(a$order, a$field), function(b){b[1]}))
+    )
+    return(result[result_order])
   })
 
-  names(x_final) <- unlist(lapply(x_final, function(a){a$PMID}))
+  names(x_final) <- unlist(lapply(x_final, function(a){a$pubmed_id}))
   class(x_final) <- "bibliography"
   return(x_final)
 }
@@ -240,7 +246,7 @@ parse_ris <- function(x){
 
   # merge data with lookup info, to provide bib-style tags
   x_merge <- merge(x,
-    code_lookup, # tag_lookup(type = "medline"),
+    code_lookup[, c("code", "order", "field")],
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
@@ -249,10 +255,6 @@ parse_ris <- function(x){
   x_merge <- x_merge[order(x_merge$row_order), ]
 
   # find a way to store missing .bib data rather than discard
-  blank_fields <- x_merge$field == ""
-  if(any(blank_fields)){
-    x_merge$field[which(blank_fields)] <- NA
-  }
   if(any(is.na(x_merge$field))){
     rows_tr <- which(is.na(x_merge$field))
     x_merge$field[rows_tr] <- x_merge$ris[rows_tr]
@@ -392,16 +394,12 @@ parse_ris <- function(x){
         result$pages <- paste(sort(result$pages), collapse = "-")
       }
     }
-    entry_order <- unlist(lapply(
-      names(result),
-      function(b, order){
-        order$order[which(order$description == b)[1]]
-      },
-      order = a
-    ))
-    final_result <- result[order(entry_order)]
 
-    return(final_result)
+    # ensure result is returned in the correct order
+    result_order <- order(
+      unlist(lapply(split(a$order, a$field), function(b){b[1]}))
+    )
+    return(result[result_order])
   })
 
   names(x_final) <- generate_ids(x_final)
