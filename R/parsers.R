@@ -132,7 +132,25 @@ parse_medline <- function(x){
     all.y = FALSE
   )
   x_merge <- x_merge[order(x_merge$row_order), ]
-  x_merge$field <- tolower(x_merge$field)
+
+  # find a way to store missing .bib data rather than discard
+  blank_fields <- x_merge$field == ""
+  if(any(blank_fields)){
+    x_merge$field[which(blank_fields)] <- NA
+  }
+  if(any(is.na(x_merge$field))){
+    rows_tr <- which(is.na(x_merge$field))
+    x_merge$field[rows_tr] <- x_merge$ris[rows_tr]
+
+    # ensure all headings have an order
+    if(all(is.na(x_merge$order))){
+      start_val <- 0
+    }else{
+      start_val <- max(x_merge$order, na.rm = TRUE)
+    }
+    x_merge$order[rows_tr] <- as.numeric(as.factor(x_merge$ris[rows_tr])) + start_val
+  }
+
 
   # convert into a list, where each reference is a separate entry
   x_split <- split(x_merge[c("field", "text")], x_merge$ref)
@@ -161,7 +179,7 @@ parse_medline <- function(x){
     return(result)
   })
 
-  names(x_final) <- unlist(lapply(x_final, function(a){a$pubmed_id}))
+  names(x_final) <- unlist(lapply(x_final, function(a){a$PMID}))
   class(x_final) <- "bibliography"
   return(x_final)
 }
@@ -238,14 +256,14 @@ parse_ris <- function(x){
   if(any(is.na(x_merge$field))){
     rows_tr <- which(is.na(x_merge$field))
     x_merge$field[rows_tr] <- x_merge$ris[rows_tr]
-    if(all(is.na(x_merge$row_order))){
+
+    # ensure all headings have an order
+    if(all(is.na(x_merge$order))){
       start_val <- 0
     }else{
-      start_val <- max(x_merge$row_order, na.rm = TRUE)
+      start_val <- max(x_merge$order, na.rm = TRUE)
     }
-    x_merge$row_order[rows_tr] <- as.numeric(
-      as.factor(x_merge$ris[rows_tr])
-    ) + start_val
+    x_merge$order[rows_tr] <- as.numeric(as.factor(x_merge$ris[rows_tr])) + start_val
   }
 
   # method to systematically search for year data

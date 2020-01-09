@@ -86,7 +86,7 @@ read_ref <- function(
     df <- do.call(parse_function, list(x = x))
 
     if(!inherits(df, "data.frame") & return_df){
-      df <- as.data.frame(df)
+      df <- synthesisr::as.data.frame.bibliography(df)
       df <- synthesisr::clean_df(df)
     }
 

@@ -109,14 +109,14 @@ c.bibliography <- function(...){
 as.data.frame.bibliography <- function(x, ...){
 
 	cols <- unique(unlist(lapply(x, names)))
-	cols <- cols[which(cols != "further_info")]
+	# cols <- cols[which(cols != "further_info")]
 
 	x_list <- lapply(x, function(a, cols){
 		result <- lapply(cols, function(b, lookup){
 			if(any(names(lookup) == b)){
 				data_tr <- lookup[[b]]
 				if(length(data_tr) > 1){
-          data_tr<-paste0(data_tr, collapse = " and ")
+          data_tr <- paste0(data_tr, collapse = " and ")
         }
 				return(data_tr)
 			}else{
@@ -136,7 +136,7 @@ as.data.frame.bibliography <- function(x, ...){
   )
 
 	x_dframe <- data.frame(
-		label = make.names(names(x_list), unique=TRUE),
+		label = make.names(names(x_list), unique = TRUE),
 		do.call(rbind, x_list),
 		stringsAsFactors = FALSE
   )
