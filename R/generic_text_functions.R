@@ -1,47 +1,3 @@
-#' Create a document-feature matrix
-#'
-#' @description Given a character vector of document information, creates a document-feature matrix.
-#' @param elements A character vector of document information (e.g. document titles or abstracts)
-#' @param features A character vector of terms to use as document features (e.g. keywords)
-#' @param closure Any restrictions on if terms should be closed when detecting matches.
-#' @param ignore_case Logical: Should case be ignored when detecting features within documents?
-#' @return Returns a matrix with documents as rows and terms as columns.
-#' @note When matching with closure, left requires terms to start with a keyword (e.g "burn" matches "burning"), right requires terms to end with a keyword (e.g. "burn" matches "postburn" but not "postburning"), full requires exact matches (e.g. "burn" only matches "burn"), and none allows keywords to be embedded within terms (e.g. "burn" matches "postburning").
-#' @example inst/examples/create_dfm.R
-create_dfm <- function(elements, features, closure=c("left", "right", "full", "none"), ignore_case=TRUE){
-  if(ignore_case==TRUE){
-    elements <- tolower(elements)
-    features <- tolower(features)
-  }
-
-  my_dictionary <- switch (closure,
-                           "left" = {my_dictionary <- paste("\\b", features, sep="")},
-                           "right" = {my_dictionary <- paste(features, "\\b", sep="")},
-                           "full" = {my_dictionary <- paste("\\b", features, "\\b", sep="")},
-                           "none" = {my_dictionary <- features}
-  )
-
-  count_detections <- function(x, words) {
-    detections <- sapply(words, grepl, x = unlist(strsplit(x, " ")))
-
-    if(!is.null(dim(detections))){
-      counts <- colSums(detections)
-    }else{
-      counts <- as.numeric(detections)
-      names(counts) <- names(detections)
-    }
-    return(counts)
-  }
-  dfm <- t(sapply(lapply(elements, count_detections, words=my_dictionary), rbind))
-  colnames(dfm) <- my_dictionary
-  rownames(dfm) <- synthesisr::generate_ids(elements)
-
-  if(closure!="none"){
-    colnames(dfm) <- gsub("\\\\b", "", colnames(dfm))
-  }
-  return(dfm)
-}
-
 #' Get short language codes
 #'
 #' @description This is a lookup function that returns the two-letter language code for specified language.
@@ -91,46 +47,26 @@ get_stopwords <- function(language = "English"){
 #' @param language A string indicating the language of the text.
 #' @return Returns the input text with stopwords removed.
 #' @examples remove_stopwords("On the Origin of Species", language="English")
-remove_stopwords <- function(text, language){
+get_tokens <- function(text, language){
 
-  stopwords <- synthesisr::get_stopwords(language)
-  stopwords <- paste("\\b", stopwords, "\\b", sep="")
+  stop_words <- stopwords::stopwords("en", "stopwords-iso")
 
   # another for-loop that needs to be more efficient
-  for(i in 1:length(stopwords)){
-    text <- gsub(stopwords[i], " ", text)
-  }
-  text <- gsub("  ", " ", text)
-  text <- gsub("  ", " ", text)
+  text <- strsplit(text, " ")
 
-  return(text)
+      whichin <- function(x){
+        x <- x[-which(x %in% stop_words)]
+        return(x)
+      }
+
+      new_text <- unlist(lapply(text, whichin))
+
+while(any(grepl("  ", new_text))){
+  new_text <- gsub("  ", " ", new_text)
+}
+  return(new_text)
 }
 
-#' Retrieves tokens from a text
-#'
-#' @description This function removes stopwords and extracts tokens from text.
-#' @param text A character vector containing text from which to extract tokens.
-#' @param language A string indicating the language of the text.
-#' @return Returns a character vector of tokens from the text.
-#' @examples get_tokens("On the Origin of Species", language = "English")
-get_tokens <- function(text, language){
-  text <- tolower(text)
-  text <- synthesisr::remove_stopwords(text=text, language=language)
-  tokens <- strsplit(text, " ")[[1]]
-  if(any(is.na(tokens))){
-    tokens <- tokens[-is.na(tokens)]
-  }
-  if(any(tokens=="")){
-    tokens <- tokens[-which(tokens=="")]
-  }
-  if(any(tokens=="")){
-    tokens <- tokens[-which(tokens==" ")]
-  }
-  if(any(tokens=="'")){
-    tokens <- tokens[-which(tokens=="'")]
-  }
-  return(tokens)
-}
 
 #' Remove punctuation from text
 #'
@@ -172,6 +108,7 @@ remove_punctuation <- function(text, preserve_punctuation=NULL){
   }
 
   return(output)
+
 }
 
 
@@ -191,8 +128,8 @@ remove_numbers <- function(text){
   }
 
   return(output)
-}
 
+}
 
 get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_punctuation=FALSE, preserve_chars=c("-", "_")){
 
@@ -236,14 +173,4 @@ get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_p
     ngrams <- synthesisr::remove_punctuation(ngrams, preserve_punctuation = preserve_chars)
   }
   return(ngrams)
-}
-
-
-replace_ngrams <- function(x, ngrams){
-  replacement_text <- gsub(" ", "_", ngrams)
-  for (i in seq_along(ngrams)) {
-    x <- gsub(ngrams[i], replacement_text[i],
-              x)
-  }
-  return(x)
 }
