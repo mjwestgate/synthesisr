@@ -125,7 +125,7 @@ parse_pubmed <- function(x){
   x <- prep_ris(x, detect_delimiter(x))
 
   x_merge <- merge(x,
-    code_lookup[, c("code", "order", "field")],
+    code_lookup[code_lookup$ris_pubmed, c("code", "order", "field")],
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
@@ -244,9 +244,17 @@ parse_ris <- function(x){
 
   x <- prep_ris(x, detect_delimiter(x))
 
+  # to avoid duplicate tags, decide whether to use wos or generic tags
+  all_tags <- unique(x$ris)
+  if(all(all_tags %in% code_lookup$code[code_lookup$ris_wos])){
+    code_lookup_thisfile <- code_lookup[code_lookup$ris_wos, ]
+  }else{
+    code_lookup_thisfile <- code_lookup[code_lookup$ris_generic, ]
+  }
+
   # merge data with lookup info, to provide bib-style tags
   x_merge <- merge(x,
-    code_lookup[, c("code", "order", "field")],
+    code_lookup_thisfile[, c("code", "order", "field")],
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
