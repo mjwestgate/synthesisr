@@ -49,13 +49,15 @@ get_stopwords <- function(language = "English"){
 #' @examples remove_stopwords("On the Origin of Species", language="English")
 get_tokens <- function(text, language){
 
-  stop_words <- stopwords::stopwords("en", "stopwords-iso")
+  stop_words <- synthesisr::get_stopwords("English")
 
   # another for-loop that needs to be more efficient
   text <- strsplit(text, " ")
 
       whichin <- function(x){
-        x <- x[-which(x %in% stop_words)]
+        if(any(x %in% stop_words)){
+          x <- x[-which(x %in% stop_words)]
+        }
         return(x)
       }
 
@@ -174,3 +176,160 @@ get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_p
   }
   return(ngrams)
 }
+
+replace_ngrams <- function(x, ngrams){
+  replacement_text <- gsub(" ", "_", ngrams)
+  for (i in seq_along(ngrams)) {
+    x <- gsub(ngrams[i], replacement_text[i],
+              x)
+  }
+  return(x)
+}
+
+#' Construct a document-term matrix (DTM)
+#'
+#' @description Takes bibliographic data and converts it to a DTM for passing to topic models.
+#' @param x a vector or \code{data.frame} containing text
+#' @param stop_words optional vector of strings, listing terms to be removed from the DTM prior to analysis. Defaults to synthesisr::get_stopwords()
+#' @param min_freq minimum proportion of entries that a term must be found in to be retained in the analysis. Defaults to 0.01.
+#' @param max_freq maximum proportion of entries that a term must be found in to be retained in the analysis. Defaults to 0.85.
+#' @param bigram_check logical: should ngrams be searched for?
+#' @param bigram_quantile what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies after removing all bigrams with frequencies <=2.
+#' @param retain_empty_rows logical: should the function return an object with the same length as the input string (TRUE), or remove rows that contain no text after filtering rare & common words etc? (FALSE, the default). The latter is the default because this is required by some potential applications, such as topic models.
+#' @details This is primarily intended to be called internally by \code{screen_topics}, but is made available for users to generate their own topic models with the same properties as those in revtools.
+#'
+#' This function uses some standard tools like stemming, converting words to lower case, and removal of numbers or punctuation. It also replaces stemmed words with the shortest version of all terms that share the same stem, which doesn't affect the calculations, but makes the resulting analyses easier to interpret. It doesn't use part-of-speech tagging.
+#'
+#' Words that occur in 2 entries or fewer are always removed by \code{make_dtm}, so values of \code{min_freq} that result in a threshold below this will not affect the result. Arguments to \code{max_freq} are passed as is. Similarly words consisting of three letters or fewer are removed.
+#'
+#' If \code{retain_empty_rows} is FALSE (the default) and the object returned is named \code{z}, then \code{as.numeric(z$dimnames$Docs)} provides an index to which entries have been retained from the input vector (\code{x}).
+#' @return An object of class \code{simple_triplet_matrix}, listing the terms (columns) present in each row or string.
+
+create_dtm <-
+  function (x,
+            stop_words,
+            bigram_check = TRUE,
+            bigram_quantile = 0.8,
+            min_freq=NULL,
+            stem_collapse=TRUE,
+            language="English") {
+    if (!(class(x) %in% c("character", "data.frame"))) {
+      stop("make_dtm only accepts arguments of class 'data.frame' or 'character'")
+    }
+    if (class(x) == "data.frame") {
+      x <- apply(x, 1, function(a) {
+        paste(a, collapse = " ")
+      })
+    }
+    n <- length(x)
+    if (missing(stop_words)) {
+      if (missing(language)) {
+        language <- "English"
+      }
+      stop_words <- synthesisr::get_stopwords(language = language)
+    }
+    else {
+      stop_words <- unique(tolower(stop_words))
+    }
+    x <- tolower(x)
+    x <- gsub(" - ", " ", x)
+    x <- synthesisr::remove_punctuation(x, preserve_punctuation = "-")
+
+    if (bigram_check) {
+      #ngrams <-  unique(synthesisr::get_ngrams(x, min_freq=1))
+
+      only_some <- function(entry){
+        internal_ngrams <- synthesisr::get_ngrams(entry, min_freq = min_freq, ngram_quantile = bigram_quantile)
+        synthesisr::replace_ngrams(entry, internal_ngrams)
+      }
+
+      x <- unlist(lapply(x, only_some))
+
+      #x <- synthesisr::replace_ngrams(x, ngrams)
+      #x <- sapply(ngrams, gsub, x=x, replacement="__")
+      #x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("_", "-"))
+
+      #new_ngrams <- gsub(" ", "_",
+      #       synthesisr::remove_punctuation(ngrams, preserve_punctuation = c("_", "-")))
+    }
+
+    x <- lapply(x, get_tokens, language="English")
+    x <- unlist(lapply(x, paste, collapse=" "))
+
+    dfm <- tm::DocumentTermMatrix(x = tm::Corpus(tm::VectorSource(x)),
+                                  control = list(wordLengths = c(4, Inf)))
+
+    class(dfm) <- "simple_triplet_matrix"
+
+    if(stem_collapse){
+      if(requireNamespace("SnowballC", quietly = TRUE)){
+        dfm <- merge_stems(dfm)
+      }else{print("SnobwallC needed to collapse stems. Creating dfm without collapsing stemmed terms.")}
+    }
+
+    return(dfm)
+  }
+
+
+
+merge_stems <- function(dfm) {
+  if (!class(dfm) %in% c("simple_triplet_matrix")) {
+    stop("merge_stems only accepts objects of class simple_triplet_matrix")
+  }
+
+  stem_terms <- SnowballC::wordStem(dfm$dimnames$Terms)
+  lookup <- data.frame(
+    initial_n = seq_along(dfm$dimnames$Terms),
+    initial = (dfm$dimnames$Terms),
+    stemmed = SnowballC::wordStem(dfm$dimnames$Terms),
+    stringsAsFactors = FALSE
+  )
+  dtm_df <- data.frame(i = dfm$i, j = dfm$j, v = dfm$v)
+
+  if (base::anyDuplicated(lookup$stemmed) > 0) {
+    lookup$n <- nchar(lookup$initial)
+    text_split <-
+      split(lookup[, c("initial_n", "n")], lookup$stemmed)
+    text_match <- data.frame(initial_n = unlist(lapply(text_split,
+                                                       function(a) {
+                                                         a$initial_n
+                                                       })),
+                             final_n = unlist(lapply(text_split, function(a) {
+                               if (nrow(a) > 1) {
+                                 rep(a$initial_n[order(a$n, decreasing = FALSE)[1]],
+                                     nrow(a))
+                               }
+                               else {
+                                 a$initial_n
+                               }
+                             })))
+    lookup$final_n <-
+      text_match$final_n[order(text_match$initial_n)]
+    dtm_df$j_new <- lookup$final_n[dtm_df$j]
+    dtm_list <- split(dtm_df[c("j_new", "v")], dtm_df$i)
+    name_lookup <- as.numeric(names(dtm_list))
+    dtm_df2 <- do.call(rbind, lapply(seq_along(dtm_list),
+                                     function(a, data) {
+                                       result <- unlist(lapply(split(data[[a]]$v, data[[a]]$j_new),
+                                                               sum))
+                                       return(data.frame(
+                                         i = a,
+                                         j = as.numeric(names(result)),
+                                         v = result
+                                       ))
+                                     }, data = dtm_list))
+
+    unique_j <- sort(unique(lookup$final_n))
+    lookup2 <- data.frame(index = seq_len(max(lookup$final_n)),
+                          end = NA)
+    lookup2$end[unique_j] <- seq_along(unique_j)
+    dfm$i <- name_lookup[dtm_df2$i]
+    dfm$j <- lookup2$end[dtm_df2$j]
+    dfm$dimnames$Terms <-
+      lookup$initial[sort(unique(lookup$final_n))]
+    dfm$v <- dtm_df2$v
+    dfm$ncol <- length(unique(dfm$j))
+  }
+  return(dfm)
+}
+
