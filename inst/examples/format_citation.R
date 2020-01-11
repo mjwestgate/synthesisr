@@ -22,5 +22,5 @@ file <- c(
 )
 
 delim <- detect_delimiter(file)
-citation <- parse_ris(prep_ris(file, delim))
+citation <- parse_ris(file)
 format_citation(citation)

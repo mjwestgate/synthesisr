@@ -1,7 +1,7 @@
 # Duplicate of functions from the Python library fuzzywuzzy
-# # https://github.com/seatgeek/fuzzywuzzy
+#github .com/seatgeek/fuzzywuzzy
 # these functions coded by Martin Westgate on 4th June 2018 based on description given here:
-# http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
+#chairnerd.seatgeek .com/fuzzywuzzy-fuzzy-string-matching-in-python/
 
 #' Detect duplicates with fuzzy matching
 #' @description This is a wrapper function for the different fuzzy matching methods.
@@ -14,7 +14,7 @@
 #' @note fuzz_token_set_ratio is similar to fuzz_token_sort_ratio, but compares both sorted strings to each other, and to a third group made of words common to both strings. It then returns the maximum value of fuzz_m_ratio from these comparisons.
 #' @note fuzzdist is a wrapper function, for compatability with stringdist.
 #' @return Returns a score of same length as b, giving the proportional dissimilarity between a and b.
-#' @examples fuzzdist("On the Origin of Species", "Of the Original Specs", method="fuzz_m_ratio")
+#' @example inst/examples/fuzzdist.R
 fuzzdist <- function(a, b,
   method = c("fuzz_m_ratio", "fuzz_partial_ratio",
              "fuzz_token_sort_ratio", "fuzz_token_set_ratio")

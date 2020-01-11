@@ -39,7 +39,6 @@ Creates a unique label for each bibliographic entry using as much author and yea
     "ER  - "
   )
 
-  delim <- detect_delimiter(file)
-  citation <- read_ris(prep_ris(file, delim))
+  citation <- parse_ris(file)
   generate_ids(citation)
 }

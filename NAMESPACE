@@ -6,7 +6,7 @@ export(as.bibliography, summary.bibliography,
        print.bibliography, '[.bibliography', c.bibliography,
 add_line_breaks, format_citation, format_citation.bibliography,
 format_citation.data.frame, format_citation.list,
-fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
+fuzzdist, fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
 find_duplicates, merge_columns)
 
 S3method(format_citation, bibliography)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_refs.R
 \name{read_ref}
 \alias{read_ref}
-\title{Internal function called by import_refs for each file}
+\title{Internal function called by read_refs for each file}
 \usage{
 read_ref(filename, return_df = TRUE, verbose = FALSE)
 }
@@ -17,12 +17,13 @@ read_ref(filename, return_df = TRUE, verbose = FALSE)
 Returns a data.frame or list of assembled search results.
 }
 \description{
-This is the underlying workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
+This is the underlying workhorse function that imports bibliographic files; primarily intended to be called from read_refs.
 }
 \examples{
 files <-
   paste(system.file(package = "synthesisr"),
-        "/extdata/zoorec.txt",
+        "/extdata/scopus.ris",
         sep = "")
-results <- import_refs(files)
+
+results <- read_refs(files)
 }

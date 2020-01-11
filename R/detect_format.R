@@ -3,7 +3,7 @@
 #' @description Because bibliographic data  can be stored in multiple file types, this function determines if the format of text is one of several likely probabilities: comma-separated; tab-separated; bibtex; and ris (medline or generic).
 #' @param x A character vector containing bibliographic data.
 #' @return Returns the format of a file: either bib, ris, or unknown.
-#' @example inst/examples/bibvris.R
+#' @example inst/examples/detect_format.R
 detect_format <- function(x){
 
   # internal function to calculate the proportion of lines that contain a particular regex

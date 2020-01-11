@@ -5,7 +5,7 @@
 #' @param return_df If TRUE, returns a data.frame; if FALSE, returns a list.
 #' @param verbose If TRUE, prints status updates.
 #' @return Returns a data.frame or list of assembled search results.
-#' @example inst/examples/import_refs.R
+#' @example inst/examples/read_refs.R
 read_refs <- function(
   filename,
   return_df = TRUE,
@@ -62,14 +62,14 @@ read_refs <- function(
   }
 }
 
-#' Internal function called by import_refs for each file
+#' Internal function called by read_refs for each file
 #'
-#' @description This is the underlying workhorse function that imports bibliographic files; primarily intended to be called from import_refs.
+#' @description This is the underlying workhorse function that imports bibliographic files; primarily intended to be called from read_refs.
 #' @param filename A path to a filename containing search results to import.
 #' @param return_df If TRUE, returns a data.frame; if FALSE, returns a list.
 #' @param verbose If TRUE, prints status updates.
 #' @return Returns a data.frame or list of assembled search results.
-#' @example inst/examples/import_refs.R
+#' @example inst/examples/read_refs.R
 read_ref <- function(
   filename,
   return_df = TRUE,

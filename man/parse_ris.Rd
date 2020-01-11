@@ -64,5 +64,5 @@ file <- c(
 
 detect_format(file) # = "parse_ris"
 df <- as.data.frame(parse_ris(file))
-write_refs(df)
+write_refs(df, format = "ris")
 }

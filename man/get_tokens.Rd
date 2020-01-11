@@ -18,5 +18,5 @@ Returns the input text with stopwords removed.
 Removes stopwords from text in whichever language is specified.
 }
 \examples{
-remove_stopwords("On the Origin of Species", language="English")
+get_tokens("On the Origin of Species", language="English")
 }

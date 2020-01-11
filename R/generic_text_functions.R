@@ -46,7 +46,7 @@ get_stopwords <- function(language = "English"){
 #' @param text A character vector containing text from which to remove stopwords.
 #' @param language A string indicating the language of the text.
 #' @return Returns the input text with stopwords removed.
-#' @examples remove_stopwords("On the Origin of Species", language="English")
+#' @examples get_tokens("On the Origin of Species", language="English")
 get_tokens <- function(text, language){
 
   stop_words <- synthesisr::get_stopwords("English")

@@ -89,7 +89,7 @@ write_ris <- function(x) {
     c(paste(b$code, b$entry, sep = "  - "), "")
 
   },
-  lookup = synthesisr::code_lookup[, c(1, 3:4)])
+  lookup = synthesisr::code_lookup[, c(1, 5:8)])
 
   export <- do.call(c, result)
   return(export)

@@ -1,6 +1,6 @@
 files <-
   paste(system.file(package = "synthesisr"),
-        "/extdata/zoorec.txt",
+        "/extdata/scopus.ris",
         sep = "")
 
 detect_filetype(files)

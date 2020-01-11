@@ -18,7 +18,7 @@ Takes an imported data.frame and rearranges it to match lookup codes.
 \examples{
 files <-
   paste(system.file(package = "synthesisr"),
-        "/extdata/zoorec.txt",
+        "/extdata/scopus.ris",
         sep = "")
 
 df <- read.delim(files)

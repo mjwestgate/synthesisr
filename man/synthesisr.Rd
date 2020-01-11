@@ -5,7 +5,12 @@
 \alias{synthesisr}
 \title{synthesisr: Import, Assemble, and Deduplicate Bibiliographic Datasets}
 \description{
-A description goes here
+Systematic review searches include multiple databases
+ that export results in a variety of formats with overlap in
+ coverage between databases. To streamline the process of importing,
+ assembling, and deduplicating results, synthesisr recognizes
+ bibliographic files exported from databases commonly used for
+ systematic reviews and merges results into a standardized format.
 }
 \section{Functions}{
 
@@ -46,7 +51,7 @@ A description goes here
 
 \strong{Deduplication}
 \itemize{
- \item \code{\link{fuzz_functions}} Fuzzy string matching
+ \item \code{\link{fuzzdist}} Fuzzy string matching
  \item \code{\link{find_duplicates}} Locate potentially duplicated references
  \item \code{\link{deduplicate}} Return a data.frame with only 'unique' references
 }

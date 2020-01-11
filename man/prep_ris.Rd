@@ -12,7 +12,7 @@ prep_ris(z, delimiter)
 \item{delimiter}{A string indicating the type of delimiter separating entries.}
 }
 \value{
-Returns a data.frame intended for import with read_ris.
+Returns a data.frame intended for import with parse_ris.
 }
 \description{
 This function preps RIS files by cleaning common issues and converting to a common format.
