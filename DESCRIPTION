@@ -25,13 +25,12 @@ License: GPL-3
 LazyData: true
 Imports:
     tm,
-    udpipe,
     ngram,
-    slam,
+    stopwords,
     stringdist
 Suggests:
     knitr,
-    stopwords
+    SnowballC
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
