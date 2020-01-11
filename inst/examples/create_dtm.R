@@ -20,4 +20,4 @@ my_df <-  data.frame(
 
 terms <- c("evidence synthesis", "package", "systematic")
 
-create_dfm(my_df$title, features = terms, closure = "none")
+create_dtm(my_df$title, features = terms, closure = "none")
