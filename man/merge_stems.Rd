@@ -38,5 +38,5 @@ my_df <-  data.frame(
 
 terms <- c("evidence synthesis", "package", "systematic")
 
-create_dtm(my_df$title, features = terms, closure = "none")
+create_dtm(as.character(my_df$title), bigram_check = TRUE, min_freq = 1)
 }
