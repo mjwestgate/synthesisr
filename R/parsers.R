@@ -1,4 +1,9 @@
-# Clean an ris file for import
+#' Clean an RIS file for import
+#'
+#' @description This function preps RIS files by cleaning common issues and converting to a common format.
+#' @param z A character vector that contains RIS bibliographic information.
+#' @param delimiter A string indicating the type of delimiter separating entries.
+#' @return Returns a data.frame intended for import with read_ris.
 prep_ris <- function(
   z,
   delimiter

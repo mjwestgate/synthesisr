@@ -138,6 +138,7 @@ remove_numbers <- function(text){
 #' @description This function extracts n-grams from text.
 #' @param x A character vector from which to extract n-grams.
 #' @param n Numeric: the minimum number of terms in an n-gram.
+#' @param min_freq Numeric: the minimum number of times an n-gram must occur to be returned.
 #' @param ngram_quantile Numeric: what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies.
 #' @param stop_words A character vector of stopwords to ignore.
 #' @param rm_punctuation Logical: should punctuation be removed before selecting ngrams?
@@ -222,7 +223,7 @@ replace_ngrams <- function(x, ngrams){
 #'
 #' If \code{retain_empty_rows} is FALSE (the default) and the object returned is named \code{z}, then \code{as.numeric(z$dimnames$Docs)} provides an index to which entries have been retained from the input vector (\code{x}).
 #' @return An object of class \code{simple_triplet_matrix}, listing the terms (columns) present in each row or string.
-#' @examples inst/examples/create_dtm.R
+#' @example inst/examples/create_dtm.R
 create_dtm <-
   function (x,
             stop_words,

@@ -19,6 +19,8 @@ get_ngrams(
 
 \item{n}{Numeric: the minimum number of terms in an n-gram.}
 
+\item{min_freq}{Numeric: the minimum number of times an n-gram must occur to be returned.}
+
 \item{ngram_quantile}{Numeric: what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies.}
 
 \item{stop_words}{A character vector of stopwords to ignore.}

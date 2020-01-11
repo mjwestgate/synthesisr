@@ -6,6 +6,18 @@
 #' @example inst/examples/bibvris.R
 detect_format <- function(x){
 
+  # internal function to calculate the proportion of lines that contain a particular regex
+  # called by detect_format
+  proportion_delimited <- function(x, regex){
+    delimiter_count <- unlist(lapply(
+      gregexpr(regex, x),
+      function(a){length(which(a > 0))}
+    ))
+    full_lines <- nchar(x) > 0
+    proportion <- length(which(delimiter_count > 0)) / length(which(full_lines))
+    return(proportion)
+  }
+
   # calculate proportional of lines containing likely tags
   proportions <- unlist(lapply(
     c(",\"", "\t", "\\{", "^[[:upper:]]{2,}"),
@@ -32,18 +44,6 @@ detect_format <- function(x){
     result <- "unknown"
   }
   return(result)
-}
-
-# internal function to calculate the proportion of lines that contain a particular regex
-# called by detect_format
-proportion_delimited <- function(x, regex){
-  delimiter_count <- unlist(lapply(
-    gregexpr(regex, x),
-    function(a){length(which(a > 0))}
-  ))
-  full_lines <- nchar(x) > 0
-  proportion <- length(which(delimiter_count > 0)) / length(which(full_lines))
-  return(proportion)
 }
 
 
