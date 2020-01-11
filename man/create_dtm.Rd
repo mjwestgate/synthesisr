@@ -23,11 +23,11 @@ create_dtm(
 
 \item{bigram_quantile}{what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies after removing all bigrams with frequencies <=2.}
 
-\item{min_freq}{minimum proportion of entries that a term must be found in to be retained in the analysis. Defaults to 0.01.}
+\item{min_freq}{Numeric: the minimum number of times an ngram must occur to be included in the term list.}
 
-\item{max_freq}{maximum proportion of entries that a term must be found in to be retained in the analysis. Defaults to 0.85.}
+\item{stem_collapse}{logical: should terms with identical lemmatized stems be merged?}
 
-\item{retain_empty_rows}{logical: should the function return an object with the same length as the input string (TRUE), or remove rows that contain no text after filtering rare & common words etc? (FALSE, the default). The latter is the default because this is required by some potential applications, such as topic models.}
+\item{language}{A string indicating which language should be used for stopwords.}
 }
 \value{
 An object of class \code{simple_triplet_matrix}, listing the terms (columns) present in each row or string.

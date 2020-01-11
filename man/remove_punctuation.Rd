@@ -9,7 +9,7 @@ remove_punctuation(text, preserve_punctuation = NULL)
 \arguments{
 \item{text}{A character vector from which to remove punctuation.}
 
-\item{remove_hyphens}{Logical: Should hyphens be considered punctuation and removed?}
+\item{preserve_punctuation}{A string or vector of punctuation to retain}
 }
 \value{
 Returns the input text with punctuation removed.

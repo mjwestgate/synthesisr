@@ -52,6 +52,11 @@ prep_ris <- function(
   if(delimiter == "space"){
     z_dframe$ris[which(z_dframe$ris == "" & z_dframe$text == "")] <- "ER"
     # ensure multiple consecutive empty rows are removed
+    # This function computes the rolling sum of detections; intended for use in detect_delimiter.
+    rollingsum <- function(a, n = 2L){
+      tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
+    }
+
     z_rollsum <- rollingsum(z_dframe$ris == "ER")
     if(any(z_rollsum > 1)){
       z_dframe <- z_dframe[which(z_rollsum <= 1), ]
@@ -125,7 +130,7 @@ parse_pubmed <- function(x){
   x <- prep_ris(x, detect_delimiter(x))
 
   x_merge <- merge(x,
-    code_lookup[code_lookup$ris_pubmed, c("code", "order", "field")],
+                   synthesisr::code_lookup[synthesisr::code_lookup$ris_pubmed, c("code", "order", "field")],
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
@@ -246,10 +251,10 @@ parse_ris <- function(x){
 
   # to avoid duplicate tags, decide whether to use wos or generic tags
   all_tags <- unique(x$ris)
-  if(all(all_tags %in% code_lookup$code[code_lookup$ris_wos])){
-    code_lookup_thisfile <- code_lookup[code_lookup$ris_wos, ]
+  if(all(all_tags %in% synthesisr::code_lookup$code[synthesisr::code_lookup$ris_wos])){
+    code_lookup_thisfile <- synthesisr::code_lookup[synthesisr::code_lookup$ris_wos, ]
   }else{
-    code_lookup_thisfile <- code_lookup[code_lookup$ris_generic, ]
+    code_lookup_thisfile <- synthesisr::code_lookup[synthesisr::code_lookup$ris_generic, ]
   }
 
   # merge data with lookup info, to provide bib-style tags

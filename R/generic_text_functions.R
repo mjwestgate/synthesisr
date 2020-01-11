@@ -74,7 +74,7 @@ while(any(grepl("  ", new_text))){
 #'
 #' @description Removes common punctuation marks from a text.
 #' @param text A character vector from which to remove punctuation.
-#' @param remove_hyphens Logical: Should hyphens be considered punctuation and removed?
+#' @param preserve_punctuation A string or vector of punctuation to retain
 #' @return Returns the input text with punctuation removed.
 #' @examples remove_punctuation("#s<<<//<y>!&^n$$t/>h%e&s$is#!++r!//")
 remove_punctuation <- function(text, preserve_punctuation=NULL){
@@ -177,6 +177,13 @@ get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_p
   return(ngrams)
 }
 
+#' Replace n-grams in text as single terms
+#'
+#' @description This function replaces spaces in n-grams with underscores to turn them into single tokens.
+#' @param x A character vector in which to replace n-grams.
+#' @param ngrams A character vector of n-grams.
+#' @return The input character vector with spaces in n-grams replaced by underscores.
+#' @examples replace_ngrams("by means of natural selection", "natural selection")
 replace_ngrams <- function(x, ngrams){
   replacement_text <- gsub(" ", "_", ngrams)
   for (i in seq_along(ngrams)) {
@@ -191,11 +198,11 @@ replace_ngrams <- function(x, ngrams){
 #' @description Takes bibliographic data and converts it to a DTM for passing to topic models.
 #' @param x a vector or \code{data.frame} containing text
 #' @param stop_words optional vector of strings, listing terms to be removed from the DTM prior to analysis. Defaults to synthesisr::get_stopwords()
-#' @param min_freq minimum proportion of entries that a term must be found in to be retained in the analysis. Defaults to 0.01.
-#' @param max_freq maximum proportion of entries that a term must be found in to be retained in the analysis. Defaults to 0.85.
+#' @param min_freq Numeric: the minimum number of times an ngram must occur to be included in the term list.
 #' @param bigram_check logical: should ngrams be searched for?
 #' @param bigram_quantile what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies after removing all bigrams with frequencies <=2.
-#' @param retain_empty_rows logical: should the function return an object with the same length as the input string (TRUE), or remove rows that contain no text after filtering rare & common words etc? (FALSE, the default). The latter is the default because this is required by some potential applications, such as topic models.
+#' @param stem_collapse logical: should terms with identical lemmatized stems be merged?
+#' @param language A string indicating which language should be used for stopwords.
 #' @details This is primarily intended to be called internally by \code{screen_topics}, but is made available for users to generate their own topic models with the same properties as those in revtools.
 #'
 #' This function uses some standard tools like stemming, converting words to lower case, and removal of numbers or punctuation. It also replaces stemmed words with the shortest version of all terms that share the same stem, which doesn't affect the calculations, but makes the resulting analyses easier to interpret. It doesn't use part-of-speech tagging.
@@ -271,7 +278,12 @@ create_dtm <-
   }
 
 
-
+#' Merge terms that have identical stems
+#'
+#' @description This function merges terms in document feature matrices if they have identical lemmatized stems.
+#' @param dfm An object of class simple_triplet_matrix.
+#' @return The input dfm with duplicated terms merged into one column.
+#' @example inst/examples/create_dtm.R
 merge_stems <- function(dfm) {
   if (!class(dfm) %in% c("simple_triplet_matrix")) {
     stop("merge_stems only accepts objects of class simple_triplet_matrix")

@@ -8,9 +8,13 @@
 
 \describe{
  \item{code}{code used in search results}
- \item{description}{description of field from original source}
+ \item{order}{the order in which to rank fields in assembled results}
+ \item{category_description}{type of bibliographic data}
+ \item{entry_description}{description of field}
  \item{field}{bibliographic field that codes correspond to}
- \item{order}{the order in which to rank fields in assembled results}}}
+ \item{ris_generic}{logical: if the code is used in generic ris files}
+ \item{ris_wos}{logical: if the code is used in Web of Science ris files}
+ \item{ris_pubmed}{logical: if the code is used in PubMed ris files}}}
 \usage{
 code_lookup
 }
