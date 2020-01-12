@@ -145,16 +145,19 @@ remove_numbers <- function(text){
 #' @param preserve_chars A character vector of punctuation marks to be retained if rm_punctuation is TRUE.
 #' @return A character vector of n-grams.
 #' @examples get_ngrams("On the Origin of Species By Means of Natural Selection")
-get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_punctuation=FALSE, preserve_chars=c("-", "_")){
+get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_punctuation=FALSE, preserve_chars=c("-", "_"), language="English"){
 
   if (missing(stop_words)) {
-    stop_words <- stopwords::stopwords(source = "stopwords-iso")
+    if(missing(language)){
+      language <- "English"
+    }
+    stop_words <- synthesisr::get_stopwords(language)
   }
 
   ngram_x <- x[!is.na(x)]
   ngram_x <- ngram_x[unlist(lapply(ngram_x, ngram::wordcount)) >= n]
   if (length(ngram_x) > 0) {
-    ngrams <- ngram::get.phrasetable(ngram::ngram(ngram_x))
+    ngrams <- ngram::get.phrasetable(ngram::ngram(ngram_x, n = n))
 
     if(!is.null(min_freq)){
       ngrams <- ngrams[ngrams$freq >= min_freq,]
