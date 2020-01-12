@@ -1,0 +1,82 @@
+---
+title: "Import, assemble, deduplicate, and manipulate bibliographic data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Import, assemble, deduplicate, and manipulate bibliographic data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Read, assemble, and deduplicate bibliographic files
+
+```{r}
+
+risfiles <- paste(system.file("extdata/", package = "synthesisr"),
+                  list.files(system.file("extdata/", package = "synthesisr")),
+                  sep = "/")
+
+imported_files <-
+  synthesisr::read_refs(filename = risfiles, return_df = TRUE)
+
+duplicates <-
+  synthesisr::find_duplicates(
+    imported_files,
+    match_variable = "title",
+    match_function = "stringdist",
+    to_lower = TRUE,
+    rm_punctuation = TRUE
+  )
+
+df <- synthesisr::deduplicate(imported_files, duplicates)
+
+```
+
+## Write bibliographic files
+
+```{r}
+
+citation <- df[1,]
+
+synthesisr::format_citation(citation)
+
+synthesisr::write_refs(citation, format="bib")
+
+```
+
+
+## Manipulate text data
+
+```{r}
+
+tokens <- synthesisr::get_tokens(synthesisr::remove_punctuation(df$title)) 
+
+bigrams <- synthesisr::get_ngrams(
+  tolower(df$title),
+  n = 2,
+  min_freq = 2,
+  rm_punctuation = TRUE,
+  preserve_chars = c("-")
+)
+
+dfm <- synthesisr::create_dtm(
+  x = df$title,
+  ngram_check = TRUE,
+  ngram_lengths = c(2, 3),
+  ngram_quantile = NULL,
+  min_freq = 2,
+  stem_collapse = FALSE
+)
+
+```
+
+
+
+
+

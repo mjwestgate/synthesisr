@@ -181,16 +181,16 @@ get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_p
       if (any(keep_rows)) {
         ngram_df <- ngram_df[keep_rows,]
       }
+      ngrams <- apply(ngram_df, 1, function(a) {
+        paste(a, collapse = " ")
+      })
     }
+    if(rm_punctuation){
+      ngrams <- synthesisr::remove_punctuation(ngrams, preserve_punctuation = preserve_chars)
+    }
+    return(ngrams)
   }
-  ngrams <- apply(ngram_df, 1, function(a) {
-    paste(a, collapse = " ")
-  })
-  if(rm_punctuation){
-    ngrams <- synthesisr::remove_punctuation(ngrams, preserve_punctuation = preserve_chars)
   }
-  return(ngrams)
-}
 
 #' Replace n-grams in text as single terms
 #'
@@ -200,6 +200,8 @@ get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_p
 #' @return The input character vector with spaces in n-grams replaced by underscores.
 #' @examples replace_ngrams("by means of natural selection", "natural selection")
 replace_ngrams <- function(x, ngrams){
+  x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("-", "_"))
+  ngrams <- synthesisr::remove_punctuation(ngrams, preserve_punctuation = c("-", "_"))
   replacement_text <- gsub(" ", "_", ngrams)
   for (i in seq_along(ngrams)) {
     x <- gsub(ngrams[i], replacement_text[i],
@@ -214,8 +216,9 @@ replace_ngrams <- function(x, ngrams){
 #' @param x a vector or \code{data.frame} containing text
 #' @param stop_words optional vector of strings, listing terms to be removed from the DTM prior to analysis. Defaults to synthesisr::get_stopwords()
 #' @param min_freq Numeric: the minimum number of times an ngram must occur to be included in the term list.
-#' @param bigram_check logical: should ngrams be searched for?
-#' @param bigram_quantile what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies after removing all bigrams with frequencies <=2.
+#' @param ngram_lengths numeric: which length ngrams should be searched for?
+#' @param ngram_check logical: should ngrams be searched for?
+#' @param ngram_quantile what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies after removing all bigrams with frequencies <=2.
 #' @param stem_collapse logical: should terms with identical lemmatized stems be merged?
 #' @param language A string indicating which language should be used for stopwords.
 #' @details This is primarily intended to be called internally by \code{screen_topics}, but is made available for users to generate their own topic models with the same properties as those in revtools.
@@ -230,8 +233,9 @@ replace_ngrams <- function(x, ngrams){
 create_dtm <-
   function (x,
             stop_words,
-            bigram_check = TRUE,
-            bigram_quantile = 0.8,
+            ngram_check = TRUE,
+            ngram_lengths=2,
+            ngram_quantile = 0.8,
             min_freq=NULL,
             stem_collapse=TRUE,
             language="English") {
@@ -257,11 +261,19 @@ create_dtm <-
     x <- gsub(" - ", " ", x)
     x <- synthesisr::remove_punctuation(x, preserve_punctuation = "-")
 
-    if (bigram_check) {
+    if (ngram_check) {
       #ngrams <-  unique(synthesisr::get_ngrams(x, min_freq=1))
 
       only_some <- function(entry){
-        internal_ngrams <- synthesisr::get_ngrams(entry, min_freq = min_freq, ngram_quantile = bigram_quantile)
+        for(k in 1:length(ngram_lengths)){
+          if(k==1){
+            internal_ngrams <- synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
+                                                      ngram_quantile = bigram_quantile)
+          }else{
+            internal_ngrams <- append(internal_ngrams, synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
+                                                      ngram_quantile = bigram_quantile))
+          }
+        }
         synthesisr::replace_ngrams(entry, internal_ngrams)
       }
 
