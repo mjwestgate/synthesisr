@@ -139,10 +139,11 @@ remove_numbers <- function(text){
 #' @param x A character vector from which to extract n-grams.
 #' @param n Numeric: the minimum number of terms in an n-gram.
 #' @param min_freq Numeric: the minimum number of times an n-gram must occur to be returned.
-#' @param ngram_quantile Numeric: what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies.
+#' @param ngram_quantile Numeric: what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of ngram frequencies.
 #' @param stop_words A character vector of stopwords to ignore.
 #' @param rm_punctuation Logical: should punctuation be removed before selecting ngrams?
 #' @param preserve_chars A character vector of punctuation marks to be retained if rm_punctuation is TRUE.
+#' @param language A string indicating the language to use for removing stopwords.
 #' @return A character vector of n-grams.
 #' @examples get_ngrams("On the Origin of Species By Means of Natural Selection")
 get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_punctuation=FALSE, preserve_chars=c("-", "_"), language="English"){
@@ -268,10 +269,10 @@ create_dtm <-
         for(k in 1:length(ngram_lengths)){
           if(k==1){
             internal_ngrams <- synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                      ngram_quantile = bigram_quantile)
+                                                      ngram_quantile = ngram_quantile)
           }else{
             internal_ngrams <- append(internal_ngrams, synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                      ngram_quantile = bigram_quantile))
+                                                      ngram_quantile = ngram_quantile))
           }
         }
         synthesisr::replace_ngrams(entry, internal_ngrams)

@@ -11,7 +11,8 @@ get_ngrams(
   ngram_quantile = NULL,
   stop_words,
   rm_punctuation = FALSE,
-  preserve_chars = c("-", "_")
+  preserve_chars = c("-", "_"),
+  language = "English"
 )
 }
 \arguments{
@@ -21,13 +22,15 @@ get_ngrams(
 
 \item{min_freq}{Numeric: the minimum number of times an n-gram must occur to be returned.}
 
-\item{ngram_quantile}{Numeric: what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies.}
+\item{ngram_quantile}{Numeric: what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of ngram frequencies.}
 
 \item{stop_words}{A character vector of stopwords to ignore.}
 
 \item{rm_punctuation}{Logical: should punctuation be removed before selecting ngrams?}
 
 \item{preserve_chars}{A character vector of punctuation marks to be retained if rm_punctuation is TRUE.}
+
+\item{language}{A string indicating the language to use for removing stopwords.}
 }
 \value{
 A character vector of n-grams.

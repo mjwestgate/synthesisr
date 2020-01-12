@@ -7,8 +7,9 @@
 create_dtm(
   x,
   stop_words,
-  bigram_check = TRUE,
-  bigram_quantile = 0.8,
+  ngram_check = TRUE,
+  ngram_lengths = 2,
+  ngram_quantile = 0.8,
   min_freq = NULL,
   stem_collapse = TRUE,
   language = "English"
@@ -19,9 +20,11 @@ create_dtm(
 
 \item{stop_words}{optional vector of strings, listing terms to be removed from the DTM prior to analysis. Defaults to synthesisr::get_stopwords()}
 
-\item{bigram_check}{logical: should ngrams be searched for?}
+\item{ngram_check}{logical: should ngrams be searched for?}
 
-\item{bigram_quantile}{what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies after removing all bigrams with frequencies <=2.}
+\item{ngram_lengths}{numeric: which length ngrams should be searched for?}
+
+\item{ngram_quantile}{what quantile of ngrams should be retained. Defaults to 0.8; i.e. the 80th percentile of bigram frequencies after removing all bigrams with frequencies <=2.}
 
 \item{min_freq}{Numeric: the minimum number of times an ngram must occur to be included in the term list.}
 
@@ -67,5 +70,5 @@ my_df <-  data.frame(
 
 terms <- c("evidence synthesis", "package", "systematic")
 
-create_dtm(as.character(my_df$title), bigram_check = TRUE, min_freq = 1)
+create_dtm(as.character(my_df$title), ngram_check = TRUE, min_freq = 1)
 }
