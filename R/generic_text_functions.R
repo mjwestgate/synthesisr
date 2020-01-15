@@ -260,7 +260,7 @@ create_dtm <-
     }
     x <- tolower(x)
     x <- gsub(" - ", " ", x)
-    x <- synthesisr::remove_punctuation(x, preserve_punctuation = "-")
+    x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("-", "_"))
 
     if (ngram_check) {
       #ngrams <-  unique(synthesisr::get_ngrams(x, min_freq=1))
@@ -288,7 +288,7 @@ create_dtm <-
       #       synthesisr::remove_punctuation(ngrams, preserve_punctuation = c("_", "-")))
     }
 
-    x <- lapply(x, get_tokens, language="English")
+    x <- lapply(x, synthesisr::get_tokens, language="English")
     x <- unlist(lapply(x, paste, collapse=" "))
 
     dfm <- tm::DocumentTermMatrix(x = tm::Corpus(tm::VectorSource(x)),
