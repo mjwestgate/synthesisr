@@ -167,8 +167,6 @@ get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_p
                                                      ngram_quantile),]
     }
 
-    ##!!! some kind of cutoff method switch
-
     if (nrow(ngrams) > 0) {
       ngram_list <- strsplit(ngrams$ngrams, " ")
 
@@ -181,17 +179,19 @@ get_ngrams <- function(x, n=2, min_freq=1, ngram_quantile=NULL, stop_words, rm_p
       }, sw = stop_words)
       if (any(keep_rows)) {
         ngram_df <- ngram_df[keep_rows,]
+        ngrams <- apply(ngram_df, 1, function(a) {
+          paste(a, collapse = " ")
+        })
+        if(rm_punctuation){
+          ngrams <- synthesisr::remove_punctuation(ngrams, preserve_punctuation = preserve_chars)
+        }
+        return(ngrams)
+
       }
-      ngrams <- apply(ngram_df, 1, function(a) {
-        paste(a, collapse = " ")
-      })
     }
-    if(rm_punctuation){
-      ngrams <- synthesisr::remove_punctuation(ngrams, preserve_punctuation = preserve_chars)
-    }
-    return(ngrams)
   }
   }
+
 
 #' Replace n-grams in text as single terms
 #'
