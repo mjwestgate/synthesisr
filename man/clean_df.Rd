@@ -35,3 +35,6 @@ my_df <-  data.frame(
 
 clean_df(my_df)
 }
+\seealso{
+[clean_authors()] and [clean_names()] for underlying functions.
+}

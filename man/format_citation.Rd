@@ -7,17 +7,41 @@
 \alias{format_citation.data.frame}
 \title{Format a citation}
 \usage{
-format_citation(data, details = TRUE, abstract = FALSE,
-  add_html = FALSE, line_breaks = FALSE, ...)
+format_citation(
+  data,
+  details = TRUE,
+  abstract = FALSE,
+  add_html = FALSE,
+  line_breaks = FALSE,
+  ...
+)
 
-\method{format_citation}{list}(data, details = TRUE, abstract = FALSE,
-  add_html = FALSE, line_breaks = FALSE, ...)
+\method{format_citation}{list}(
+  data,
+  details = TRUE,
+  abstract = FALSE,
+  add_html = FALSE,
+  line_breaks = FALSE,
+  ...
+)
 
-\method{format_citation}{bibliography}(data, details = TRUE,
-  abstract = FALSE, add_html = FALSE, line_breaks = FALSE, ...)
+\method{format_citation}{bibliography}(
+  data,
+  details = TRUE,
+  abstract = FALSE,
+  add_html = FALSE,
+  line_breaks = FALSE,
+  ...
+)
 
-\method{format_citation}{data.frame}(data, details = TRUE,
-  abstract = FALSE, add_html = FALSE, line_breaks = FALSE, ...)
+\method{format_citation}{data.frame}(
+  data,
+  details = TRUE,
+  abstract = FALSE,
+  add_html = FALSE,
+  line_breaks = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{An object of class data.frame or bibliography.}
@@ -72,6 +96,6 @@ file <- c(
 )
 
 delim <- detect_delimiter(file)
-citation <- read_ris(prep_ris(file, delim))
+citation <- parse_ris(file)
 format_citation(citation)
 }

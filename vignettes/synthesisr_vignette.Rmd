@@ -1,0 +1,97 @@
+---
+title: "Import, assemble, deduplicate, and manipulate bibliographic data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Import, assemble, deduplicate, and manipulate bibliographic data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+Systematic review searches include multiple databases that export results in a variety of formats with overlap in coverage between databases. To streamline the process of importing, assembling, and deduplicating results, synthesisr recognizes bibliographic files exported from databases commonly used for systematic reviews and merges results into a standardized format.  
+
+If you run into issues with the package, please open an issue at https://github.com/rmetaverse/synthesisr or email eliza.grames@uconn.edu or martinjwestgate@gmail.com.
+
+## Read, assemble, and deduplicate bibliographic files
+
+synthesisr can read any BibTex or RIS formatted bibliographic data files. It detects whether files are more bib-like or ris-like and imports them accordingly. Note that RIS files from some databases may contain non-standard fields that cause import failure in rare cases; if this happens, we recommend converting the file in open source bibliographic management software such as Zotero.
+
+After import, synthesisr can detect duplicates and retain only unique bibliographic records. Duplicates can be deteced with a variety of methods such as string distance of fuzzy matching records. 
+
+```{r}
+
+risfiles <- paste(system.file("extdata/", package = "synthesisr"),
+                  list.files(system.file("extdata/", package = "synthesisr")),
+                  sep = "/")
+
+imported_files <-
+  synthesisr::read_refs(filename = risfiles, return_df = TRUE)
+
+duplicates <-
+  synthesisr::find_duplicates(
+    imported_files,
+    match_variable = "title",
+    match_function = "stringdist",
+    to_lower = TRUE,
+    rm_punctuation = TRUE
+  )
+
+df <- synthesisr::deduplicate(imported_files, duplicates)
+
+```
+
+## Write bibliographic files
+
+To facilitate exporting results to other platforms after assembly and deduplication, synthesisr can write bibliographic data to .ris or .bib files. Optionally, write_refs can write directly to a text file stored locally. 
+
+```{r}
+
+citation <- df[1,]
+
+synthesisr::format_citation(citation)
+
+synthesisr::write_refs(citation, format="bib", 
+                       write_file = FALSE)
+
+```
+
+
+## Manipulate text data
+
+To support other packages in the metaverse, synthesisr also contains an assortment of text-mining functions useful for evidence synthesis such as extracing tokens and building document-term matrices. For example, synthesisr contains functions to extract tokens, identify n-grams (phrases with n words), and build document feature matrices. 
+
+```{r}
+
+tokens <- synthesisr::get_tokens(synthesisr::remove_punctuation(df$title)) 
+
+bigrams <- synthesisr::get_ngrams(
+  tolower(df$title),
+  n = 2,
+  min_freq = 2,
+  rm_punctuation = TRUE,
+  preserve_chars = c("-")
+)
+
+dfm <- synthesisr::create_dtm(
+  x = df$title,
+  ngram_check = TRUE,
+  ngram_lengths = c(2, 3),
+  ngram_quantile = NULL,
+  min_freq = 2,
+  stem_collapse = FALSE
+)
+
+```
+
+
+
+
+

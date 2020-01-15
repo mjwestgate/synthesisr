@@ -21,6 +21,5 @@
     "ER  - "
   )
 
-  delim <- detect_delimiter(file)
-  citation <- read_ris(prep_ris(file, delim))
+  citation <- parse_ris(file)
   generate_ids(citation)

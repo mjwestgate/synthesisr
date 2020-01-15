@@ -8,8 +8,12 @@
 \alias{fuzz_token_set_ratio}
 \title{Detect duplicates with fuzzy matching}
 \usage{
-fuzzdist(a, b, method = c("fuzz_m_ratio", "fuzz_partial_ratio",
-  "fuzz_token_sort_ratio", "fuzz_token_set_ratio"))
+fuzzdist(
+  a,
+  b,
+  method = c("fuzz_m_ratio", "fuzz_partial_ratio", "fuzz_token_sort_ratio",
+    "fuzz_token_set_ratio")
+)
 
 fuzz_m_ratio(a, b)
 
@@ -55,5 +59,7 @@ fuzz_token_set_ratio is similar to fuzz_token_sort_ratio, but compares both sort
 fuzzdist is a wrapper function, for compatability with stringdist.
 }
 \examples{
-fuzzdist("On the Origin of Species", "Of the Original Specs", method="fuzz_m_ratio")
+fuzzdist("On the Origin of Species",
+         "Of the Original Specs",
+         method = "fuzz_m_ratio")
 }

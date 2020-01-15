@@ -3,9 +3,9 @@
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
 #' @param data A data.frame that contains duplicate bibliographic entries.
 #' @param match_variable A length-1 integer or string listing the column in which duplicates should be sought. Defaults to doi where available, followed by title. If neither are found the function will fail.
-#' @param group_vars An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.
+#' @param group_variables An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.
 #' @param match_function The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches
-#' @param method A string indicating the method to use for fuzzdist.
+#' @param method A string indicating the method to use for fuzzdist or stringdist.
 #' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
 #' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates?
 #' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates?
@@ -14,10 +14,10 @@
 find_duplicates <- function(
   data,
   match_variable,
-  group_vars  = NULL,
-  match_function  = c("stringdist",  "fuzzdist", "exact"),
+  group_variables, # = NULL,
+  match_function, # = c("stringdist",  "fuzzdist", "exact"),
   method,
-  threshold  = 5,
+  threshold, # = 5,
   to_lower = FALSE,
   rm_punctuation = FALSE
 ){
@@ -34,11 +34,11 @@ find_duplicates <- function(
   if(missing(data)){
     stop("'data' is missing: Please provide a data.frame")
   }
-  if(missing(group_vars)){
-    group_vars <- NULL
+  if(missing(group_variables)){
+    group_variables <- NULL
   }else{
-    if(!all(group_vars %in% colnames(data))){
-      group_vars <- NULL
+    if(!all(group_variables %in% colnames(data))){
+      group_variables <- NULL
     }
   }
 
@@ -68,7 +68,7 @@ find_duplicates <- function(
   }
 
   # methods
-  if(missing(match_function)){match_function <- "exact"}
+  if(missing(match_function)){match_function <- "stringdist"}
   if(!any(c("fuzzdist", "stringdist", "exact") == match_function)){
     stop(
       paste0(
@@ -133,16 +133,16 @@ find_duplicates <- function(
       }else{
         # include only those entries in the same grouping categories as the current entry
         # plus any entries that are missing those values
-        if(is.null(group_vars)){
+        if(is.null(group_variables)){
           rows_tr <- remaining_rows
         }else{
-          match_list <- lapply(group_vars, function(a, data, row){
+          match_list <- lapply(group_variables, function(a, data, row){
             (data[, a] == data[row_start, a]) | is.na(data[, a])
             },
             data = data,
             row = row_start
           )
-          if(length(group_vars) == 1){
+          if(length(group_variables) == 1){
             rows_tr <- which(unlist(match_list))
           }else{
             rows_tr <- which(apply(
@@ -187,13 +187,57 @@ find_duplicates <- function(
   # add attributes
   result <- data$group
   attr(result, "match_variable") <- match_variable
-  if(is.null(group_vars)){
-    attr(result, "group_vars") <- NA
+  if(is.null(group_variables)){
+    attr(result, "group_variables") <- NA
   }else{
-    attr(result, "group_vars") <- group_vars
+    attr(result, "group_variables") <- group_variables
   }
   attr(result, "match_function") <- match_function
   attr(result, "method") <- method
   attr(result, "threshold") <- threshold
   return(result)
 }
+
+#' Remove duplicates from a bibliographic data set
+#'
+#' @description Given a list of duplicate entries and a data set, this function extracts only unique references.
+#' @param x A data.frame containing bibliographic data.
+#' @param matches A character vector showing which entires in x are duplicates.
+#' @return Returns a data.frame of unique references.
+#' @example inst/examples/deduplicate.R
+deduplicate <- function(
+  x, # data.frame returned by make_reference_dataframe
+  matches # vector showing which values are duplicates
+){
+  if(missing(matches)){
+    stop("please specify a vector containing identified matches
+    (e.g. as returned by find_duplicates)")
+  }
+  if(length(matches) == 1){
+    matches <- x[, matches]
+  }
+  x_split <- split(x, matches)
+  x_split <- lapply(x_split, function(a){
+    if(nrow(a) == 1){
+      result <- a[1, ]
+      result$n_duplicates <- 1
+    }else{
+      row <- which.max(
+        apply(
+          apply(a, 1, nchar),
+          2,
+          function(b){sum(b, na.rm = TRUE)}
+        )
+      )
+      result <- a[row, ]
+      result$n_duplicates <- nrow(a)
+    }
+    return(result)
+  })
+  output <- as.data.frame(
+    do.call(rbind, x_split),
+    stringsAsFactors = FALSE
+  )
+  return(output)
+}
+

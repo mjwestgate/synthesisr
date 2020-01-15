@@ -1,5 +1,6 @@
 files <-
   paste(system.file(package = "synthesisr"),
-        "/extdata/zoorec.txt",
+        "/extdata/scopus.ris",
         sep = "")
-results <- import_refs(files)
+
+results <- read_refs(files)
