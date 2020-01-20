@@ -190,6 +190,20 @@ replace_ngrams <- function(x, ngrams){
   return(x)
 }
 
+# called internally from create_dtm to only search within one entry for ngrams to reduce replacement time
+check_ngrams <- function(entry){
+  for(k in 1:length(ngram_lengths)){
+    if(k==1){
+      internal_ngrams <- synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
+                                                ngram_quantile = ngram_quantile)
+    }else{
+      internal_ngrams <- append(internal_ngrams, synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
+                                                                        ngram_quantile = ngram_quantile))
+    }
+  }
+  synthesisr::replace_ngrams(entry, internal_ngrams)
+}
+
 #' Construct a document-term matrix (DTM)
 #'
 #' @description Takes bibliographic data and converts it to a DTM for passing to topic models.
@@ -242,29 +256,9 @@ create_dtm <-
     x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("-", "_"))
 
     if (ngram_check) {
-      #ngrams <-  unique(synthesisr::get_ngrams(x, min_freq=1))
 
-      only_some <- function(entry){
-        for(k in 1:length(ngram_lengths)){
-          if(k==1){
-            internal_ngrams <- synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                      ngram_quantile = ngram_quantile)
-          }else{
-            internal_ngrams <- append(internal_ngrams, synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                      ngram_quantile = ngram_quantile))
-          }
-        }
-        synthesisr::replace_ngrams(entry, internal_ngrams)
-      }
+      x <- unlist(lapply(x, check_ngrams))
 
-      x <- unlist(lapply(x, only_some))
-
-      #x <- synthesisr::replace_ngrams(x, ngrams)
-      #x <- sapply(ngrams, gsub, x=x, replacement="__")
-      #x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("_", "-"))
-
-      #new_ngrams <- gsub(" ", "_",
-      #       synthesisr::remove_punctuation(ngrams, preserve_punctuation = c("_", "-")))
     }
 
     x <- lapply(x, synthesisr::get_tokens, language="English")
