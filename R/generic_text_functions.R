@@ -112,25 +112,6 @@ remove_punctuation <- function(text, preserve_punctuation=NULL){
 }
 
 
-#' Remove numbers from text
-#'
-#' @description Removes numbers from a text.
-#' @param text A character vector from which to remove numbers.
-#' @return Returns the input text with numbers removed.
-#' @examples remove_numbers("11s0y6nt4he35si6sr")
-remove_numbers <- function(text){
-  output <- gsub("[[:digit:]]", "", text)
-
-  if(any(grepl("  ", output))){
-    while(any(grepl("  ", output))){
-      output <- gsub("  ", " ", output)
-    }
-  }
-
-  return(output)
-
-}
-
 #' Extract n-grams from text
 #'
 #' @description This function extracts n-grams from text.
