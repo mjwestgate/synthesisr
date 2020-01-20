@@ -51,7 +51,6 @@ get_tokens <- function(text, language){
 
   stop_words <- synthesisr::get_stopwords("English")
 
-  # another for-loop that needs to be more efficient
   text <- strsplit(text, " ")
 
       whichin <- function(x){
@@ -93,20 +92,19 @@ remove_punctuation <- function(text, preserve_punctuation=NULL){
           output <- gsub(paste(" ", preserve_punctuation[i], sep=""), preserve_punctuation[i], output)
         }
       }
+      if(any(grepl(" -", output))){
+        while(any(grepl(" -", output))){
+          output <- gsub(" -", "-", output)
+        }
+      }
+
+      if(any(grepl("  ", output))){
+        while(any(grepl("  ", output))){
+          output <- gsub("  ", " ", output)
+        }
+      }
   } else{
-    output <- gsub("[[:punct:]]", "\\1 ", text)
-  }
-
-  if(any(grepl(" -", output))){
-    while(any(grepl(" -", output))){
-      output <- gsub(" -", "-", output)
-    }
-  }
-
-  if(any(grepl("  ", output))){
-    while(any(grepl("  ", output))){
-      output <- gsub("  ", " ", output)
-    }
+    output <- tm::removePunctuation(text)
   }
 
   return(output)
