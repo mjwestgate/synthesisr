@@ -5,11 +5,9 @@
 #' @return Returns a character vector containing a two-letter language code.
 #' @examples language_code("French")
 language_code <- function(language){
-  if(nchar(language==2)){la_code <- language}
+  if(nchar(language==2)){la_code <- tolower(language)}
   if(nchar(language)>2){
-
-    reference <- synthesisr::possible_langs
-    la_code <- as.character(reference$Short[which(reference$Language==language)])
+    la_code <- as.character(synthesisr::possible_langs$Short[which(tolower(synthesisr::possible_langs$Language)==tolower(language))])
   }
   return(la_code)
 }
@@ -48,24 +46,9 @@ get_stopwords <- function(language = "English"){
 #' @return Returns the input text with stopwords removed.
 #' @examples get_tokens("On the Origin of Species", language="English")
 get_tokens <- function(text, language){
-
-  stop_words <- synthesisr::get_stopwords("English")
-
-  text <- strsplit(text, " ")
-
-      whichin <- function(x){
-        if(any(x %in% stop_words)){
-          x <- x[-which(x %in% stop_words)]
-        }
-        return(x)
-      }
-
-      new_text <- unlist(lapply(text, whichin))
-
-while(any(grepl("  ", new_text))){
-  new_text <- gsub("  ", " ", new_text)
-}
-  return(new_text)
+  language <- synthesisr::language_code(language)
+  tm::scan_tokenizer(tm::removeWords(text, tm::stopwords(language)))
+  return(text)
 }
 
 
