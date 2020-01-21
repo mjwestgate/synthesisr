@@ -5,8 +5,8 @@
 #' @return Returns a character vector containing a two-letter language code.
 #' @examples language_code("French")
 language_code <- function(language){
-  if(nchar(language==2)){la_code <- tolower(language)}
-  if(nchar(language)>2){
+  if(nchar(language == 2)){la_code <- tolower(language)}
+  if(nchar(language) > 2){
     la_code <- as.character(synthesisr::possible_langs$Short[which(tolower(synthesisr::possible_langs$Language)==tolower(language))])
   }
   return(la_code)
@@ -45,7 +45,7 @@ get_stopwords <- function(language = "English"){
 #' @param language A string indicating the language of the text.
 #' @return Returns the input text with stopwords removed.
 #' @examples get_tokens("On the Origin of Species", language="English")
-get_tokens <- function(text, language){
+get_tokens <- function(text, language = "English"){
   language <- synthesisr::language_code(language)
   tm::scan_tokenizer(tm::removeWords(text, tm::stopwords(language)))
   return(text)
@@ -59,7 +59,7 @@ get_tokens <- function(text, language){
 #' @param preserve_punctuation A string or vector of punctuation to retain
 #' @return Returns the input text with punctuation removed.
 #' @examples remove_punctuation("#s<<<//<y>!&^n$$t/>h%e&s$is#!++r!//")
-remove_punctuation <- function(text, preserve_punctuation=NULL){
+remove_punctuation <- function(text, preserve_punctuation = NULL){
 
   if (!is.null(preserve_punctuation)){
     retain <-
@@ -174,17 +174,28 @@ replace_ngrams <- function(x, ngrams){
 }
 
 # called internally from create_dtm to only search within one entry for ngrams to reduce replacement time
-check_ngrams <- function(entry){
+check_ngrams <- function(entry, ngram_lengths, min_freq, ngram_quantile){
   for(k in 1:length(ngram_lengths)){
-    if(k==1){
-      internal_ngrams <- synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                ngram_quantile = ngram_quantile)
+    if(k == 1){
+      internal_ngrams <- get_ngrams(
+        entry,
+        n = ngram_lengths[k],
+        min_freq = min_freq,
+        ngram_quantile = ngram_quantile
+      )
     }else{
-      internal_ngrams <- append(internal_ngrams, synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                                        ngram_quantile = ngram_quantile))
+      internal_ngrams <- append(
+        internal_ngrams,
+        get_ngrams(
+          entry,
+          n = ngram_lengths[k],
+          min_freq = min_freq,
+          ngram_quantile = ngram_quantile
+        )
+      )
     }
   }
-  synthesisr::replace_ngrams(entry, internal_ngrams)
+  replace_ngrams(entry, internal_ngrams)
 }
 
 #' Construct a document-term matrix (DTM)
@@ -207,15 +218,14 @@ check_ngrams <- function(entry){
 #' If \code{retain_empty_rows} is FALSE (the default) and the object returned is named \code{z}, then \code{as.numeric(z$dimnames$Docs)} provides an index to which entries have been retained from the input vector (\code{x}).
 #' @return An object of class \code{simple_triplet_matrix}, listing the terms (columns) present in each row or string.
 #' @example inst/examples/create_dtm.R
-create_dtm <-
-  function (x,
+create_dtm <- function(x,
             stop_words,
             ngram_check = TRUE,
-            ngram_lengths=2,
+            ngram_lengths = 2,
             ngram_quantile = 0.8,
-            min_freq=NULL,
-            stem_collapse=TRUE,
-            language="English") {
+            min_freq = NULL,
+            stem_collapse = TRUE,
+            language = "English") {
     if (!(class(x) %in% c("character", "data.frame"))) {
       stop("make_dtm only accepts arguments of class 'data.frame' or 'character'")
     }
@@ -225,8 +235,8 @@ create_dtm <-
       })
     }
     n <- length(x)
-    if (missing(stop_words)) {
-      if (missing(language)) {
+    if(missing(stop_words)) {
+      if(missing(language)) {
         language <- "English"
       }
       stop_words <- synthesisr::get_stopwords(language = language)
@@ -238,14 +248,18 @@ create_dtm <-
     x <- gsub(" - ", " ", x)
     x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("-", "_"))
 
-    if (ngram_check) {
-
-      x <- unlist(lapply(x, check_ngrams))
-
+    if(ngram_check) {
+      x <- unlist(lapply(x, function(a, ngram_lengths, min_freq, ngram_quantile){
+        check_ngrams(a, ngram_lengths, min_freq, ngram_quantile)
+        },
+        ngram_lengths = ngram_lengths,
+        min_freq = min_freq,
+        ngram_quantile = ngram_quantile
+      ))
     }
 
     x <- lapply(x, synthesisr::get_tokens, language="English")
-    x <- unlist(lapply(x, paste, collapse=" "))
+    x <- unlist(lapply(x, paste, collapse = " "))
 
     dfm <- tm::DocumentTermMatrix(x = tm::Corpus(tm::VectorSource(x)),
                                   control = list(wordLengths = c(4, Inf)))

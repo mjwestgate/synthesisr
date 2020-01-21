@@ -26,9 +26,11 @@ my_df <-  data.frame(
 
     "revtools: An R package to support article screening for evidence synthesis",
 
-    "An automated approach to identifying search terms for systematic reviews using keyword co‐occurrence networks",
+    "An automated approach to identifying search terms for systematic reviews
+    using keyword co‐occurrence networks",
 
-    "Reproducible, flexible and high‐throughput data extraction from primary literature: The metaDigitise r package",
+    "Reproducible, flexible and high‐throughput data extraction from primary literature:
+    The metaDigitise r package",
 
     "eviatlas:tool for visualizing evidence synthesis databases.",
 
@@ -53,4 +55,7 @@ extract_unique_references(my_df, matches = dups)
 
 # or, in one line:
 deduplicate(my_df, "title")
+}
+\seealso{
+[find_duplicates()], [deduplicate()]
 }

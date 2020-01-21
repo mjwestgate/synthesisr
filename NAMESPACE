@@ -1,14 +1,28 @@
-exportPattern("^[[:alpha:]]+")
+export(
+  read_refs, read_ref,
+    detect_delimiter, detect_format,
+    parse_bibtex, parse_ris, parse_pubmed, parse_csv, parse_tsv,
+    generate_ids, clean_df, clean_authors, clean_names,
+  as.bibliography,
+    summary.bibliography, print.bibliography, '[.bibliography', c.bibliography,
+    as.data.frame.bibliography,
+  format_citation,
+    format_citation.bibliography, format_citation.data.frame, format_citation.list,
+  fuzzdist,
+    fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
+  deduplicate,
+    find_duplicates, extract_unique_references,
+  create_dtm,
+    get_ngrams, replace_ngrams,
+    get_stopwords, get_tokens, remove_punctuation,
+    language_code, add_line_breaks,
+  write_refs,
+    write_bib, write_ris,
+  merge_columns, match_columns, remove_factors, create_index
+)
 importFrom("stats", "dist", "xtabs")
 importFrom("utils", "read.csv", "read.table", "write.csv", "read.delim", "head", "tail", "write.table")
 importFrom("stringdist", "stringdist")
-export(as.bibliography, summary.bibliography,
-       print.bibliography, '[.bibliography', c.bibliography,
-add_line_breaks, format_citation, format_citation.bibliography,
-format_citation.data.frame, format_citation.list,
-fuzzdist, fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
-find_duplicates, merge_columns)
-
 S3method(format_citation, bibliography)
 S3method(format_citation, list)
 S3method(format_citation, data.frame)

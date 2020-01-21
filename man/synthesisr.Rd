@@ -12,57 +12,63 @@ Systematic review searches include multiple databases
  bibliographic files exported from databases commonly used for
  systematic reviews and merges results into a standardized format.
 }
-\section{Functions}{
+\section{Import}{
 
-\strong{Importing and cleaning bibliographic data}
+The key task performed by \code{synthesisr} is flexible import and presentation of bibliographic data. This is typically achieved by \code{\link{read_refs}}, which can import multiple files at once and link them together into a single \code{data.frame}. Users that require more detailed control can use the following functions:
 \itemize{
- \item Import bibliographic datasets via \code{\link{read_refs}}, incorporating:
-   \itemize{
-     \item \code{\link{read_ref}} Import an individual bibliographic dataset
-     \item \code{\link{detect_format}} Detects if a file is bib-like or ris-like
-     \item \code{\link{detect_delimiter}} Detect delimiter type in ris files
-     \item \code{\link{code_lookup}} Tag replacement for ris files
-     \item \code{\link{parse_ris}} Parse a vector containing bibliographic data
-     \item \code{\link{as.bibliography}} Methods for class 'bibliography'
-   }
- \item Clean column and author names via \code{\link{clean_df}}
-   \itemize{
-     \item \code{\link{clean_names}} Clean column names
-     \item \code{\link{clean_authors}} Clean author names
-   }
- \item Indexing
-   \itemize{
-     \item \code{\link{create_index}} Create an ordered string
-     \item \code{\link{generate_ids}} Generate unique row IDs from bibliographic data
-  }
+  \item \code{\link{read_ref}} Import an individual bibliographic dataset
+  \item \code{\link{detect_format}} Detects if a file is bib-like or ris-like
+  \item \code{\link{detect_delimiter}} Detect delimiter type in ris files
+  \item \code{\link{code_lookup}} Tag replacement for ris files
+  \item \code{\link{parse_ris}} Parse a vector containing bibliographic data
+  \item \code{\link{as.bibliography}} Methods for class 'bibliography'
+  \item \code{\link{match_columns}} Takes an imported data.frame and rearranges it to match lookup codes
+  \item \code{\link{clean_df}} Clean author and column names
+  \item \code{\link{generate_ids}} Generate unique row IDs from bibliographic data
+  \item \code{\link{format_citation}} Return a clean citation from a bibliography or data.frame
+}
 }
 
-\strong{Data manipulation}
+\section{Deduplication}{
+
+When importing from multiple databases, it is likely that there will be duplicates in the resulting dataset. The easiest way to deal with this problem in \code{synthesisr} is using the \code{\link{deduplicate}} command; but this can be risky, particularly if there are no DOIs in the dataset. To get finer control of the deduplication process, consider using the sub-functions:
+\itemize{
+  \item \code{\link{find_duplicates}} Locate potentially duplicated references
+  \item \code{\link{extract_unique_references}} Return a data.frame with only 'unique' references
+}
+}
+
+\section{Text mining}{
+
+A range of tools that can make the systematic review process more efficient rely on text manipulation or text mining techniques. While several R packages exist that apply these methods, here we group some standard functions that are optimized for ease-of-use. The most important of these functions is \code{\link{create_dtm}} for building Document-Term Matrices, but other useful tools include:
+\itemize{
+  \item \code{\link{language_code}} Returns the two-letter language code for specified language
+  \item \code{\link{get_stopwords}} Locate stopwords for a specified language
+  \item \code{\link{get_tokens}} Remove stopwords from a vector of strings
+  \item \code{\link{remove_punctuation}} Remove punctuation from a vector of strings
+  \item \code{\link{get_ngrams}} Find sequential combinations of words
+  \item \code{\link{replace_ngrams}} Replace spaces in n-grams with underscores
+  \item \code{\link{fuzzdist}} Fuzzy string matching
+  \item \code{\link{add_line_breaks}} Set a maximum character width for strings
+}
+}
+
+\section{Export}{
+
+Exporting data processed in \code{synthesisr} back to a file in a standard bibliographic format is possible using \code{\link{write_refs}}. Alternatively, you can call either of the two sub-functions to export to ris or bibtex formats (respectively):
+\itemize{
+  \item \code{\link{write_ris}} Export as ris
+  \item \code{\link{write_bib}} Export as bib
+}
+}
+
+\section{Miscellaneous Functions}{
+
+\code{synthesisr} contains several functions that are useful for manipulating data; these are included here for completeness.
 \itemize{
  \item \code{\link{merge_columns}} rbind two data.frames with different numbers of columns
  \item \code{\link{remove_factors}} Remove factors from a data.frame
-}
-
-\strong{Formatting}
-\itemize{
- \item \code{\link{format_citation}} Return a clean citation from a bibliography or data.frame
- \item \code{\link{add_line_breaks}} Set a maximum character width for strings in a vector
-}
-
-\strong{Deduplication}
-\itemize{
- \item \code{\link{fuzzdist}} Fuzzy string matching
- \item \code{\link{find_duplicates}} Locate potentially duplicated references
- \item \code{\link{deduplicate}} Return a data.frame with only 'unique' references
-}
-
-\strong{Export}
-\itemize{
- \item \code{\link{write_refs}} Export bibliographic data. Bundles:
-   \itemize{
-     \item \code{\link{write_ris}} Export as ris
-     \item \code{\link{write_bib}} Export as bib
- }
+ \item \code{\link{create_index}} Create an ordered string
 }
 }
 

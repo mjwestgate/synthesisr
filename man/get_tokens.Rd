@@ -4,7 +4,7 @@
 \alias{get_tokens}
 \title{Remove stopwords from text}
 \usage{
-get_tokens(text, language)
+get_tokens(text, language = "English")
 }
 \arguments{
 \item{text}{A character vector containing text from which to remove stopwords.}
