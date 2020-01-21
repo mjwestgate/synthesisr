@@ -73,5 +73,5 @@ extract_unique_references(my_df, matches = dups)
 deduplicate(my_df, "title")
 }
 \seealso{
-[extract_unique_references()], [deduplicate()]
+\code{\link{extract_unique_references}}, \code{\link{deduplicate}}
 }

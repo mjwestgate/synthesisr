@@ -9,7 +9,7 @@
 #' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to TRUE.
 #' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates? Defaults to TRUE.
 #' @return Returns a vector of duplicate matches and methods used.
-#' @seealso [extract_unique_references()], [deduplicate()]
+#' @seealso \code{\link{extract_unique_references}}, \code{\link{deduplicate}}
 #' @example inst/examples/deduplicate.R
 find_duplicates <- function(
   data, # string
@@ -202,7 +202,7 @@ find_duplicates <- function(
 #' @param matches A vector showing which entries in \code{data} are duplicates.
 #' @param type How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
 #' @return Returns a \code{data.frame} of unique references.
-#' @seealso [find_duplicates()], [deduplicate()]
+#' @seealso \code{\link{find_duplicates}}, \code{\link{deduplicate}}
 #' @example inst/examples/deduplicate.R
 extract_unique_references <- function(
   data, # data.frame
@@ -268,7 +268,7 @@ extract_unique_references <- function(
 #' @return A \code{data.frame} containing data identified as unique.
 #' @details
 #' This is a wrapper function to \code{find_duplicates} and \code{extract_unique_references}, which tries to choose some sensible defaults. Use with care.
-#' @seealso [find_duplicates()] and [extract_unique_references()] for underlying functions.
+#' @seealso \code{\link{find_duplicates}} and \code{\link{extract_unique_references}} for underlying functions.
 #' @example inst/examples/deduplicate.R
 deduplicate <- function(
   data,

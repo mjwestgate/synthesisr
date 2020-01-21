@@ -36,5 +36,5 @@ my_df <-  data.frame(
 clean_df(my_df)
 }
 \seealso{
-[clean_authors()] and [clean_names()] for underlying functions.
+\code{\link{clean_authors}} and \code{\link{clean_names}} for underlying functions.
 }
