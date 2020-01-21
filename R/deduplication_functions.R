@@ -1,70 +1,56 @@
 #' Detect duplicate values
 #'
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
-#' @param data A data.frame that contains duplicate bibliographic entries.
-#' @param match_variable A length-1 integer or string listing the column in which duplicates should be sought. Defaults to doi where available, followed by title. If neither are found the function will fail.
-#' @param group_variables An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.
-#' @param match_function The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches
+#' @param data A character vector containing duplicate bibliographic entries.
+#' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.
+#' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches.
 #' @param method A string indicating the method to use for fuzzdist or stringdist.
 #' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
-#' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates?
-#' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates?
+#' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to TRUE.
+#' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates? Defaults to TRUE.
 #' @return Returns a vector of duplicate matches and methods used.
 #' @example inst/examples/deduplicate.R
 find_duplicates <- function(
-  data,
-  match_variable,
-  group_variables, # = NULL,
-  match_function, # = c("stringdist",  "fuzzdist", "exact"),
-  method,
-  threshold, # = 5,
-  to_lower = FALSE,
-  rm_punctuation = FALSE
+  data, # string
+  group_by, # either a vector or a data.frame or list containing vectors
+  match_function = "stringdist",
+  method = "osa",
+  threshold,
+  to_lower = TRUE,
+  rm_punctuation = TRUE
 ){
 
-  if(match_function=="stringdist"){
+  # check for stringdist
+  if(match_function == "stringdist"){
     if(!requireNamespace("stringdist")){
       match_function <- "fuzzdist"
       print("Note: stringdist must be installed to use stringdist method. Using fuzzdist instead.")
     }else{requireNamespace("stringdist")}
   }
 
-  # error catching
   # data
   if(missing(data)){
     stop("'data' is missing: Please provide a data.frame")
   }
-  if(missing(group_variables)){
-    group_variables <- NULL
-  }else{
-    if(!all(group_variables %in% colnames(data))){
-      group_variables <- NULL
-    }
+  if(inherits(data, "data.frame")){
+    stop("'data' must be a character vector, not a data.frame")
+  }
+  if(class(data) != "character"){
+    data <- as.character(data)
   }
 
-  # match variable
-  if(missing(match_variable)){
-    if(any(colnames(data) == "doi")){
-      match_variable <- "doi"
-      if(missing(match_function)){match_function <- "exact"}
-    }else{
-      if(any(colnames(data) == "title")){
-        match_variable <- "title"
-      }else{
-        stop("match_variable is missing, with no default;
-          please specify which column should be searched for duplicates"
-        )
-      }
-    }
+  # grouping
+  if(missing(group_by)){
+    group_variables <- NULL
   }else{
-    if(!any(colnames(data) == match_variable)){
-      stop(paste0(
-        match_variable,
-        " is not a valid column name in ",
-        data,
-        ": Please specify which column should be searched for duplicates"
-      ))
+    if(!inherits(group_by, c("data.frame", "character", "list"))){
+      stop("object specified by 'group_by' must be of class list, data.frame or character")
     }
+    group_variables <- switch(class(group_by),
+      "character" = {list(group_by)},
+      "data.frame" = {as.list(group_by)},
+      "list" = {group_by}
+    )
   }
 
   # methods
@@ -102,96 +88,106 @@ find_duplicates <- function(
     }
   }
 
-  # prep columns
-  if(any(colnames(data) == "checked") == FALSE){
-    data$checked <- FALSE
-  }
-  if(any(colnames(data) == "group") == FALSE){
-    data$group <- NA
-  }
-  if(to_lower){
-    data[, match_variable] <- tolower(data[, match_variable])
-  }
-  if(rm_punctuation){
-    data[, match_variable] <- synthesisr::remove_punctuation(data[, match_variable])
-  }
+  # transformations
+  if(to_lower){data <- tolower(data)}
+  if(rm_punctuation){data <- synthesisr::remove_punctuation(data)}
 
-  # run while loop
-  progress <- 1
-	while(all(data$checked) == FALSE){
-    remaining_rows <- which(data$checked == FALSE)
-    if(length(remaining_rows) == 1){
-			data$group[remaining_rows] <- progress
-		  data$checked[remaining_rows] <- TRUE
-		}else{
-      # locate relevant information
-			row_start <- remaining_rows[1]
-      # if this entry is empty, then skip (i.e. never match NAs)
-      if(is.na(data[row_start, match_variable])){
-        data$checked[row_start] <- TRUE
-        data$group[row_start] <- progress
-      }else{
-        # include only those entries in the same grouping categories as the current entry
-        # plus any entries that are missing those values
-        if(is.null(group_variables)){
-          rows_tr <- remaining_rows
-        }else{
-          match_list <- lapply(group_variables, function(a, data, row){
-            (data[, a] == data[row_start, a]) | is.na(data[, a])
-            },
-            data = data,
-            row = row_start
-          )
-          if(length(group_variables) == 1){
-            rows_tr <- which(unlist(match_list))
-          }else{
-            rows_tr <- which(apply(
-              do.call(cbind, match_list),
-              1,
-              function(a){all(a)}
-            ))
-          }
-        }
-        rows_tr <- rows_tr[which(rows_tr != row_start)]
+  # quick option for exact matching based on split()
+  if(match_function == "exact"){
+    order_initial <- seq_along(data)
+    # ensure NAs are always given a unique value
+    data[is.na(data)] <- paste0("MISSING_VALUE_", seq_along(which(is.na(data))))
+    # split data by name
+    order_list <- split(order_initial, data)
+    order_list <- order_list[order(unlist(lapply(order_list, min)))]
+    result <- do.call(c, lapply(seq_along(order_list), function(a, ol){
+        rep(a, length(ol[[a]]))
+      }, ol = order_list))
+    result <- result[order(do.call(c, order_list))]
 
-        if(length(rows_tr) > 0){
-          if(match_function == "exact"){
-            match_result <- (data[rows_tr, match_variable] == data[row_start, match_variable])
-          }else{
-            match_result <- do.call(
-              match_function,
-              list(
-                a = data[row_start, match_variable],
-                b = data[rows_tr, match_variable],
-                method = method
-              )
-            ) <= threshold
-          }
-          if(any(match_result, na.rm = TRUE)){
-            rows_selected <- rows_tr[which(match_result)]
-            data$checked[c(row_start, rows_selected)] <- TRUE
-            data$group[c(row_start, rows_selected)] <- progress
-          }else{
-            data$checked[row_start] <- TRUE
-            data$group[row_start] <- progress
-          }
+  }else{ # i.e. if a stringdist-based method is requested
+
+    # prep vectors to track progress
+    checked <- rep(FALSE, length(data))
+    group <- rep(FALSE, length(data))
+
+    # run 'while' loop
+    progress <- 1
+  	while(all(checked) == FALSE){
+      remaining_rows <- which(checked == FALSE)
+      if(length(remaining_rows) == 1){
+  			group[remaining_rows] <- progress
+  		  checked[remaining_rows] <- TRUE
+  		}else{
+        # locate relevant information
+  			row_start <- remaining_rows[1]
+        # if this entry is empty, then skip (i.e. never match NAs)
+        if(is.na(data[row_start])){
+          checked[row_start] <- TRUE
+          group[row_start] <- progress
         }else{
-          data$checked[row_start] <- TRUE
-          data$group[row_start] <- progress
-        }
-      } # end if(is.na(data[row_start, match_variable]))
-    } # end if(length(remaining_rows) == 1)
-    progress <- progress + 1
-  } # end while loop
+          # include only those entries in the same grouping categories as the current entry
+          # plus any entries that are missing those values
+          if(is.null(group_variables)){
+            rows_tr <- remaining_rows
+          }else{
+            match_list <- lapply(
+              group_variables,
+              function(a, row){
+                if(is.na(a[row])){rep(TRUE, length(a))}else{a == a[row]}
+              }, row = row_start
+            )
+            # match_list <- lapply(group_variables, function(a, data, row){
+            #   (data[, a] == data[row_start, a]) | is.na(data[, a])
+            #   },
+            #   data = data,
+            #   row = row_start
+            # )
+            if(length(group_variables) == 1){
+              rows_tr <- which(unlist(match_list))
+            }else{
+              rows_tr <- which(apply(
+                do.call(cbind, match_list),
+                1,
+                function(a){all(a)}
+              ))
+            }
+          }
+          rows_tr <- rows_tr[which(rows_tr != row_start)]
+
+          if(length(rows_tr) > 0){
+            # if(match_function == "exact"){
+            #   match_result <- (data[rows_tr] == data[row_start])
+            # }else{
+              match_result <- do.call(
+                match_function,
+                list(
+                  a = data[row_start],
+                  b = data[rows_tr],
+                  method = method
+                )
+              ) <= threshold
+            # }
+            if(any(match_result, na.rm = TRUE)){
+              rows_selected <- rows_tr[which(match_result)]
+              checked[c(row_start, rows_selected)] <- TRUE
+              group[c(row_start, rows_selected)] <- progress
+            }else{
+              checked[row_start] <- TRUE
+              group[row_start] <- progress
+            }
+          }else{
+            checked[row_start] <- TRUE
+            group[row_start] <- progress
+          }
+        } # end if(is.na(data[row_start, match_variable]))
+      } # end if(length(remaining_rows) == 1)
+      progress <- progress + 1
+    } # end while loop
+    result <- group
+  }
 
   # add attributes
-  result <- data$group
-  attr(result, "match_variable") <- match_variable
-  if(is.null(group_variables)){
-    attr(result, "group_variables") <- NA
-  }else{
-    attr(result, "group_variables") <- group_variables
-  }
   attr(result, "match_function") <- match_function
   attr(result, "method") <- method
   attr(result, "threshold") <- threshold
@@ -201,39 +197,55 @@ find_duplicates <- function(
 #' Remove duplicates from a bibliographic data set
 #'
 #' @description Given a list of duplicate entries and a data set, this function extracts only unique references.
-#' @param x A data.frame containing bibliographic data.
-#' @param matches A character vector showing which entires in x are duplicates.
-#' @return Returns a data.frame of unique references.
+#' @param data A \code{data.frame} containing bibliographic information.
+#' @param matches A vector showing which entries in \code{data} are duplicates.
+#' @param type How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
+#' @return Returns a \code{data.frame} of unique references.
 #' @example inst/examples/deduplicate.R
-deduplicate <- function(
-  x, # data.frame returned by make_reference_dataframe
-  matches # vector showing which values are duplicates
+extract_unique_references <- function(
+  data, # data.frame
+  matches, # vector showing which values are duplicates
+  type = "merge"
 ){
   if(missing(matches)){
     stop("please specify a vector containing identified matches
     (e.g. as returned by find_duplicates)")
   }
-  if(length(matches) == 1){
-    matches <- x[, matches]
+  if(length(matches) != nrow(data)){
+    stop("'matches' does not have the same length as x")
   }
-  x_split <- split(x, matches)
-  x_split <- lapply(x_split, function(a){
+  if(!type %in% c("merge", "select")){
+    stop("'type' must be one of 'select' or 'merge'")
+  }
+
+  x_split <- split(data, matches)
+  x_split <- lapply(x_split, function(a, type){
     if(nrow(a) == 1){
       result <- a[1, ]
       result$n_duplicates <- 1
     }else{
-      row <- which.max(
-        apply(
-          apply(a, 1, nchar),
-          2,
-          function(b){sum(b, na.rm = TRUE)}
+      if(type == "merge"){
+        result_list <- lapply(a, function(b){
+          nx <- nchar(as.character(b))
+          nx[is.na(nx)] <- 0
+          return(b[which.max(nx)])
+        })
+        result <- as.data.frame(result_list, stringsAsFactors = FALSE)
+      }else{
+        row <- which.max(
+          apply(
+            apply(a, 1, nchar),
+            2,
+            function(b){sum(b, na.rm = TRUE)}
+          )
         )
-      )
-      result <- a[row, ]
+        result <- a[row, ]
+      }
       result$n_duplicates <- nrow(a)
     }
     return(result)
-  })
+  }, type = type
+  )
   output <- as.data.frame(
     do.call(rbind, x_split),
     stringsAsFactors = FALSE
@@ -241,3 +253,62 @@ deduplicate <- function(
   return(output)
 }
 
+
+#' Remove duplicates from a bibliographic data set
+#'
+#' @description Removes duplicates using sensible defaults
+#'
+#' @param data A \code{data.frame} containing bibliographic information.
+#' @param match_by Name of the column in \code{data} where duplicates should be sought.
+#' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches. Passed to \code{find_duplicates}.
+#' @param type How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
+#' @param \dots Arguments passed to \code{find_duplicates}.
+#' @return A \code{data.frame} containing data identified as unique.
+#' @details
+#' This is a wrapper function to \code{find_duplicates} and \code{extract_unique_references}, which tries to choose some sensible defaults. Use with care.
+#' @example inst/examples/deduplicate.R
+deduplicate <- function(
+  data,
+  match_by,
+  match_function,
+  type = "merge",
+  ... # args passed to find_duplicates
+){
+  if(missing(data)){
+    stop("'data' is missing, with no default")
+  }
+
+  # add defaults
+  if(missing(match_by)){
+    if(any(colnames(data) == "doi")){
+      data_fd <- data[, "doi"]
+      if(missing(match_function)){match_function <- "exact"}
+    }else{
+      if(any(colnames(data) == "title")){
+        data_fd <- data[, "title"]
+        if(missing(match_function)){match_function <- "stringdist"}
+      }else{
+        stop("'match_by' is missing, with no default;
+          please specify which column should be searched for duplicates"
+        )
+      }
+    }
+  }else{
+    if(!any(colnames(data) == match_by)){
+      stop(paste0(
+        match_by,
+        " is not a valid column name in ",
+        data,
+        ": Please specify which column should be searched for duplicates"
+      ))
+    }else{
+      data_fd <- data[, match_by]
+      if(missing(match_function)){match_function <- "stringdist"}
+    }
+  }
+
+  result <- find_duplicates(data_fd, match_function = match_function, ...)
+  return(
+    extract_unique_references(data, matches = result, type = type)
+  )
+}

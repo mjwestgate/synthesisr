@@ -4,18 +4,27 @@
 \alias{deduplicate}
 \title{Remove duplicates from a bibliographic data set}
 \usage{
-deduplicate(x, matches)
+deduplicate(data, match_by, match_function, type = "merge", ...)
 }
 \arguments{
-\item{x}{A data.frame containing bibliographic data.}
+\item{data}{A \code{data.frame} containing bibliographic information.}
 
-\item{matches}{A character vector showing which entires in x are duplicates.}
+\item{match_by}{Name of the column in \code{data} where duplicates should be sought.}
+
+\item{match_function}{The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches. Passed to \code{find_duplicates}.}
+
+\item{type}{How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.}
+
+\item{\dots}{Arguments passed to \code{find_duplicates}.}
 }
 \value{
-Returns a data.frame of unique references.
+A \code{data.frame} containing data identified as unique.
 }
 \description{
-Given a list of duplicate entries and a data set, this function extracts only unique references.
+Removes duplicates using sensible defaults
+}
+\details{
+This is a wrapper function to \code{find_duplicates} and \code{extract_unique_references}, which tries to choose some sensible defaults. Use with care.
 }
 \examples{
 my_df <-  data.frame(
@@ -24,11 +33,9 @@ my_df <-  data.frame(
 
     "revtools: An R package to support article screening for evidence synthesis",
 
-    "An automated approach to identifying search terms for
-    systematic reviews using keyword co‐occurrence networks",
+    "An automated approach to identifying search terms for systematic reviews using keyword co‐occurrence networks",
 
-    "Reproducible, flexible and high‐throughput data extraction
-    from primary literature: The metaDigitise r package",
+    "Reproducible, flexible and high‐throughput data extraction from primary literature: The metaDigitise r package",
 
     "eviatlas:tool for visualizing evidence synthesis databases.",
 
@@ -41,14 +48,16 @@ my_df <-  data.frame(
               "Grames et al", "Pick et al", NA, NA)
 )
 
-dups <-
-  find_duplicates(
-    my_df,
-    match_variable = "title",
-    match_function = "stringdist",
-    rm_punctuation = TRUE,
-    to_lower = TRUE
-  )
+# run deduplication
+dups <- find_duplicates(
+  my_df$title,
+  match_function = "stringdist",
+  rm_punctuation = TRUE,
+  to_lower = TRUE
+)
 
-deduplicate(my_df, matches = dups)
+extract_unique_references(my_df, matches = dups)
+
+# or, in one line:
+deduplicate(my_df, "title")
 }

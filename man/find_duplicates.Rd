@@ -6,31 +6,28 @@
 \usage{
 find_duplicates(
   data,
-  match_variable,
-  group_variables,
-  match_function,
-  method,
+  group_by,
+  match_function = "stringdist",
+  method = "osa",
   threshold,
-  to_lower = FALSE,
-  rm_punctuation = FALSE
+  to_lower = TRUE,
+  rm_punctuation = TRUE
 )
 }
 \arguments{
-\item{data}{A data.frame that contains duplicate bibliographic entries.}
+\item{data}{A character vector containing duplicate bibliographic entries.}
 
-\item{match_variable}{A length-1 integer or string listing the column in which duplicates should be sought. Defaults to doi where available, followed by title. If neither are found the function will fail.}
+\item{group_by}{An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.}
 
-\item{group_variables}{An optional vector listing the columns to use as grouping variables; that is, categories withing which duplicates should be sought (see 'note'). Optionally NULL to compare all entries against one another.}
-
-\item{match_function}{The duplicate detection method to use; options are "stringdist" for similarity, "fuzzdist" for fuzzy matching, or "exact" for exact matches}
+\item{match_function}{The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches.}
 
 \item{method}{A string indicating the method to use for fuzzdist or stringdist.}
 
 \item{threshold}{Numeric: the cutoff threshold for stringdist or fuzzdist.}
 
-\item{to_lower}{Logical: Should all entries should be considered in lowercase when detecting duplicates?}
+\item{to_lower}{Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to TRUE.}
 
-\item{rm_punctuation}{Logical: Should punctuation should be removed when detecting duplicates?}
+\item{rm_punctuation}{Logical: Should punctuation should be removed when detecting duplicates? Defaults to TRUE.}
 }
 \value{
 Returns a vector of duplicate matches and methods used.
@@ -45,11 +42,9 @@ my_df <-  data.frame(
 
     "revtools: An R package to support article screening for evidence synthesis",
 
-    "An automated approach to identifying search terms for
-    systematic reviews using keyword co‐occurrence networks",
+    "An automated approach to identifying search terms for systematic reviews using keyword co‐occurrence networks",
 
-    "Reproducible, flexible and high‐throughput data extraction
-    from primary literature: The metaDigitise r package",
+    "Reproducible, flexible and high‐throughput data extraction from primary literature: The metaDigitise r package",
 
     "eviatlas:tool for visualizing evidence synthesis databases.",
 
@@ -62,14 +57,16 @@ my_df <-  data.frame(
               "Grames et al", "Pick et al", NA, NA)
 )
 
-dups <-
-  find_duplicates(
-    my_df,
-    match_variable = "title",
-    match_function = "stringdist",
-    rm_punctuation = TRUE,
-    to_lower = TRUE
-  )
+# run deduplication
+dups <- find_duplicates(
+  my_df$title,
+  match_function = "stringdist",
+  rm_punctuation = TRUE,
+  to_lower = TRUE
+)
 
-deduplicate(my_df, matches = dups)
+extract_unique_references(my_df, matches = dups)
+
+# or, in one line:
+deduplicate(my_df, "title")
 }
