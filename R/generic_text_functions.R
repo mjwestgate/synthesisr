@@ -5,11 +5,9 @@
 #' @return Returns a character vector containing a two-letter language code.
 #' @examples language_code("French")
 language_code <- function(language){
-  if(nchar(language==2)){la_code <- language}
+  if(nchar(language==2)){la_code <- tolower(language)}
   if(nchar(language)>2){
-
-    reference <- synthesisr::possible_langs
-    la_code <- as.character(reference$Short[which(reference$Language==language)])
+    la_code <- as.character(synthesisr::possible_langs$Short[which(tolower(synthesisr::possible_langs$Language)==tolower(language))])
   }
   return(la_code)
 }
@@ -48,25 +46,9 @@ get_stopwords <- function(language = "English"){
 #' @return Returns the input text with stopwords removed.
 #' @examples get_tokens("On the Origin of Species", language="English")
 get_tokens <- function(text, language){
-
-  stop_words <- synthesisr::get_stopwords("English")
-
-  # another for-loop that needs to be more efficient
-  text <- strsplit(text, " ")
-
-      whichin <- function(x){
-        if(any(x %in% stop_words)){
-          x <- x[-which(x %in% stop_words)]
-        }
-        return(x)
-      }
-
-      new_text <- unlist(lapply(text, whichin))
-
-while(any(grepl("  ", new_text))){
-  new_text <- gsub("  ", " ", new_text)
-}
-  return(new_text)
+  language <- synthesisr::language_code(language)
+  tm::scan_tokenizer(tm::removeWords(text, tm::stopwords(language)))
+  return(text)
 }
 
 
@@ -93,45 +75,25 @@ remove_punctuation <- function(text, preserve_punctuation=NULL){
           output <- gsub(paste(" ", preserve_punctuation[i], sep=""), preserve_punctuation[i], output)
         }
       }
+      if(any(grepl(" -", output))){
+        while(any(grepl(" -", output))){
+          output <- gsub(" -", "-", output)
+        }
+      }
+
+      if(any(grepl("  ", output))){
+        while(any(grepl("  ", output))){
+          output <- gsub("  ", " ", output)
+        }
+      }
   } else{
-    output <- gsub("[[:punct:]]", "\\1 ", text)
-  }
-
-  if(any(grepl(" -", output))){
-    while(any(grepl(" -", output))){
-      output <- gsub(" -", "-", output)
-    }
-  }
-
-  if(any(grepl("  ", output))){
-    while(any(grepl("  ", output))){
-      output <- gsub("  ", " ", output)
-    }
+    output <- tm::removePunctuation(text)
   }
 
   return(output)
 
 }
 
-
-#' Remove numbers from text
-#'
-#' @description Removes numbers from a text.
-#' @param text A character vector from which to remove numbers.
-#' @return Returns the input text with numbers removed.
-#' @examples remove_numbers("11s0y6nt4he35si6sr")
-remove_numbers <- function(text){
-  output <- gsub("[[:digit:]]", "", text)
-
-  if(any(grepl("  ", output))){
-    while(any(grepl("  ", output))){
-      output <- gsub("  ", " ", output)
-    }
-  }
-
-  return(output)
-
-}
 
 #' Extract n-grams from text
 #'
@@ -211,6 +173,20 @@ replace_ngrams <- function(x, ngrams){
   return(x)
 }
 
+# called internally from create_dtm to only search within one entry for ngrams to reduce replacement time
+check_ngrams <- function(entry){
+  for(k in 1:length(ngram_lengths)){
+    if(k==1){
+      internal_ngrams <- synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
+                                                ngram_quantile = ngram_quantile)
+    }else{
+      internal_ngrams <- append(internal_ngrams, synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
+                                                                        ngram_quantile = ngram_quantile))
+    }
+  }
+  synthesisr::replace_ngrams(entry, internal_ngrams)
+}
+
 #' Construct a document-term matrix (DTM)
 #'
 #' @description Takes bibliographic data and converts it to a DTM for passing to topic models.
@@ -263,29 +239,9 @@ create_dtm <-
     x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("-", "_"))
 
     if (ngram_check) {
-      #ngrams <-  unique(synthesisr::get_ngrams(x, min_freq=1))
 
-      only_some <- function(entry){
-        for(k in 1:length(ngram_lengths)){
-          if(k==1){
-            internal_ngrams <- synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                      ngram_quantile = ngram_quantile)
-          }else{
-            internal_ngrams <- append(internal_ngrams, synthesisr::get_ngrams(entry, n=ngram_lengths[k], min_freq = min_freq,
-                                                      ngram_quantile = ngram_quantile))
-          }
-        }
-        synthesisr::replace_ngrams(entry, internal_ngrams)
-      }
+      x <- unlist(lapply(x, check_ngrams))
 
-      x <- unlist(lapply(x, only_some))
-
-      #x <- synthesisr::replace_ngrams(x, ngrams)
-      #x <- sapply(ngrams, gsub, x=x, replacement="__")
-      #x <- synthesisr::remove_punctuation(x, preserve_punctuation = c("_", "-"))
-
-      #new_ngrams <- gsub(" ", "_",
-      #       synthesisr::remove_punctuation(ngrams, preserve_punctuation = c("_", "-")))
     }
 
     x <- lapply(x, synthesisr::get_tokens, language="English")

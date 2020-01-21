@@ -1,3 +1,10 @@
+# ensure multiple consecutive empty rows are removed
+# This function computes the rolling sum of detections; intended for use in detect_delimiter.
+rollingsum <- function(a, n = 2L){
+  tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
+}
+
+
 #' Clean an RIS file for import
 #'
 #' @description This function preps RIS files by cleaning common issues and converting to a common format.
@@ -56,11 +63,6 @@ prep_ris <- function(
   }
   if(delimiter == "space"){
     z_dframe$ris[which(z_dframe$ris == "" & z_dframe$text == "")] <- "ER"
-    # ensure multiple consecutive empty rows are removed
-    # This function computes the rolling sum of detections; intended for use in detect_delimiter.
-    rollingsum <- function(a, n = 2L){
-      tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
-    }
 
     z_rollsum <- rollingsum(z_dframe$ris == "ER")
     if(any(z_rollsum > 1)){
