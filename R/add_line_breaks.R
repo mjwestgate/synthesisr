@@ -22,10 +22,35 @@ add_line_breaks <- function(x, n = 50, html = FALSE){
         result$nchars[which(is.na(result$nchars))] <- 2
       }
     	result$sum <- cumsum(result$nchars)
+
+
+
     	result$group <- cut(result$sum,
     		breaks = seq(0, max(result$sum)+n-1, n),
     		labels = FALSE)
+
+
+
     	result_list <- split(result$text, result$group)
+
+    	while(any(lapply(result_list, function(x){
+    	  sum(nchar(x))
+    	})>n)){
+    	  error_start <- min(which(lapply(result_list, function(x){
+    	    sum(nchar(x))
+    	  })>n))
+    	  error_range <- min(which(result$group==error_start)):nrow(result)
+
+    	  result$sum[error_range] <- cumsum(result$nchars[error_range])
+
+    	  result$group[error_range] <- cut(result$sum[error_range],
+    	                      breaks = seq(0, max(result$sum[error_range])+n-1, n),
+    	                      labels = FALSE)+result$group[error_range[1]-1]
+
+    	  result_list <- split(result$text, result$group)
+
+    	}
+
     	result <- paste(
         unlist(
           lapply(result_list, function(a){paste(a, collapse = " ")})
