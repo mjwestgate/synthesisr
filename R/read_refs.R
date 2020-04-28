@@ -25,7 +25,7 @@ read_refs <- function(
 
   if(length(filename) > 1){
     result_list <- lapply(filename, function(a, df){
-      synthesisr::read_ref(a, df)
+      synthesisr::read_ref(a, df, verbose=verbose)
     },
     df = return_df
     )
@@ -57,7 +57,7 @@ read_refs <- function(
 
   }else{ # i.e. if onely one filename given
     return(
-      synthesisr::read_ref(filename, return_df)
+      synthesisr::read_ref(filename, return_df, verbose=verbose)
     )
   }
 }
