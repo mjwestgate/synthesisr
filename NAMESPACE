@@ -12,10 +12,7 @@ export(
     fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
   deduplicate,
     find_duplicates, extract_unique_references,
-  create_dtm,
-    get_ngrams, replace_ngrams,
-    get_stopwords, get_tokens, remove_punctuation,
-    language_code, add_line_breaks,
+add_line_breaks,
   write_refs,
     write_bib, write_ris,
   merge_columns, match_columns, remove_factors, create_index

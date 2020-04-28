@@ -31,7 +31,8 @@ Imports:
 Suggests:
     knitr,
     SnowballC,
-    rmarkdown
+    rmarkdown,
+    testthat
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
