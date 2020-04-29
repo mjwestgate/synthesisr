@@ -91,7 +91,7 @@ find_duplicates <- function(
 
   # transformations
   if(to_lower){data <- tolower(data)}
-  if(rm_punctuation){data <- synthesisr::remove_punctuation(data)}
+  if(rm_punctuation){data <- tm::removePunctuation(data)}
 
   # quick option for exact matching based on split()
   if(match_function == "exact"){
