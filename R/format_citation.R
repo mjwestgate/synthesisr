@@ -217,5 +217,6 @@ format_citation.data.frame <- function(
       data_out <- add_line_breaks(data_out, line_breaks)
     }
   }
+  data_out <- unlist(lapply(data_out, trimws))
   return(data_out)
 }
