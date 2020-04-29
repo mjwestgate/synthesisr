@@ -7,21 +7,18 @@
 match_columns <- function(df){
   # figure out which columns match known tags
   hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
+  newcolnames <- synthesisr::code_lookup$field[match(colnames(df), synthesisr::code_lookup$code)]
+  colnames(df)[!is.na(newcolnames)] <- newcolnames[!is.na(newcolnames)]
 
   # rearrange data in standard(ish) order
   if(any(is.na(hits))){
-    newdat <- df[, hits[!is.na(hits)]]
-  }else{newdat <- df[,hits]}
+    hits <- hits[!is.na(hits)]
+  }
 
   # retain columns even if they did not match lookup
-  newcolnames <- synthesisr::code_lookup$field[match(colnames(newdat), synthesisr::code_lookup$code)]
-  newcolnames[which(is.na(newcolnames) | newcolnames=="")] <- colnames(newdat)[which(is.na(newcolnames) | newcolnames=="")]
-  colnames(newdat) <- newcolnames
+  retain <- append(hits, seq(1, length(df), 1)[!(seq(1, length(df), 1) %in% hits)])
 
-  # drop duplicate columns that matched more than one tag
-  newdat <- newdat[,-which(duplicated(colnames(newdat)))]
-
-  return(newdat)
+  return(df[,retain])
 }
 
 #' Bind two or more data frames with different columns
