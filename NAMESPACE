@@ -1,7 +1,7 @@
 export(
   read_refs, read_ref,
     detect_delimiter, detect_format,
-    parse_bibtex, parse_ris, parse_pubmed, parse_csv, parse_tsv,
+    parse_bibtex, parse_ris, parse_pubmed, parse_csv, parse_tsv, prep_ris,
     generate_ids, clean_df, clean_authors, clean_names,
   as.bibliography,
     summary.bibliography, print.bibliography, '[.bibliography', c.bibliography,

@@ -50,7 +50,7 @@ detect_format <- function(x){
 #' Detect delimiter type in bibliographic files
 #'
 #' @description The delimiter in ris files is often an endrow, a special character, or a space. This function detects which delimiter, if any, a file uses.
-#' @param x A character vector containing bibliographic data.
+#' @param x A character vector containing RIS-formatted bibliographic data.
 #' @return Returns the delimiter type used in a file.
 #' @example inst/examples/detect_delimiter.R
 detect_delimiter <- function(x){
