@@ -337,6 +337,7 @@ review_duplicates <- function(text, matches){
 #' @param overrides Numeric: a vector of group numbers that are not true duplicates
 #' @return the input matches vector with unique group numbers for members of groups that the user overrides
 override_duplicates <- function(matches, overrides){
+  matches <- as.numeric(matches)
   for(i in 1:length(overrides)){
     matches[max(which(matches==overrides[i]))] <- max(matches)+1
   }

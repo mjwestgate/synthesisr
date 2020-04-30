@@ -373,6 +373,12 @@ parse_ris <- function(x){
   # convert into a list, where each reference is a separate entry
   x_split <- split(x_merge[c("field", "ris", "text", "order")], x_merge$ref)
 
+  # there is an issue with date accessed creating non-existing records
+  # removing datasets with 1 row fixes this
+if(any(unlist(lapply(x_split, nrow))==1)){
+  x_split <- x_split[  -which(unlist(lapply(x_split, nrow))==1)]
+}
+
   # convert to list format
   x_final <- lapply(x_split, function(a){
     result <- split(a$text, a$field)

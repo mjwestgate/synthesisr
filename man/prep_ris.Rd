@@ -4,7 +4,7 @@
 \alias{prep_ris}
 \title{Clean an RIS file for import}
 \usage{
-prep_ris(z, delimiter)
+prep_ris(z, delimiter, type)
 }
 \arguments{
 \item{z}{A character vector that contains RIS bibliographic information.}
