@@ -21,5 +21,5 @@ eviatlas <- c(
   "ER  - "
 )
 
-expect(detect_delimiter(eviatlas)=="endrow", "RIS file with ER not being recognized as endrow")
-
+expect(detect_delimiter(eviatlas) == "endrow",
+       "RIS file with ER not being recognized as endrow")

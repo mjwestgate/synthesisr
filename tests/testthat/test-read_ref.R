@@ -27,6 +27,7 @@ writeLines(file, tmp)
 
 df <- read_ref(tmp, return_df = TRUE, verbose = TRUE)
 
-expect(nrow(df)==1, "Number of imported example files differs from expectation")
+expect(nrow(df) == 1,
+       "Number of imported example files differs from expectation")
 
 expect(any(grep("EviAtlas", df[1,])), "First article is not expected article")

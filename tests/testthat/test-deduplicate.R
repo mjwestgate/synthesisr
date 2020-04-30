@@ -29,14 +29,24 @@ dups <- find_duplicates(
   to_lower = TRUE
 )
 
-expect(length(dups)==nrow(my_df), "Not all rows in df have been classified as duplicates or unique entries")
+expect(
+  length(dups) == nrow(my_df),
+  "Not all rows in df have been classified as duplicates or unique entries"
+)
 
-expect(all(dups[5:6]==dups[1:2]), "Not detecting duplicated titles in example df")
+expect(all(dups[5:6] == dups[1:2]),
+       "Not detecting duplicated titles in example df")
 
 deduped <- extract_unique_references(my_df, matches = dups)
 
-expect(length(unique(dups))==nrow(deduped), "Not all duplicate entries ignored when extracting unique references")
+expect(
+  length(unique(dups)) == nrow(deduped),
+  "Not all duplicate entries ignored when extracting unique references"
+)
 
 deduped2 <- deduplicate(my_df, "title")
 
-expect(all.equal(deduped, deduped2), "deduplicate not returning the same result as combining find_duplicates and extract_unique_references")
+expect(
+  all.equal(deduped, deduped2),
+  "deduplicate not returning the same result as combining find_duplicates and extract_unique_references"
+)

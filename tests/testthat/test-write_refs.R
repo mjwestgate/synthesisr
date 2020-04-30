@@ -29,8 +29,17 @@ evi_ris <- write_refs(df, format = "ris")
 evi_bib <- write_refs(df, format = "bib")
 
 
-expect(detect_format(evi_bib)=="parse_bibtex", "Bibtex formatted references not exporting as expected")
+expect(
+  detect_format(evi_bib) == "parse_bibtex",
+  "Bibtex formatted references not exporting as expected"
+)
 
 # note that this does not necessarily mean external programs will be able to read the file
-expect(detect_format(evi_ris)=="parse_ris", "RIS formatted references not exporting as expected")
-expect(any(grep("ER ", evi_ris, ignore.case = FALSE)), "ER tags for end of record not being included in RIS exports which causes errors with some external bibliographic programs")
+expect(
+  detect_format(evi_ris) == "parse_ris",
+  "RIS formatted references not exporting as expected"
+)
+expect(
+  any(grep("ER ", evi_ris, ignore.case = FALSE)),
+  "ER tags for end of record not being included in RIS exports which causes errors with some external bibliographic programs"
+)
