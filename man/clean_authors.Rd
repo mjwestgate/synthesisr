@@ -16,5 +16,5 @@ Returns the input vector with standardized delimiters.
 This function standardizes delimiters between author names.
 }
 \examples{
-clean_authors(c("Pullin AND Knight",  "Pullin & Knight"))
+clean_authors(c("Darwin AND Wallace",  "Darwin & Wallace"))
 }

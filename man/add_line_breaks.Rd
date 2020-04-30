@@ -15,7 +15,7 @@ add_line_breaks(x, n = 50, max_n = 80, html = FALSE, max_time = 60)
 
 \item{html}{logical: Should the line breaks be specified in html?}
 
-\item{max_time}{Numeric: What is the total amount of time (in seconds) to adjust groups until character thresholds are reached?}
+\item{max_time}{Numeric: What is the maximum amount of time (in seconds) allowed to adjust groups until character thresholds are reached?}
 }
 \value{
 Returns the input vector unaltered except for the addition of line breaks.

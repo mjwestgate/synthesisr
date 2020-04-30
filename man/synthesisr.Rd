@@ -35,6 +35,7 @@ When importing from multiple databases, it is likely that there will be duplicat
   \item \code{\link{find_duplicates}} Locate potentially duplicated references
   \item \code{\link{extract_unique_references}} Return a data.frame with only 'unique' references
   \item \code{\link{fuzzdist}} Fuzzy string matching
+  \item \code{\link{review_duplicates}} Manually review potential duplicates
 }
 }
 

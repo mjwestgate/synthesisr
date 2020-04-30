@@ -16,27 +16,16 @@ Returns the format of a file: either bib, ris, or unknown.
 Because bibliographic data  can be stored in multiple file types, this function determines if the format of text is one of several likely probabilities: comma-separated; tab-separated; bibtex; and ris (medline or generic).
 }
 \examples{
-file <- c(
-  "TY  - JOUR",
-  "AU  - Haddaway, Neal R.",
-  "AU  - Feierman, Andrew",
-  "AU  - Grainger, Matthew J.",
-  "AU  - Gray, Charles T.",
-  "AU  - Tanriver-Ayder, Ezgi",
-  "AU  - Dhaubanjar, Sanita",
-  "AU  - Westgate, Martin J.",
-  "PY  - 2019",
-  "DA  - 2019/06/04",
-  "TI  - EviAtlas: a tool for visualising evidence synthesis databases",
-  "JO  - Environmental Evidence",
-  "SP  - 22",
-  "VL  - 8",
-  "IS  - 1",
-  "SN  - 2047-2382",
-  "UR  - https://doi.org/10.1186/s13750-019-0167-1",
-  "DO  - 10.1186/s13750-019-0167-1",
-  "ID  - Haddaway2019",
-  "ER  - "
-)
-detect_format(file)
+metafor <- c("@article{viechtbauer2010,
+  title={Conducting meta-analyses in R with the metafor package},
+  author={Viechtbauer, Wolfgang},
+  journal={Journal of Statistical Software},
+  volume={36},
+  number={3},
+  pages={1--48},
+  year={2010},
+  publisher={UCLA Statistics}
+}")
+
+detect_format(metafor)
 }

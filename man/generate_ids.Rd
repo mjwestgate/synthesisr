@@ -7,7 +7,7 @@
 generate_ids(x)
 }
 \arguments{
-\item{x}{A list of bibliographic entires.}
+\item{x}{A list of bibliographic entries.}
 }
 \value{
 Returns a character vector of unique names.

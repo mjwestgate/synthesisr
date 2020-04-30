@@ -11,7 +11,7 @@ extract_unique_references(data, matches, type = "merge")
 
 \item{matches}{A vector showing which entries in \code{data} are duplicates.}
 
-\item{type}{How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.}
+\item{type}{How should entries be selected to retain? Default is \code{"merge"} which selects the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.}
 }
 \value{
 Returns a \code{data.frame} of unique references.

@@ -22,7 +22,7 @@ Returns a character vector containing bibliographic information in the specified
 This function exports data.frames containing bibliographic information to either a .ris or .bib file.
 }
 \examples{
-file <- c(
+eviatlas <- c(
   "TY  - JOUR",
   "AU  - Haddaway, Neal R.",
   "AU  - Feierman, Andrew",
@@ -45,7 +45,7 @@ file <- c(
   "ER  - "
 )
 
-detect_format(file) # = "parse_ris"
-df <- as.data.frame(parse_ris(file))
+detect_format(eviatlas) # = "parse_ris"
+df <- as.data.frame(parse_ris(eviatlas))
 write_refs(df, format = "ris")
 }

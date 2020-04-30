@@ -16,7 +16,7 @@ Returns a character vector containing references in .bib format.
 This is a subfunction of write_bibliography to convert an object of class bibliography to .bib text format.
 }
 \examples{
-file <- c(
+eviatlas <- c(
   "TY  - JOUR",
   "AU  - Haddaway, Neal R.",
   "AU  - Feierman, Andrew",
@@ -39,7 +39,7 @@ file <- c(
   "ER  - "
 )
 
-detect_format(file) # = "parse_ris"
-df <- as.data.frame(parse_ris(file))
+detect_format(eviatlas) # = "parse_ris"
+df <- as.data.frame(parse_ris(eviatlas))
 write_refs(df, format = "ris")
 }
