@@ -4,7 +4,7 @@
 #' @param n Numeric: The desired number of characters that should separate consecutive line breaks.
 #' @param max_n Numeric: The maximum number of characters that may separate consecutive line breaks.
 #' @param html logical: Should the line breaks be specified in html?
-#' @param max_time Numeric: What is the total amount of time (in seconds) to adjust groups until character thresholds are reached?
+#' @param max_time Numeric: What is the maximum amount of time (in seconds) allowed to adjust groups until character thresholds are reached?
 #' @details Line breaks are only added between words, so the value of n is actually a threshold value rather than being matched exactly. max_n is matched exactly if a limit is set and max_time is not reached finding new break points between words.
 #' @return Returns the input vector unaltered except for the addition of line breaks.
 #' @examples add_line_breaks(c("On the Origin of Species"), n = 10)

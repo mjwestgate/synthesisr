@@ -227,7 +227,7 @@ parse_pubmed <- function(x){
 #' Generate unique labels for entires
 #'
 #' @description Creates a unique label for each bibliographic entry using as much author and year data as possible.
-#' @param x A list of bibliographic entires.
+#' @param x A list of bibliographic entries.
 #' @return Returns a character vector of unique names.
 #' @example inst/examples/generate_ids.R
 generate_ids <- function(x){

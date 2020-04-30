@@ -91,7 +91,9 @@ find_duplicates <- function(
 
   # transformations
   if(to_lower){data <- tolower(data)}
-  if(rm_punctuation){data <- tm::removePunctuation(data)}
+  if(rm_punctuation){
+      data <- gsub("[[:punct:]]", "", data)
+    }
 
   # quick option for exact matching based on split()
   if(match_function == "exact"){
@@ -200,7 +202,7 @@ find_duplicates <- function(
 #' @description Given a list of duplicate entries and a data set, this function extracts only unique references.
 #' @param data A \code{data.frame} containing bibliographic information.
 #' @param matches A vector showing which entries in \code{data} are duplicates.
-#' @param type How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
+#' @param type How should entries be selected to retain? Default is \code{"merge"} which selects the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
 #' @return Returns a \code{data.frame} of unique references.
 #' @seealso \code{\link{find_duplicates}}, \code{\link{deduplicate}}
 #' @example inst/examples/deduplicate.R
@@ -317,10 +319,10 @@ deduplicate <- function(
 }
 
 #' Manually review potential duplicates
-#' @description Allows users to manually review articles classified as duplicates to check if they are indeed duplicates.
-#' @param text A character vector of the text that was used to identify potential duplicates
-#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function
-#' @return a data.frame of potential duplicates grouped together
+#' @description Allows users to manually review articles classified as duplicates.
+#' @param text A character vector of the text that was used to identify potential duplicates.
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function.
+#' @return A data.frame of potential duplicates grouped together.
 review_duplicates <- function(text, matches){
   likely_duplicates <- unique(matches)[table(matches)>1]
 
@@ -333,9 +335,9 @@ review_duplicates <- function(text, matches){
 
 #' Manually override duplicates
 #' @description Re-assign group numbers to text that was classified as duplicated but is unique.
-#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function
-#' @param overrides Numeric: a vector of group numbers that are not true duplicates
-#' @return the input matches vector with unique group numbers for members of groups that the user overrides
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function.
+#' @param overrides Numeric: a vector of group numbers that are not true duplicates.
+#' @return The input \code{matches} vector with unique group numbers for members of groups that the user overrides.
 override_duplicates <- function(matches, overrides){
   matches <- as.numeric(matches)
   for(i in 1:length(overrides)){

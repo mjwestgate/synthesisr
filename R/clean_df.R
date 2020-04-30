@@ -31,7 +31,7 @@ clean_df <- function(data){
 #' @description This function standardizes delimiters between author names.
 #' @param x Either a string or a vector of author names.
 #' @return Returns the input vector with standardized delimiters.
-#' @examples clean_authors(c("Pullin AND Knight",  "Pullin & Knight"))
+#' @examples clean_authors(c("Darwin AND Wallace",  "Darwin & Wallace"))
 clean_authors <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
     x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)

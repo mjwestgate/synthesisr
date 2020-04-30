@@ -1,13 +1,13 @@
 #' Format a citation
 #'
-#' @description This function takes an object of class data.frame or bibliography and returns a formatted citation.
-#' @param data An object of class data.frame or bibliography.
+#' @description This function takes an object of class data.frame, list, or bibliography and returns a formatted citation.
+#' @param data An object of class data.frame, list, or or bibliography.
 #' @param details Logical: Should identifying information such as author names & journal titles be displayed? Defaults to TRUE.
 #' @param abstract Logical: Should the abstract be shown (if available)? Defaults to FALSE.
 #' @param add_html Logical: Should the journal title be italicized using html codes? Defaults to FALSE.
 #' @param line_breaks Either logical, stating whether line breaks should be added, or numeric stating how many characters should separate consecutive line breaks. Defaults to FALSE.
 #' @param ... any other arguments.
-#' @return Returns a string of length equal to length(x) that contains formatted citations.
+#' @return Returns a string of length equal to length(data) that contains formatted citations.
 #' @example inst/examples/format_citation.R
 format_citation <- function(
   data,
