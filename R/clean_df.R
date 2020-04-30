@@ -93,8 +93,10 @@ clean_names <- function(
   x <- sub("^[[:punct:]]*", "", x) # leading punctuation
   x <- sub("[[:punct:]]*$", "", x) # trailing punctuation
   x <- gsub("\\.+", "_", x) # replace 1 or more dots with underscore
-  x <- tolower(x)
+  non_codes <- nchar(x) > 2 # for colnames with nchar > 2, convert to lower case
+  x[non_codes] <- tolower(x[non_codes])
   x <- sub("authors", "author", x) # remove plural authors
   x <- make.unique(x, sep = "_")
+  x <- gsub(" ", "_", x)
   return(x)
 }

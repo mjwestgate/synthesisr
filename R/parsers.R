@@ -13,14 +13,16 @@ rollingsum <- function(a, n = 2L){
 #' @return Returns a data.frame intended for import with parse_ris.
 prep_ris <- function(
   z,
-  delimiter
+  delimiter,
+  type # either "pubmed" or "generic"
 ){
   # detect tags
-  tags <- regexpr(
-    "^([[:upper:]]{2,4}|[[:upper:]]{1}[[:digit:]]{1})\\s{0,}-{0,2}\\s{0,}",
-    perl = TRUE,
-    z
-  )
+  if(type == "pubmed"){
+    ris_regex <- "^[[:upper:]]{2,4}\\s*-\\s"
+  }else{ # i.e. generic
+    ris_regex <- "^([[:upper:]]{2}|[[:upper:]][[:digit:]])\\s*-{0,2}\\s*"
+  }
+  tags <- regexpr(ris_regex, perl = TRUE, z)
   z_dframe <- data.frame(
     text = z,
     row = seq_along(z),
@@ -79,13 +81,32 @@ prep_ris <- function(
       split(z_dframe$ris, z_dframe$ref),
       function(a){a[which(a != "")[1]]}
     ))
-    start_tag <- names(which.max(xtabs(~ start_tags )))
 
-    # continue old code
-    row_df <- data.frame(
-      start = which(z_dframe$ris == start_tag),
-      end = which(z_dframe$ris == "ER")
-    )
+    # fix bug where not all entries start with same tag
+    start_tag_xtab <- xtabs(~ start_tags )
+    end_rows <- which(z_dframe$ris == "ER")
+    # previous behavior:
+    if(max(xtabs(~ start_tags)) == length(which(z_dframe$ris == "ER"))){
+      start_tag <- names(which.max(xtabs(~ start_tags)))
+      row_df <- data.frame(
+        start = which(z_dframe$ris == start_tag),
+        end = end_rows
+      )
+    # new option:
+    }else{
+      row_df <- data.frame(
+        start = c(1, end_rows[1:(length(end_rows)-1)] - 1),
+        end = end_rows
+      )
+    }
+
+    # previous code:
+    # start_tag <- names(which.max(xtabs(~ start_tags )))
+    # row_df <- data.frame(
+    #   start = which(z_dframe$ris == start_tag),
+    #   end = which(z_dframe$ris == "ER")
+    # )
+
     z_list <- apply(
       row_df,
       1,
@@ -134,7 +155,7 @@ prep_ris <- function(
 #' @describeIn parse_ris Parse bibliographic text
 parse_pubmed <- function(x){
 
-  x <- prep_ris(x, detect_delimiter(x))
+  x <- prep_ris(x, detect_delimiter(x), type = "pubmed")
 
   x_merge <- merge(x,
                    synthesisr::code_lookup[synthesisr::code_lookup$ris_pubmed, c("code", "order", "field")],
@@ -254,7 +275,7 @@ generate_ids <- function(x){
 #' @example inst/examples/parse_ris.R
 parse_ris <- function(x){
 
-  x <- prep_ris(x, detect_delimiter(x))
+  x <- prep_ris(x, detect_delimiter(x), type = "generic")
 
   # to avoid duplicate tags, decide whether to use wos or generic tags
   all_tags <- unique(x$ris)
@@ -549,10 +570,40 @@ parse_bibtex <- function(x){
 
 #' @describeIn parse_ris Parse comma-separated values
 parse_csv <- function(x){
-  match_columns(read.table(text = x, sep = ","))
+  z <- read.table(
+    text = x,
+    sep = ",",
+    skip = 1,
+    fill = TRUE,
+    stringsAsFactors = FALSE
+  )
+  colnames(z) <- as.character(
+    read.table(
+      text = x,
+      nrows = 1,
+      sep = ",",
+      stringsAsFactors = FALSE
+    )[1, ]
+  )
+  return(match_columns(z))
 }
 
 #' @describeIn parse_ris Parse tab-separated values
 parse_tsv <- function(x){
-  match_columns(read.table(text = x, sep = "\t"))
+  z <- read.table(
+    text = x,
+    sep = "\t",
+    skip = 1,
+    fill = TRUE,
+    stringsAsFactors = FALSE
+  )
+  colnames(z) <- as.character(
+    read.table(
+      text = x,
+      nrows = 1,
+      sep = "\t",
+      stringsAsFactors = FALSE
+    )[1, ]
+  )
+  return(match_columns(z))
 }
