@@ -2,39 +2,9 @@
 % Please edit documentation in R/format_citation.R
 \name{format_citation}
 \alias{format_citation}
-\alias{format_citation.list}
-\alias{format_citation.bibliography}
-\alias{format_citation.data.frame}
 \title{Format a citation}
 \usage{
 format_citation(
-  data,
-  details = TRUE,
-  abstract = FALSE,
-  add_html = FALSE,
-  line_breaks = FALSE,
-  ...
-)
-
-\method{format_citation}{list}(
-  data,
-  details = TRUE,
-  abstract = FALSE,
-  add_html = FALSE,
-  line_breaks = FALSE,
-  ...
-)
-
-\method{format_citation}{bibliography}(
-  data,
-  details = TRUE,
-  abstract = FALSE,
-  add_html = FALSE,
-  line_breaks = FALSE,
-  ...
-)
-
-\method{format_citation}{data.frame}(
   data,
   details = TRUE,
   abstract = FALSE,
@@ -62,15 +32,6 @@ Returns a string of length equal to length(x) that contains formatted citations.
 \description{
 This function takes an object of class data.frame or bibliography and returns a formatted citation.
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{list}: Format citation from a list
-
-\item \code{bibliography}: Format citation from a bibliography
-
-\item \code{data.frame}: Format citation from a data.frame
-}}
-
 \examples{
 file <- c(
   "TY  - JOUR",

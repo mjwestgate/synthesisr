@@ -1,14 +1,12 @@
 export(
   read_refs, read_ref,
     detect_delimiter, detect_format,
-    parse_bibtex, parse_ris, parse_pubmed, parse_csv, parse_tsv, prep_ris,
+    parse_bibtex, parse_ris, parse_pubmed, parse_csv, parse_tsv, prep_ris, detect_year,
     generate_ids, clean_df, clean_authors, clean_names,
   as.bibliography,
     summary.bibliography, print.bibliography, '[.bibliography', c.bibliography,
     as.data.frame.bibliography,
-  format_citation,
-    format_citation.bibliography, format_citation.data.frame, format_citation.list,
-  fuzzdist,
+  format_citation,  fuzzdist,
     fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
   deduplicate,
     find_duplicates, extract_unique_references,
@@ -20,9 +18,6 @@ add_line_breaks,
 importFrom("stats", "dist", "xtabs")
 importFrom("utils", "read.csv", "read.table", "write.csv", "read.delim", "head", "tail", "write.table")
 importFrom("stringdist", "stringdist")
-S3method(format_citation, bibliography)
-S3method(format_citation, list)
-S3method(format_citation, data.frame)
 S3method(c, bibliography)
 S3method(print, bibliography)
 S3method(summary, bibliography)
