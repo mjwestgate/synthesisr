@@ -37,7 +37,7 @@ perspective <- c(
  "ER - "
 
 )
-df <- as.data.frame(parse_ris(revtools))
+df <- as.data.frame(parse_ris(perspective))
 colnames(df) # some parsed, some not
 
 formatted <- match_columns(df)

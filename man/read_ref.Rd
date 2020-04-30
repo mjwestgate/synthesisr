@@ -22,7 +22,8 @@ This is the underlying workhorse function that imports bibliographic files; prim
 \examples{
 litsearchr <- c(
   "@article{grames2019,
-  title={An automated approach to identifying search terms for systematic reviews using keyword co-occurrence networks},
+  title={An automated approach to identifying search terms for
+  systematic reviews using keyword co-occurrence networks},
   author={Grames, Eliza M and Stillman, Andrew N and Tingley, Morgan W and Elphick, Chris S},
   journal={Methods in Ecology and Evolution},
   volume={10},

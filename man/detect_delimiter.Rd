@@ -26,7 +26,8 @@ revtools <- c("",
               "VI  - 10",
               "IP  - 4",
               "DP  - 2019 Dec",
-              "TI  - revtools: An R package to support article screening for evidence synthesis.",
+              "TI  - revtools: An R package to support article
+                     screening for evidence synthesis.",
               "PG  - 606-614",
               "LID - 10.1002/jrsm.1374 [doi]",
               "AU  - Westgate MJ",
@@ -51,7 +52,6 @@ revtools <- c("",
               "PHST- 2019/07/23 00:00 [accepted]",
               "AID - 10.1002/jrsm.1374 [doi]",
               "PST - ppublish",
-              "SO  - Res Synth Methods. 2019 Dec;10(4):606-614. doi: 10.1002/jrsm.1374. Epub 2019 Oct ",
               "      18."
 )
 
