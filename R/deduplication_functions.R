@@ -4,7 +4,7 @@
 #' @param data A character vector containing duplicate bibliographic entries.
 #' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.
 #' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches.
-#' @param method A string indicating the method to use for fuzzdist or stringdist.
+#' @param method A string indicating the method to use for fuzzdist or stringdist. Options for fuzzdist are fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, and fuzz_token_set_ratio.
 #' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
 #' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to TRUE.
 #' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates? Defaults to TRUE.
@@ -314,4 +314,31 @@ deduplicate <- function(
   return(
     extract_unique_references(data, matches = result, type = type)
   )
+}
+
+#' Manually review potential duplicates
+#' @description Allows users to manually review articles classified as duplicates to check if they are indeed duplicates.
+#' @param text A character vector of the text that was used to identify potential duplicates
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function
+#' @return a data.frame of potential duplicates grouped together
+review_duplicates <- function(text, matches){
+  likely_duplicates <- unique(matches)[table(matches)>1]
+
+  review <- data.frame(title=text[matches %in% likely_duplicates],
+                       matches=matches[matches %in% likely_duplicates])
+
+  review <- review[order(review[,2]),]
+  return(review)
+}
+
+#' Manually override duplicates
+#' @description Re-assign group numbers to text that was classified as duplicated but is unique.
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function
+#' @param overrides Numeric: a vector of group numbers that are not true duplicates
+#' @return the input matches vector with unique group numbers for members of groups that the user overrides
+override_duplicates <- function(matches, overrides){
+  for(i in 1:length(overrides)){
+    matches[max(which(matches==overrides[i]))] <- max(matches)+1
+  }
+  return(matches)
 }

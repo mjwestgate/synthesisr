@@ -21,7 +21,7 @@ find_duplicates(
 
 \item{match_function}{The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches.}
 
-\item{method}{A string indicating the method to use for fuzzdist or stringdist.}
+\item{method}{A string indicating the method to use for fuzzdist or stringdist. Options for fuzzdist are fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, and fuzz_token_set_ratio.}
 
 \item{threshold}{Numeric: the cutoff threshold for stringdist or fuzzdist.}
 

@@ -9,7 +9,7 @@ export(
   format_citation,  fuzzdist,
     fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
   deduplicate,
-    find_duplicates, extract_unique_references,
+    find_duplicates, extract_unique_references, review_duplicates, override_duplicates,
 add_line_breaks,
   write_refs,
     write_bib, write_ris,
