@@ -10,6 +10,8 @@ prep_ris(z, delimiter, type)
 \item{z}{A character vector that contains RIS bibliographic information.}
 
 \item{delimiter}{A string indicating the type of delimiter separating entries.}
+
+\item{type}{A string indicating the ris source; options are pubmed or generic.}
 }
 \value{
 Returns a data.frame intended for import with parse_ris.
