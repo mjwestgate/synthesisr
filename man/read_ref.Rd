@@ -20,10 +20,32 @@ Returns a data.frame or list of assembled search results.
 This is the underlying workhorse function that imports bibliographic files; primarily intended to be called from read_refs.
 }
 \examples{
-files <-
-  paste(system.file(package = "synthesisr"),
-        "/extdata/scopus.ris",
-        sep = "")
+file <- c(
+  "TY  - JOUR",
+  "AU  - Haddaway, Neal R.",
+  "AU  - Feierman, Andrew",
+  "AU  - Grainger, Matthew J.",
+  "AU  - Gray, Charles T.",
+  "AU  - Tanriver-Ayder, Ezgi",
+  "AU  - Dhaubanjar, Sanita",
+  "AU  - Westgate, Martin J.",
+  "PY  - 2019",
+  "DA  - 2019/06/04",
+  "TI  - EviAtlas: a tool for visualising evidence synthesis databases",
+  "JO  - Environmental Evidence",
+  "SP  - 22",
+  "VL  - 8",
+  "IS  - 1",
+  "SN  - 2047-2382",
+  "UR  - https://doi.org/10.1186/s13750-019-0167-1",
+  "DO  - 10.1186/s13750-019-0167-1",
+  "ID  - Haddaway2019",
+  "ER  - "
+)
 
-results <- read_refs(files)
+tmp <- tempfile()
+
+writeLines(file, tmp)
+
+df <- read_refs(tmp, return_df = TRUE, verbose = TRUE)
 }

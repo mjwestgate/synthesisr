@@ -7,7 +7,7 @@
 detect_delimiter(x)
 }
 \arguments{
-\item{x}{A character vector containing bibliographic data.}
+\item{x}{A character vector containing RIS-formatted bibliographic data.}
 }
 \value{
 Returns the delimiter type used in a file.

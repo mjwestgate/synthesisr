@@ -19,7 +19,6 @@
 #'   \item \code{\link{match_columns}} Takes an imported data.frame and rearranges it to match lookup codes
 #'   \item \code{\link{clean_df}} Clean author and column names
 #'   \item \code{\link{generate_ids}} Generate unique row IDs from bibliographic data
-#'   \item \code{\link{format_citation}} Return a clean citation from a bibliography or data.frame
 #' }
 #'
 #' @section Deduplication:
@@ -27,20 +26,8 @@
 #'\itemize{
 #'   \item \code{\link{find_duplicates}} Locate potentially duplicated references
 #'   \item \code{\link{extract_unique_references}} Return a data.frame with only 'unique' references
-#'}
-#'
-#' @section Text mining:
-#' A range of tools that can make the systematic review process more efficient rely on text manipulation or text mining techniques. While several R packages exist that apply these methods, here we group some standard functions that are optimized for ease-of-use. The most important of these functions is \code{\link{create_dtm}} for building Document-Term Matrices, but other useful tools include:
-#' \itemize{
-#'   \item \code{\link{language_code}} Returns the two-letter language code for specified language
-#'   \item \code{\link{get_stopwords}} Locate stopwords for a specified language
-#'   \item \code{\link{get_tokens}} Remove stopwords from a vector of strings
-#'   \item \code{\link{remove_punctuation}} Remove punctuation from a vector of strings
-#'   \item \code{\link{get_ngrams}} Find sequential combinations of words
-#'   \item \code{\link{replace_ngrams}} Replace spaces in n-grams with underscores
 #'   \item \code{\link{fuzzdist}} Fuzzy string matching
-#'   \item \code{\link{add_line_breaks}} Set a maximum character width for strings
-#' }
+#'}
 #'
 #' @section Export:
 #' Exporting data processed in \code{synthesisr} back to a file in a standard bibliographic format is possible using \code{\link{write_refs}}. Alternatively, you can call either of the two sub-functions to export to ris or bibtex formats (respectively):
@@ -55,6 +42,8 @@
 #'  \item \code{\link{merge_columns}} rbind two data.frames with different numbers of columns
 #'  \item \code{\link{remove_factors}} Remove factors from a data.frame
 #'  \item \code{\link{create_index}} Create an ordered string
+#'  \item \code{\link{format_citation}} Return a clean citation from a bibliography or data.frame
+#'  \item \code{\link{add_line_breaks}} Set a maximum character width for strings
 #'}
 #'
 #' @docType package
