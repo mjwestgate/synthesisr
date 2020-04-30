@@ -1,20 +1,20 @@
 Package: synthesisr
 Type: Package
 Title: Import, Assemble, and Deduplicate Bibiliographic Datasets
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
-     person(
+         person(
+    given = "Martin",
+    family = "Westgate",
+    role = c("aut", "cre"),
+    email = "martinjwestgate@gmail.com",
+    comment = c(ORCID = "0000-0003-0854-2034")),
+    person(
     given = "Eliza",
     family = "Grames",
     role = c("aut", "cre"),
     email = "eliza.grames@uconn.edu",
-    comment = c(ORCID = "0000-0003-1743-6815")),
-    person(
-    given = "Martin",
-    family = "Westgate",
-    role = c("aut"),
-    email = "martinjwestgate@gmail.com",
-    comment = c(ORCID = "0000-0003-0854-2034")))
+    comment = c(ORCID = "0000-0003-1743-6815")))
 Description: Systematic review searches include multiple databases
     that export results in a variety of formats with overlap in
     coverage between databases. To streamline the process of importing,
