@@ -12,7 +12,7 @@ Authors@R: c(
     person(
     given = "Eliza",
     family = "Grames",
-    role = c("aut", "cre"),
+    role = c("aut"),
     email = "eliza.grames@uconn.edu",
     comment = c(ORCID = "0000-0003-1743-6815")))
 Description: Systematic review searches include multiple databases
