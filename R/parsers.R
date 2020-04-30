@@ -625,7 +625,10 @@ detect_year <- function(df){
   if(class(df)!="data.frame"){
     stop(print("detect_year expects an object of class data.frame as input"))
   }
-  dates <- grep("date", colnames(df))
+  dates <- grep("date", tolower(colnames(df)))
+  if(any(grep("access", tolower(colnames(df))[dates]))){
+    dates <- dates[-grep("access", tolower(colnames(df)[dates]))]
+    }
 
   guess_year <- function(x) {
     possible_years <- strsplit(gsub("[[:punct:]]", " ", paste(x[dates], collapse = " ")), " ")[[1]]
