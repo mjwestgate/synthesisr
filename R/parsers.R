@@ -607,3 +607,39 @@ parse_tsv <- function(x){
   )
   return(match_columns(z))
 }
+
+
+#' Fill in probable year values
+#' @description Given a data.frame containing bibliographic data, this function attempts to detect the publication year based on date fields for articles missing a year.
+#' @param df a data.frame containing bibliographic data
+#' @return the input data.frame with years added for articles missing that information
+#' @example inst/examples/detect_year.R
+detect_year <- function(df){
+  if(class(df)!="data.frame"){
+    stop(print("detect_year expects an object of class data.frame as input"))
+  }
+  dates <- grep("date", colnames(df))
+
+  guess_year <- function(x) {
+    possible_years <- strsplit(gsub("[[:punct:]]", " ", paste(x[dates], collapse = " ")), " ")[[1]]
+    possible_years <- suppressWarnings(possible_years[which(nchar(possible_years) == 4 &
+                                                              !is.na(as.numeric(possible_years)))])
+    if (any(!is.na(possible_years))) {
+      names(sort(table(possible_years), decreasing = TRUE))[1]
+    } else{
+      "<NA>"
+    }
+  }
+
+  if(any(dates)){
+    if (any(colnames(df) == "year")) {
+      need_years <- which(is.na(as.numeric(df$year)))
+    }else{
+      need_years <- seq(1, nrow(df), 1)
+      df$year <- rep("<NA>", nrow(df))
+    }
+    df[need_years, 'year'] <- apply(df[need_years,],1, guess_year)
+    }
+
+  return(df)
+}
