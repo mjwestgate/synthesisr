@@ -38,12 +38,7 @@ clean_authors <- function(x){
   }else{
     x <- gsub(",(?=\\s[[:alpha:]]{2,})", " and ", x, perl = TRUE)
   }
-  x <- gsub("\\s", " ", x)
-  if(any(grepl("  ", x))){
-    while(grepl("  ", x)){
-      x <- gsub("  ", " ", x)
-    }
-  }
+  x <- gsub("\\s{2, }", " ", x)
   return(x)
 }
 

@@ -101,13 +101,6 @@ prep_ris <- function(
       )
     }
 
-    # previous code:
-    # start_tag <- names(which.max(xtabs(~ start_tags )))
-    # row_df <- data.frame(
-    #   start = which(z_dframe$ris == start_tag),
-    #   end = which(z_dframe$ris == "ER")
-    # )
-
     z_list <- apply(
       row_df,
       1,
@@ -159,7 +152,7 @@ parse_pubmed <- function(x){
   x <- prep_ris(x, detect_delimiter(x), type = "pubmed")
 
   x_merge <- merge(x,
-                   synthesisr::code_lookup[synthesisr::code_lookup$ris_pubmed, c("code", "order", "field")],
+    code_lookup[code_lookup$ris_pubmed, c("code", "order", "field")],
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
@@ -278,17 +271,23 @@ parse_ris <- function(x){
 
   x <- prep_ris(x, detect_delimiter(x), type = "generic")
 
-  # to avoid duplicate tags, decide whether to use wos or generic tags
-  all_tags <- unique(x$ris)
-  if(all(all_tags %in% synthesisr::code_lookup$code[synthesisr::code_lookup$ris_wos])){
-    code_lookup_thisfile <- synthesisr::code_lookup[synthesisr::code_lookup$ris_wos, ]
-  }else{
-    code_lookup_thisfile <- synthesisr::code_lookup[synthesisr::code_lookup$ris_generic, ]
-  }
+  # to avoid duplicate tags, decide which category of tags is appropriate
+  # if there is a near-perfect match, prefer that category over any others
+  code_lookup_thisfile <- detect_tags(tags = unique(x$ris))
+
+  # note: this new method is well-suited to manual replacement of ris tags
+  # - just replace code_lookup_thisfile with a user input if provided, and estimate otherwise
+
+  # old code:
+  # if(all(all_tags %in% code_lookup$code[code_lookup$ris_wos])){
+  #   code_lookup_thisfile <- code_lookup[code_lookup$ris_wos, ]
+  # }else{
+  #   code_lookup_thisfile <- code_lookup[code_lookup$ris_generic, ]
+  # }
 
   # merge data with lookup info, to provide bib-style tags
   x_merge <- merge(x,
-    code_lookup_thisfile[, c("code", "order", "field")],
+    code_lookup_thisfile,
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
@@ -579,18 +578,12 @@ parse_bibtex <- function(x){
 parse_csv <- function(x){
   z <- read.table(
     text = x,
+    header = TRUE,
     sep = ",",
-    skip = 1,
+    quote = "\"",
+    dec = ".",
     fill = TRUE,
     stringsAsFactors = FALSE
-  )
-  colnames(z) <- as.character(
-    read.table(
-      text = x,
-      nrows = 1,
-      sep = ",",
-      stringsAsFactors = FALSE
-    )[1, ]
   )
   return(match_columns(z))
 }
@@ -599,57 +592,12 @@ parse_csv <- function(x){
 parse_tsv <- function(x){
   z <- read.table(
     text = x,
+    header = TRUE,
     sep = "\t",
-    skip = 1,
+    quote = "\"",
+    dec = ".",
     fill = TRUE,
     stringsAsFactors = FALSE
   )
-  colnames(z) <- as.character(
-    read.table(
-      text = x,
-      nrows = 1,
-      sep = "\t",
-      stringsAsFactors = FALSE
-    )[1, ]
-  )
   return(match_columns(z))
-}
-
-
-#' Fill in probable year values
-#' @description Given a data.frame containing bibliographic data, this function attempts to detect the publication year based on date fields for articles missing a year.
-#' @param df a data.frame containing bibliographic data
-#' @return the input data.frame with years added for articles missing that information
-#' @example inst/examples/detect_year.R
-detect_year <- function(df){
-  if(class(df)!="data.frame"){
-    stop(print("detect_year expects an object of class data.frame as input"))
-  }
-  dates <- grep("date", tolower(colnames(df)))
-  if(any(grep("access", tolower(colnames(df))[dates]))){
-    dates <- dates[-grep("access", tolower(colnames(df)[dates]))]
-    }
-
-  guess_year <- function(x) {
-    possible_years <- strsplit(gsub("[[:punct:]]", " ", paste(x[dates], collapse = " ")), " ")[[1]]
-    possible_years <- suppressWarnings(possible_years[which(nchar(possible_years) == 4 &
-                                                              !is.na(as.numeric(possible_years)))])
-    if (any(!is.na(possible_years))) {
-      names(sort(table(possible_years), decreasing = TRUE))[1]
-    } else{
-      "<NA>"
-    }
-  }
-
-  if(any(dates)){
-    if (any(colnames(df) == "year")) {
-      need_years <- which(is.na(as.numeric(df$year)))
-    }else{
-      need_years <- seq(1, nrow(df), 1)
-      df$year <- rep("<NA>", nrow(df))
-    }
-    df[need_years, 'year'] <- apply(df[need_years,],1, guess_year)
-    }
-
-  return(df)
 }

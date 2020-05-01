@@ -25,7 +25,7 @@ read_refs <- function(
 
   if(length(filename) > 1){
     result_list <- lapply(filename, function(a, df){
-      synthesisr::read_ref(a, df, verbose=verbose)
+      read_ref(a, df, verbose=verbose)
     },
     df = return_df
     )
@@ -38,7 +38,7 @@ read_refs <- function(
     }
 
     if(return_df){
-      result <- synthesisr::merge_columns(result_list)
+      result <- merge_columns(result_list)
       result$filename <- unlist(
         lapply(seq_len(length(result_list)),
         function(a, data){
@@ -55,9 +55,9 @@ read_refs <- function(
       return(result)
     }
 
-  }else{ # i.e. if onely one filename given
+  }else{ # i.e. if only one filename given
     return(
-      synthesisr::read_ref(filename, return_df, verbose=verbose)
+      read_ref(filename, return_df, verbose = verbose)
     )
   }
 }
@@ -77,18 +77,18 @@ read_ref <- function(
 	){
   if(verbose){cat(paste0("Reading file ", filename, " ... "))}
   x <- readLines(filename, warn = FALSE)
-
   parse_function <- detect_format(x[1:min(c(length(x), 200))])
+
   if(parse_function != "unknown"){
 
     df <- do.call(parse_function, list(x = x))
 
     if(!inherits(df, "data.frame") & return_df){
-      df <- synthesisr::as.data.frame.bibliography(df)
+      df <- as.data.frame.bibliography(df)
     }
 
     if(inherits(df, "data.frame")){
-      df <- synthesisr::clean_df(df)
+      df <- clean_df(df)
     }
 
     if(verbose){cat("done\n")}
