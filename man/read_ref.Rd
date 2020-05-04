@@ -4,7 +4,7 @@
 \alias{read_ref}
 \title{Internal function called by read_refs for each file}
 \usage{
-read_ref(filename, return_df = TRUE, verbose = FALSE)
+read_ref(filename, replace_tags = "default", return_df = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{filename}{A path to a filename containing search results to import.}

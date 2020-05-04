@@ -3,35 +3,30 @@ Type: Package
 Title: Import, Assemble, and Deduplicate Bibiliographic Datasets
 Version: 0.3.0
 Authors@R: c(
-         person(
+  person(
     given = "Martin",
     family = "Westgate",
     role = c("aut", "cre"),
     email = "martinjwestgate@gmail.com",
     comment = c(ORCID = "0000-0003-0854-2034")),
-    person(
+  person(
     given = "Eliza",
     family = "Grames",
     role = c("aut"),
     email = "eliza.grames@uconn.edu",
     comment = c(ORCID = "0000-0003-1743-6815")))
-Description: Systematic review searches include multiple databases
-    that export results in a variety of formats with overlap in
-    coverage between databases. To streamline the process of importing,
-    assembling, and deduplicating results, synthesisr recognizes
-    bibliographic files exported from databases commonly used for
-    systematic reviews and merges results into a standardized format.
+Description: A critical first step in systematic literature reviews
+  and text mining is to identify relevant texts from a range of different
+  sources, particularly academic databases such as 'Web of Science' or
+  'Scopus'. These databases often export in different formats or with
+  different metadata tags. 'Synthesisr' imports bibliographic data in a
+  range of formats ('bibtex', 'ris', 'ciw') in a standard way, and allows
+  merging and de-duplicating of the resulting dataset.
 License: GPL-3
 LazyData: true
-Imports:
-    stringdist
-Suggests:
-    knitr,
-    SnowballC,
-    rmarkdown,
-    testthat
+Suggests: stringdist, knitr, rmarkdown, testthat
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
-Date: 2019-04-14
+Date: 2020-05-04
 Encoding: UTF-8

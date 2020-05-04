@@ -1,6 +1,4 @@
-
-
-#' @describeIn as.bibliography Summarize a bibliography
+#' @rdname bibliography-class
   summary.bibliography <- function(object, ...){
 
 	# are any abstracts completely missing?
@@ -68,8 +66,7 @@
 	cat(result, sep = "\n")
 }
 
-
-#' @describeIn as.bibliography Print a bibliography
+#' @rdname bibliography-class
 print.bibliography <- function(x, n, ...){
 	length_tr <- length(x)
 	if(missing(n)){
@@ -83,7 +80,7 @@ print.bibliography <- function(x, n, ...){
 	cat(paste(unlist(text_tr), collapse = "\n\n"))
 }
 
-#' @describeIn as.bibliography Class bibliography
+#' @rdname bibliography-class
 '[.bibliography' <- function(x, n){
   class(x) <- "list"
   if(all(n %in% seq_len(length(x))) == FALSE){
@@ -94,7 +91,7 @@ print.bibliography <- function(x, n, ...){
   return(z)
 }
 
-#' @describeIn as.bibliography Class bibliography
+#' @rdname bibliography-class
 c.bibliography <- function(...){
   result <- lapply(list(...), function(a){
     class(a) <- "list"
@@ -105,7 +102,7 @@ c.bibliography <- function(...){
   return(result)
 }
 
-#' @describeIn as.bibliography Convert a data.frame to a bibliography
+#' @rdname bibliography-class
 as.data.frame.bibliography <- function(x, ...){
 
 	cols <- unique(unlist(lapply(x, names)))
@@ -136,7 +133,6 @@ as.data.frame.bibliography <- function(x, ...){
   )
 
 	x_dframe <- data.frame(
-		label = make.names(names(x_list), unique = TRUE),
 		do.call(rbind, x_list),
 		stringsAsFactors = FALSE
   )
@@ -145,28 +141,12 @@ as.data.frame.bibliography <- function(x, ...){
 	return(x_dframe)
 }
 
-#' Methods for class 'bibliography'
-#'
-#' @description This is a small number of standard methods for interacting with class 'bibliography'. More may be added later.
-#' @param x An object of class 'bibliography'
-#' @param object An object of class 'bibliography'
-#' @param n Number of items to select/print
-#' @param ... Any further information
-#' @aliases summary.bibliography, print.bibliography, c.bibliography, as.data.frame.bibliography
+
+#' @rdname bibliography-class
 as.bibliography <- function(x, ...){
 
 	if(class(x) != "data.frame"){
 		stop("as.bibliography can only be called for objects of class 'data.frame'")
-	}
-
-	# get labels for each entry
-	x_cols <- colnames(x)
-	if(any(x_cols == "label")){
-		label_col <- which(x_cols == "label")
-		label_vec <- x[, label_col]
-		x <- x[, -label_col]
-	}else{
-		label_vec <- create_index("ref", nrow(x))
 	}
 
 	x_list <- lapply(
@@ -182,7 +162,7 @@ as.bibliography <- function(x, ...){
   		return(a)
     }
 	)
-	names(x_list) <- label_vec
+	names(x_list) <- seq_len(nrow(x))
 	class(x_list) <- "bibliography"
 	return(x_list)
 }

@@ -1,4 +1,4 @@
-cleaned <- clean_names(c(".title...", "X..YEAR",
+cleaned <- clean_colnames(c(".title...", "X..YEAR",
                          "authors..", ".AUTHOR"))
 
 expect(!any(grepl("[[:punct::]]", cleaned)), "Punctuation not removed from names")

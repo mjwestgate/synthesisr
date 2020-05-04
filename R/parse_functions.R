@@ -1,152 +1,4 @@
-# ensure multiple consecutive empty rows are removed
-# This function computes the rolling sum of detections; intended for use in detect_delimiter.
-rollingsum <- function(a, n = 2L){
-  tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
-}
-
-
-#' Clean an RIS file for import
-#'
-#' @description This function preps RIS files by cleaning common issues and converting to a common format.
-#' @param z A character vector that contains RIS bibliographic information.
-#' @param delimiter A string indicating the type of delimiter separating entries.
-#' @param type A string indicating the ris source; options are pubmed or generic.
-#' @return Returns a data.frame intended for import with parse_ris.
-prep_ris <- function(
-  z,
-  delimiter,
-  type # either "pubmed" or "generic"
-){
-  # detect tags
-  if(type == "pubmed"){
-    ris_regex <- "^[[:upper:]]{2,4}\\s*-\\s"
-  }else{ # i.e. generic
-    ris_regex <- "^([[:upper:]]{2}|[[:upper:]][[:digit:]])\\s*-{0,2}\\s*"
-  }
-  tags <- regexpr(ris_regex, perl = TRUE, z)
-  z_dframe <- data.frame(
-    text = z,
-    row = seq_along(z),
-    match_length = attr(tags, "match.length"),
-    stringsAsFactors = FALSE
-  )
-  z_list <- split(z_dframe, z_dframe$match_length)
-  z_list <- lapply(z_list, function(a){
-    n <- a$match_length[1]
-    if(n < 0){
-      result <- data.frame(
-        ris = "",
-        text = a$text,
-        row_order = a$row,
-        stringsAsFactors = FALSE
-      )
-    }else{
-      result <- data.frame(
-        ris = sub("\\s{0,}-\\s{0,}|^\\s+|\\s+$", "", substr(a$text, 1, n)),
-        text = gsub("^\\s+|\\s+$", "", substr(a$text, n+1, nchar(a$text))),
-        row_order = a$row,
-        stringsAsFactors = FALSE
-      )
-    }
-    return(result)
-  })
-  z_dframe <- do.call(rbind, z_list)
-  z_dframe <- z_dframe[order(z_dframe$row), ]
-
-  # replace tag information for delimiter == character | space
-  if(delimiter == "character"){ # i.e. a single character repeated many times
-    z_dframe$ris[which(
-      unlist(lapply(
-        strsplit(z, ""),
-        function(a){
-          length(unique(a)) == 1 & length(a > 6)
-        }
-      ))
-    )] <- "ER"
-  }
-  if(delimiter == "space"){
-    z_dframe$ris[which(z_dframe$ris == "" & z_dframe$text == "")] <- "ER"
-
-    z_rollsum <- rollingsum(z_dframe$ris == "ER")
-    if(any(z_rollsum > 1)){
-      z_dframe <- z_dframe[which(z_rollsum <= 1), ]
-    }
-  }
-  if(delimiter == "endrow"){
-    # work out what most common starting tag is
-    z_dframe$ref <- c(0, cumsum(z_dframe$ris == "ER")[
-      seq_len(nrow(z_dframe)-1)]
-    ) # split by reference
-
-    start_tags <- unlist(lapply(
-      split(z_dframe$ris, z_dframe$ref),
-      function(a){a[which(a != "")[1]]}
-    ))
-
-    # fix bug where not all entries start with same tag
-    start_tag_xtab <- xtabs(~ start_tags )
-    end_rows <- which(z_dframe$ris == "ER")
-    # previous behavior:
-    if(max(xtabs(~ start_tags)) == length(which(z_dframe$ris == "ER"))){
-      start_tag <- names(which.max(xtabs(~ start_tags)))
-      row_df <- data.frame(
-        start = which(z_dframe$ris == start_tag),
-        end = end_rows
-      )
-    # new option:
-    }else{
-      row_df <- data.frame(
-        start = c(1, end_rows[1:(length(end_rows)-1)] - 1),
-        end = end_rows
-      )
-    }
-
-    z_list <- apply(
-      row_df,
-      1,
-      function(a){c(a[1]:a[2])}
-    )
-    z_list <- lapply(
-      z_list,
-      function(a, lookup){lookup[a, ]},
-      lookup = z_dframe
-    )
-    z_dframe <- as.data.frame(
-      do.call(rbind, z_list)
-    )
-  }
-
-  # cleaning
-  z_dframe$ref <- c(0, cumsum(z_dframe$ris == "ER")[
-    seq_len(nrow(z_dframe)-1)]
-  ) # split by reference
-  z_dframe <- z_dframe[which(z_dframe$text != ""), ] # remove empty rows
-  z_dframe <- z_dframe[which(z_dframe$ris != "ER"), ] # remove end rows
-  z_dframe$text <- trimws(z_dframe$text)
-
-  # fill missing tags
-  z_split <- split(z_dframe, z_dframe$ref)
-  z_split <- lapply(z_split, function(a){
-    if(a$ris[1] == ""){
-      a$ris[1] <- "ZZ"
-    }
-    accum_ris <- Reduce(c, a$ris, accumulate = TRUE)
-    a$ris <- unlist(lapply(
-      accum_ris,
-      function(b){
-        good_vals <- which(b != "")
-        b[good_vals[length(good_vals)]]
-      }))
-    return(a)
-  })
-  z_dframe <- as.data.frame(
-    do.call(rbind, z_split)
-  )
-
-  return(z_dframe)
-}
-
-#' @describeIn parse_ris Parse bibliographic text
+#' @rdname parse_
 parse_pubmed <- function(x){
 
   x <- prep_ris(x, detect_delimiter(x), type = "pubmed")
@@ -217,49 +69,6 @@ parse_pubmed <- function(x){
   return(x_final)
 }
 
-#' Generate unique labels for entires
-#'
-#' @description Creates a unique label for each bibliographic entry using as much author and year data as possible.
-#' @param x A list of bibliographic entries.
-#' @return Returns a character vector of unique names.
-#' @example inst/examples/generate_ids.R
-generate_ids <- function(x){
-  nonunique_names <- unlist(lapply(x, function(a){
-    name_vector <- rep("", 3)
-    if(any(names(a) == "author")){
-      name_vector[1] <- strsplit(a$author[1], ",")[[1]][1]
-    }
-    if(any(names(a) == "year")){
-      name_vector[2] <- a$year[1]
-    }
-    if(any(names(a) == "journal")){
-      journal_info <- strsplit(a$journal, " ")[[1]]
-      name_vector[3] <- paste(
-        substr(journal_info, 1, min(nchar(journal_info), 4)),
-        collapse = "")
-    }
-    name_vector <- name_vector[which(name_vector != "")]
-    if(length(name_vector) == 0){
-      return("ref")
-    }else{
-      return(paste(name_vector, collapse = "_"))
-    }
-  }))
-
-  # where this is not possible, give a 'ref1' style result
-  if(any(nonunique_names == "ref")){
-    rows_tr <- which(nonunique_names == "ref")
-    nonunique_names[rows_tr] <- create_index("ref", length(rows_tr))
-  }
-
-  # ensure names are unique
-  if(length(unique(nonunique_names)) < length(nonunique_names)){
-    nonunique_names <- make.unique(nonunique_names, sep = "_")
-  }
-
-  return(nonunique_names)
-}
-
 
 #' Parse bibliographic text in a variety of formats
 #'
@@ -267,23 +76,33 @@ generate_ids <- function(x){
 #' @param x A character vector containing bibliographic information in ris format.
 #' @return Returns an object of class bibliography.
 #' @example inst/examples/parse_ris.R
-parse_ris <- function(x){
+#' @name parse_
+parse_ris <- function(x, replace_tags){
 
   x <- prep_ris(x, detect_delimiter(x), type = "generic")
 
-  # to avoid duplicate tags, decide which category of tags is appropriate
-  # if there is a near-perfect match, prefer that category over any others
-  code_lookup_thisfile <- detect_tags(tags = unique(x$ris))
-
-  # note: this new method is well-suited to manual replacement of ris tags
-  # - just replace code_lookup_thisfile with a user input if provided, and estimate otherwise
-
-  # old code:
-  # if(all(all_tags %in% code_lookup$code[code_lookup$ris_wos])){
-  #   code_lookup_thisfile <- code_lookup[code_lookup$ris_wos, ]
-  # }else{
-  #   code_lookup_thisfile <- code_lookup[code_lookup$ris_generic, ]
-  # }
+  # create the appropriate lookup file for the specified tag
+  if(inherits(replace_tags, "data.frame")){
+    if(!any(colnames(replace_tags) == "order")){
+      replace_tags$order <- seq_len(nrow(replace_tags))
+    }
+    code_lookup_thisfile <- replace_tags
+  }else{
+    if(replace_tags == "none"){
+      ris_vals <- unique(x$ris)
+      code_lookup_thisfile <- data.frame(
+        code = ris_vals,
+        field = ris_vals,
+        order = seq_along(ris_vals),
+        stringsAsFactors = FALSE
+      )
+    }else if(replace_tags == "default"){
+      code_lookup_thisfile <- detect_tags(tags = unique(x$ris))
+    }else if(any(c("wos", "scopus", "ovid", "asp") == replace_tags)){
+      rows <- which(code_lookup[, paste0("ris_", replace_tags)])
+      code_lookup_thisfile <- code_lookup[rows, c("code", "order", "field")]
+    }
+  }
 
   # merge data with lookup info, to provide bib-style tags
   x_merge <- merge(x,
@@ -449,13 +268,13 @@ if(any(unlist(lapply(x_split, nrow))==1)){
     return(result[result_order])
   })
 
-  names(x_final) <- generate_ids(x_final)
+  # names(x_final) <- seq_along(x_final)
   class(x_final) <- "bibliography"
   return(x_final)
 }
 
 
-#' @describeIn parse_ris Parse bibtex format
+#' @rdname parse_
 parse_bibtex <- function(x){
 
   # which lines start with @article?
@@ -574,7 +393,7 @@ parse_bibtex <- function(x){
 
 }
 
-#' @describeIn parse_ris Parse comma-separated values
+#' @rdname parse_
 parse_csv <- function(x){
   z <- read.table(
     text = x,
@@ -588,7 +407,7 @@ parse_csv <- function(x){
   return(match_columns(z))
 }
 
-#' @describeIn parse_ris Parse tab-separated values
+#' @rdname parse_
 parse_tsv <- function(x){
   z <- read.table(
     text = x,

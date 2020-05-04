@@ -1,13 +1,14 @@
-#' Matches imported data to reference codes
-#'
-#' @description Takes an imported data.frame and rearranges it to match lookup codes.
-#' @param df A data.frame that contains bibliographic information.
-#' @return Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
-#' @example inst/examples/match_columns.R
+# internal function used by parse_csv and parse_tsv
+# ' Matches imported data to reference codes
+# '
+# ' @description Takes an imported data.frame and rearranges it to match lookup codes.
+# ' @param df A data.frame that contains bibliographic information.
+# ' @return Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
+# ' @example inst/examples/match_columns.R
 match_columns <- function(df){
   # figure out which columns match known tags
-  hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
-  newcolnames <- synthesisr::code_lookup$field[match(colnames(df), synthesisr::code_lookup$code)]
+  hits <- as.numeric(match(code_lookup$code, colnames(df)))
+  newcolnames <- code_lookup$field[match(colnames(df), code_lookup$code)]
   colnames(df)[!is.na(newcolnames)] <- newcolnames[!is.na(newcolnames)]
 
   # rearrange data in standard(ish) order
@@ -74,18 +75,16 @@ merge_columns <- function(
 
 }
 
-#' Remove factors from an object
-#'
-#' @description This function converts factors to characters to avoid errors with levels.
-#' @param z A data.frame
-#' @return Returns the input data.frame with all factors converted to character.
-#' @examples remove_factors(list(as.factor(c("a", "b"))))
+# internal functions called by merge_columns
+# ' Remove factors from an object
+# '
+# ' @description This function converts factors to characters to avoid errors with levels.
+# ' @param z A data.frame
+# ' @return Returns the input data.frame with all factors converted to character.
+# ' @examples remove_factors(list(as.factor(c("a", "b"))))
 remove_factors <- function(z){
   z[] <- lapply(z, function(x){
     if(is.factor(x)){as.character(x)}else{x}
   })
   return(z)
 }
-
-
-

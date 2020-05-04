@@ -4,7 +4,7 @@
 \alias{write_refs}
 \title{Export data to a bibliographic format}
 \usage{
-write_refs(x, format = "ris", write_file = FALSE, filename = NULL)
+write_refs(x, format = "ris", write_file = TRUE, filename = "bibliography")
 }
 \arguments{
 \item{x}{Either a data.frame containing bibliographic information or an object of class bibliography.}

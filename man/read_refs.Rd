@@ -4,20 +4,30 @@
 \alias{read_refs}
 \title{Import bibliographic search results}
 \usage{
-read_refs(filename, return_df = TRUE, verbose = FALSE)
+read_refs(
+  filename,
+  replace_tags = "default",
+  return_df = TRUE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{filename}{A path to a filename or vector of filenames containing search results to import.}
 
-\item{return_df}{If TRUE, returns a data.frame; if FALSE, returns a list.}
+\item{replace_tags}{Either a length-1 character stating how should ris tags be replaced (see details for a list of options), or an object inheriting from class \code{data.frame} containing user-defined replacement tags.}
 
-\item{verbose}{If TRUE, prints status updates.}
+\item{return_df}{If TRUE (default), returns a data.frame; if FALSE, returns a list.}
+
+\item{verbose}{If TRUE, prints status updates (defaults to FALSE).}
 }
 \value{
 Returns a data.frame or list of assembled search results.
 }
 \description{
 Imports common bibliographic reference formats (i.e. .bib, .ris, or .txt).
+}
+\details{
+The default for argument \code{replace_tags} is \code{"default"}, which estimates what database has been used for ris tag replacement, then fills any gaps with generic tags. Any tags missing from the database (i.e. \code{code_lookup}) are passed unchanged. Other options are to use tags from Web of Science (\code{"wos"}), Scopus (\code{"scopus"}), Ovid (\code{"ovid"}) or Academic Search Premier (\code{"asp"}). If a \code{data.frame} is given, then it must contain two columns: \code{"code"} listing the original tags in the source document, and \code{"field"} listing the replacement column/tag names. The \code{data.frame} may optionally include a third column named \code{"order"}, which specifies the order of columns in the resulting \code{data.frame}; otherwise this will be taken as the row order. Finally, passing \code{"none"} to \code{replace_tags} suppresses tag replacement.
 }
 \examples{
 litsearchr <- c(

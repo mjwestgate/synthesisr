@@ -25,7 +25,7 @@ format_citation <- function(
     data <- as.data.frame(data)
   }
 
-    colnames(data) <- clean_names(colnames(data))
+    colnames(data) <- clean_colnames(colnames(data))
   if(any(names(data) == "journal")){
     source <- "journal"
   }else{

@@ -17,14 +17,20 @@ Systematic review searches include multiple databases
 The key task performed by \code{synthesisr} is flexible import and presentation of bibliographic data. This is typically achieved by \code{\link{read_refs}}, which can import multiple files at once and link them together into a single \code{data.frame}. Users that require more detailed control can use the following functions:
 \itemize{
   \item \code{\link{read_ref}} Import an individual bibliographic dataset
-  \item \code{\link{detect_format}} Detects if a file is bib-like or ris-like
-  \item \code{\link{detect_delimiter}} Detect delimiter type in ris files
+  \item \code{\link{detect_}} Detect file attributes
+  \item \code{\link{parse_}} Parse a vector containing bibliographic data
+  \item \code{\link{clean_}} Cleaning functions for author and column names
   \item \code{\link{code_lookup}} Tag replacement for ris files
-  \item \code{\link{parse_ris}} Parse a vector containing bibliographic data
-  \item \code{\link{as.bibliography}} Methods for class 'bibliography'
-  \item \code{\link{match_columns}} Takes an imported data.frame and rearranges it to match lookup codes
-  \item \code{\link{clean_df}} Clean author and column names
-  \item \code{\link{generate_ids}} Generate unique row IDs from bibliographic data
+}
+}
+
+\section{Data}{
+
+\itemize{
+  \item \code{\link{bibliography-class}} Methods for class 'bibliography'
+ \item \code{\link{merge_columns}} rbind two data.frames with different numbers of columns
+ \item \code{\link{format_citation}} Return a clean citation from a bibliography or data.frame
+ \item \code{\link{add_line_breaks}} Set a maximum character width for strings
 }
 }
 
@@ -45,18 +51,6 @@ Exporting data processed in \code{synthesisr} back to a file in a standard bibli
 \itemize{
   \item \code{\link{write_ris}} Export as ris
   \item \code{\link{write_bib}} Export as bib
-}
-}
-
-\section{Miscellaneous Functions}{
-
-\code{synthesisr} contains several functions that are useful for manipulating data; these are included here for completeness.
-\itemize{
- \item \code{\link{merge_columns}} rbind two data.frames with different numbers of columns
- \item \code{\link{remove_factors}} Remove factors from a data.frame
- \item \code{\link{create_index}} Create an ordered string
- \item \code{\link{format_citation}} Return a clean citation from a bibliography or data.frame
- \item \code{\link{add_line_breaks}} Set a maximum character width for strings
 }
 }
 

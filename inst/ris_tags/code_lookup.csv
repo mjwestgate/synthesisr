@@ -1,4 +1,4 @@
-"code","order","category_description","entry_description","field","ris_generic","ris_wos","ris_pubmed","ris_scopus","ris_ASP","ris_ovid"
+"code","order","category_description","entry_description","field","ris_generic","ris_wos","ris_pubmed","ris_scopus","ris_asp","ris_ovid"
 "DB",1.09,"File & document metadata","Database","database",TRUE,FALSE,FALSE,TRUE,TRUE,FALSE
 "FN",1.1,"File & document metadata","File Name","file_name",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
 "N",1.1,"File & document metadata","File name","file_name",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE

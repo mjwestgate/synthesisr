@@ -17,21 +17,26 @@ proportion_delimited <- function(x, regex){
 #' @param x A character vector containing bibliographic data.
 #' @return Returns the format of a file: either bib, ris, or unknown.
 #' @example inst/examples/detect_format.R
+#' @rdname detect_
 detect_format <- function(x){
 
   # calculate proportional of lines containing likely tags
   proportions <- unlist(lapply(
-    c(",", "\t", "\\{|\\}", "^([[:upper:]]{2,4}|[[:upper:]][[:digit:]])\\s*-{0,2}\\s*"),
+    c(
+      ",(\"|[[:alnum:]])",
+      "\t",
+      "\\{|\\}",
+      "^([[:upper:]]{2,4}\\s*-\\s)|(([[:upper:]]{2}|[[:upper:]][[:digit:]])\\s*-{0,2}\\s*)"
+    ),
     function(a, z){proportion_delimited(z, a)},
     z = x
   ))
-  # NOTE: if we use 'comma not followed by space' as our regex,
-  # we can use switch/which.max for choosing the 'best' delimiter
 
   # if any are detection, pick the most likely one
-  if(any(proportions[2:4] > 0.1)){
+  if(any(proportions > 0.2)){
     result <- switch(
-      c("tab", "bibtex", "ris")[which.max(proportions[2:4])],
+      c("comma", "tab", "bibtex", "ris")[which.max(proportions)],
+      "comma" = "parse_csv",
       "tab" = "parse_tsv",
       "bibtex" = "parse_bibtex",
       "ris" = {
@@ -43,11 +48,7 @@ detect_format <- function(x){
       }
     )
   }else{
-    if(proportions[1] > 0.2){
-      result <- "parse_csv"
-    }else{
-      result <- "unknown"
-    }
+    result <- "unknown"
   }
   return(result)
 }
@@ -59,6 +60,7 @@ detect_format <- function(x){
 #' @param x A character vector containing RIS-formatted bibliographic data.
 #' @return Returns the delimiter type used in a file.
 #' @example inst/examples/detect_delimiter.R
+#' @rdname detect_
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
     delimiter <- "endrow"
@@ -88,9 +90,14 @@ detect_delimiter <- function(x){
   return(delimiter)
 }
 
-# Function to ensure that ris tags are matched correctly
-# tags a vector of strings
-# and returns a subsetted version of code_lookup that contains only useful information
+
+#' Match tags in a ris file to a library of replacement names
+#'
+#' @description Different databases use different conventions for ris tags, including the same tag for different meanings, hence the need to identify the naming convention in use. This function identifies the best match from a reference library and returns a dta.frame of proposed substitutions.
+#' @param tags A character vector containing RIS tags.
+#' @return Returns the a data/frame of proposed substitutions.
+#' @example inst/examples/detect_delimiter.R
+#' @rdname detect_
 detect_tags <- function(
   tags # a vector of strings representing ris tags
 ){
@@ -109,15 +116,12 @@ detect_tags <- function(
   generic_proportion <- ris_sums[1] / nrow(ris_matrix)
   # default to ris_generic if everything else is bad
   if(best_proportion < 0.75 & generic_proportion > best_proportion){
-    match_df <- code_lookup[
-      code_lookup$ris_generic,
-      c("code", "order", "field")
-    ]
+    match_df <- code_lookup[code_lookup$ris_generic, ]
   }else{ # i.e. if the 'best' match performs perfectly
     if(best_proportion > 0.99){ # i.e. a perfect match
       match_df <- code_lookup[
         code_lookup[, names(best_match)],
-        c("code", "order", "field")
+
       ]
     }else{ # otherwise use the best choice, then generic to fill gaps
        rows_best <- which(
@@ -132,7 +136,7 @@ detect_tags <- function(
     }
   }
 
-  return(match_df)
+  return(match_df[, c("code", "order", "field")])
 }
 
 
@@ -141,6 +145,7 @@ detect_tags <- function(
 #' @param df a data.frame containing bibliographic data
 #' @return the input data.frame with years added for articles missing that information
 #' @example inst/examples/detect_year.R
+#' @rdname detect_
 detect_year <- function(df){
   if(!inherits(df, "data.frame")){
     stop(print("detect_year expects an object of class data.frame as input"))
@@ -162,7 +167,7 @@ detect_year <- function(df){
   }
 
   if(any(dates)){
-    if (any(colnames(df) == "year")) {
+    if(any(colnames(df) == "year")) {
       need_years <- which(is.na(as.numeric(df$year)))
     }else{
       need_years <- seq(1, nrow(df), 1)
