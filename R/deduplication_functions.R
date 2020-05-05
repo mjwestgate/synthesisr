@@ -24,9 +24,14 @@ find_duplicates <- function(
   # check for stringdist
   if(match_function == "stringdist"){
     if(!requireNamespace("stringdist")){
-      match_function <- "fuzzdist"
-      print("Note: stringdist must be installed to use stringdist method. Using fuzzdist instead.")
-    }else{requireNamespace("stringdist")}
+      match_function <- "exact"
+      print("Note: stringdist must be installed to use stringdist method. Using exact matching instead.")
+    }else{
+      if(!any(search() == "package:stringdist")){
+        loadNamespace("stringdist")
+        attachNamespace("stringdist")
+      }
+    }
   }
 
   # data

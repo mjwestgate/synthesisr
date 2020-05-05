@@ -14,7 +14,6 @@ export(
   write_refs, write_bib, write_ris,
   merge_columns
 )
-importFrom("stringdist", "stringdist")
 importFrom("stats", "dist", "xtabs")
 importFrom("utils", "read.csv", "read.table", "write.csv", "read.delim", "head", "tail", "write.table")
 S3method(c, bibliography)

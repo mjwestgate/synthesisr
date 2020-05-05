@@ -7,17 +7,16 @@
 #'  bibliographic files exported from databases commonly used for
 #'  systematic reviews and merges results into a standardized format.
 #'
-#' @section Import:
-#' The key task performed by \code{synthesisr} is flexible import and presentation of bibliographic data. This is typically achieved by \code{\link{read_refs}}, which can import multiple files at once and link them together into a single \code{data.frame}. Users that require more detailed control can use the following functions:
+#' @section Import & Export:
+#' The key task performed by \code{synthesisr} is flexible import and presentation of bibliographic data. This is typically achieved by \code{\link{read_refs}}, which can import multiple files at once and link them together into a single \code{data.frame}. Conversely, export if via \code{\link{write_refs}}. Users that require more detailed control can use the following functions:
 #' \itemize{
-#'   \item \code{\link{read_ref}} Import an individual bibliographic dataset
-#'   \item \code{\link{detect_}} Detect file attributes
-#'   \item \code{\link{parse_}} Parse a vector containing bibliographic data
-#'   \item \code{\link{clean_}} Cleaning functions for author and column names
+#'   \item \code{\link{detect}} Detect file attributes
+#'   \item \code{\link{parse}} Parse a vector containing bibliographic data
+#'   \item \code{\link{clean}} Cleaning functions for author and column names
 #'   \item \code{\link{code_lookup}} Tag replacement for ris files
 #' }
 #'
-#' @section Data:
+#' @section Data formatting:
 #' \itemize{
 #'   \item \code{\link{bibliography-class}} Methods for class 'bibliography'
 #'  \item \code{\link{merge_columns}} rbind two data.frames with different numbers of columns
@@ -33,13 +32,6 @@
 #'   \item \code{\link{fuzzdist}} Fuzzy string matching
 #'   \item \code{\link{review_duplicates}} Manually review potential duplicates
 #'}
-#'
-#' @section Export:
-#' Exporting data processed in \code{synthesisr} back to a file in a standard bibliographic format is possible using \code{\link{write_refs}}. Alternatively, you can call either of the two sub-functions to export to ris or bibtex formats (respectively):
-#' \itemize{
-#'   \item \code{\link{write_ris}} Export as ris
-#'   \item \code{\link{write_bib}} Export as bib
-#' }
 #'
 #' @docType package
 #' @name synthesisr

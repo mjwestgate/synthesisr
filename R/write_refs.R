@@ -1,9 +1,5 @@
-#' Write a .bib file
-#'
-#' @description This is a subfunction of write_bibliography to convert an object of class bibliography to .bib text format.
-#' @param x An object of class bibliography.
-#' @return Returns a character vector containing references in .bib format.
-#' @example inst/examples/parse_ris.R
+# Parse an object of class bibliography for export in bib format
+#' @describeIn write_refs Format a bib file for export
 write_bib <- function(x) {
   # process basic text
   result <- lapply(x, function(a) {
@@ -38,16 +34,15 @@ write_bib <- function(x) {
 }
 
 
-#' Write a .ris file
-#'
-#' @description This is a subfunction of write_bibliography to convert an object of class bibliography to .ris text format.
-#' @param x An object of class bibliography.
-#' @return Returns a character vector containing references in .ris format.
-#' @example inst/examples/parse_ris.R
-write_ris <- function(x) {
+# Parse an object of class bibliography for export in ris format
+#' @describeIn write_refs Format a ris file for export
+write_ris <- function(x,
+  tag_naming = "synthesisr"
+){
   result <- lapply(x, function(a, lookup) {
     # convert to tagged vector
     b <- do.call(c, a)
+    b <- b[!is.na(b)]
     b <- data.frame(
       tag = c(names(b), "end"),
       entry = c(b, ""),
@@ -57,7 +52,7 @@ write_ris <- function(x) {
     b$tag <- gsub("[[:digit:]]", "", b$tag)
 
     # page information needs to be treated separately
-    if (any(b$tag == "pages")) {
+    if(any(b$tag == "pages")){
       page.row <- which(b$tag == "pages")
       page.sep <- strsplit(b$entry[page.row], "-")[[1]]
       if (length(page.sep) > 1) {
@@ -73,13 +68,7 @@ write_ris <- function(x) {
         ))
       }
     }
-    #  b$order <- seq_len(nrow(b))
-
-    # return(data.frame(
-    #   tag = c(b$tag, "end_row"),
-    #   entry = c(b$entry, ""),
-    #   stringsAsFactors = FALSE
-    # ))
+    b$order <- seq_len(nrow(b))
 
     # substitute tags for ris format versions
     b <- merge(
@@ -88,9 +77,9 @@ write_ris <- function(x) {
       by.x = "field",
       by.y = "tag",
       all.x = FALSE,
-      all.y = TRUE
+      all.y = FALSE
     )
-    b <- b[which(!is.na(b$code)),]
+    b <- b[order(b$order), c(2:3)]
 
     # concatenate rows, return a vector of strings
     return(
@@ -98,9 +87,9 @@ write_ris <- function(x) {
     )
 
   },
-  lookup = code_lookup[
-    code_lookup$ris_generic,
-    c("code", "field", "ris_generic")
+  lookup = synthesisr::code_lookup[
+    synthesisr::code_lookup[, paste0("ris_", tag_naming)],
+    c("code", "field")
   ]
   )
 
@@ -113,43 +102,72 @@ write_ris <- function(x) {
 #' @description This function exports data.frames containing bibliographic information to either a .ris or .bib file.
 #' @param x Either a data.frame containing bibliographic information or an object of class bibliography.
 #' @param format What format should the data be exported as? Options are ris or bib.
-#' @param write_file If TRUE, saves the result to a text file in the working directory.
-#' @param filename If write_file is TRUE, the name of the file to be written.
+#' @param tag_naming what naming convention should be used to write RIS files? See details for options.
+#' @param write_file Either logical indicating whether a file should be written (defaulting to FALSE), or a character giving the name of the file to be written.
 #' @return Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
 #' @example inst/examples/parse_ris.R
-write_refs <- function(x,
-   format = "ris",
-   write_file = TRUE,
-   filename = "bibliography"
+write_refs <- function(
+  x,
+  format = "ris",
+  tag_naming = "synthesisr",
+  write_file = FALSE # either logical or a character (i.e. a file name)
+  # filename
 ){
-  if(!is.logical(write_file)){
-    stop("write_file should be logical (TRUE or FALSE)")
-  }
-  if(!(format %in% c("ris", "bib"))){
-    stop("format must be either 'ris' or 'bib'")
-  }
-  if(write_file) {
-    if(missing(filename)) {
-      stop("argument 'filename' is missing, with no default")
-    }else{
-      if(!grepl("\\.[[:alpha:]]{2,4}$", filename)){
-        filename <- paste(filename, format, sep = ".")
-      }
-    }
-  }
+  # check input data
   if(!any(c("bibliography", "data.frame") == class(x))) {
     stop("write_bibliography only accepts objects of class 'data.frame' or 'bibliography'")
   }
-  if(class(x) == "data.frame") {
+  if(inherits(x, "data.frame")){
     x <- as.bibliography(x)
   }
 
+  # check format
+  if(!(format %in% c("ris", "bib"))){
+    stop("format must be either 'ris' or 'bib'")
+  }
+
+  # check output format - consistent with read_refs
+  if(format == "ris"){
+    valid_tags <- c("best_guess", "none", "wos", "scopus", "ovid", "asp", "synthesisr")
+    if(inherits(tag_naming, "character")){
+      if(!any(valid_tags == tag_naming)){
+        stop("tag_naming should be one of 'best_guess', 'none', 'wos', 'scopus', 'ovid',  'asp' or 'synthesisr'.")
+      }
+    }else if(inherits(tag_naming, "data.frame")){
+      if(any(!(c("code", "field") %in% colnames(tag_naming)))){
+        stop("if a data.frame is supplied to replace_tags, it must contain columns 'code' & 'field'.")
+      }
+    }
+  }
+
+  # check file out information (write_file and filename)
+  if(length(write_file) > 1){
+    stop("write_file should be a length-1 character or logical")
+  }else{
+    if(inherits(write_file, "character")){
+      file_out <- TRUE
+      if(grepl("\\.[[:alpha:]]{2,4}$", filename)){
+        filename <- write_file
+      }else{
+        filename <- paste(filename, format, sep = ".")
+      }
+    }else{
+      if(write_file){
+        file_out <- TRUE
+        filename <- paste("synthesisr_bibliography", format, sep = ".")
+      }else{
+        file_out <- FALSE
+      }
+    }
+  }
+
+  # write result in correct format
   export <- switch(format,
     "bib" = {write_bib(x)},
-    "ris" = {write_ris(x)}
+    "ris" = {write_ris(x, tag_naming = tag_naming)}
   )
 
-  if(write_file) {
+  if(file_out) {
     write.table(
       export,
       filename,

@@ -17,7 +17,7 @@ proportion_delimited <- function(x, regex){
 #' @param x A character vector containing bibliographic data.
 #' @return Returns the format of a file: either bib, ris, or unknown.
 #' @example inst/examples/detect_format.R
-#' @rdname detect_
+#' @rdname detect
 detect_format <- function(x){
 
   # calculate proportional of lines containing likely tags
@@ -60,7 +60,7 @@ detect_format <- function(x){
 #' @param x A character vector containing RIS-formatted bibliographic data.
 #' @return Returns the delimiter type used in a file.
 #' @example inst/examples/detect_delimiter.R
-#' @rdname detect_
+#' @rdname detect
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
     delimiter <- "endrow"
@@ -97,14 +97,14 @@ detect_delimiter <- function(x){
 #' @param tags A character vector containing RIS tags.
 #' @return Returns the a data/frame of proposed substitutions.
 #' @example inst/examples/detect_delimiter.R
-#' @rdname detect_
+#' @rdname detect
 detect_tags <- function(
   tags # a vector of strings representing ris tags
 ){
-  rows <- which(code_lookup$code %in% tags)
+  rows <- which(synthesisr::code_lookup$code %in% tags)
   ris_list <- split(
-    code_lookup[rows, grepl("ris_", colnames(code_lookup))],
-    code_lookup$code[rows]
+    synthesisr::code_lookup[rows, grepl("ris_", colnames(synthesisr::code_lookup))],
+    synthesisr::code_lookup$code[rows]
   )
   ris_matrix <- do.call(
     rbind,
@@ -116,23 +116,23 @@ detect_tags <- function(
   generic_proportion <- ris_sums[1] / nrow(ris_matrix)
   # default to ris_generic if everything else is bad
   if(best_proportion < 0.75 & generic_proportion > best_proportion){
-    match_df <- code_lookup[code_lookup$ris_generic, ]
+    match_df <- synthesisr::code_lookup[synthesisr::code_lookup$ris_generic, ]
   }else{ # i.e. if the 'best' match performs perfectly
     if(best_proportion > 0.99){ # i.e. a perfect match
-      match_df <- code_lookup[
-        code_lookup[, names(best_match)],
+      match_df <- synthesisr::code_lookup[
+        synthesisr::code_lookup[, names(best_match)],
 
       ]
     }else{ # otherwise use the best choice, then generic to fill gaps
        rows_best <- which(
-         code_lookup[, names(best_match)] &
-         code_lookup$code %in% names(which(ris_matrix[, names(best_match)]))
+         synthesisr::code_lookup[, names(best_match)] &
+         synthesisr::code_lookup$code %in% names(which(ris_matrix[, names(best_match)]))
        )
        rows_generic <- which(
-         code_lookup$ris_generic &
-         code_lookup$code %in% names(which(!ris_matrix[, names(best_match)]))
+         synthesisr::code_lookup$ris_generic &
+         synthesisr::code_lookup$code %in% names(which(!ris_matrix[, names(best_match)]))
        )
-      match_df <- code_lookup[c(rows_best, rows_generic), ]
+      match_df <- synthesisr::code_lookup[c(rows_best, rows_generic), ]
     }
   }
 
@@ -145,7 +145,7 @@ detect_tags <- function(
 #' @param df a data.frame containing bibliographic data
 #' @return the input data.frame with years added for articles missing that information
 #' @example inst/examples/detect_year.R
-#' @rdname detect_
+#' @rdname detect
 detect_year <- function(df){
   if(!inherits(df, "data.frame")){
     stop(print("detect_year expects an object of class data.frame as input"))

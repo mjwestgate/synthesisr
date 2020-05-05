@@ -30,7 +30,10 @@ In the code below, we will demonstrate how to read and assemble bibliographic da
 ```{r}
 # system.file will look for the path to where synthesisr is installed
 # by using the example bibliographic data files, you can reproduce the vignette
-bibfiles <- list.files(system.file("extdata/", package = "synthesisr"), full.names = TRUE)
+bibfiles <- list.files(
+  system.file("extdata/", package = "synthesisr"),
+  full.names = TRUE
+)
 
 # we can print the list of bibfiles to confirm what we will import
 # in this example, we have bibliographic data exported from Scopus and Zoological Record
@@ -38,10 +41,10 @@ print(bibfiles)
 
 # now we can use read_refs to read in our bibliographic data files
 # we save them to a data.frame object (because return_df=TRUE) called imported_files
-imported_files <-  synthesisr::read_refs(
+library(synthesisr)
+imported_files <-  read_refs(
   filename = bibfiles,
-  return_df = TRUE
-)
+  return_df = TRUE)
 
 ```
 
@@ -52,7 +55,7 @@ Many journals are indexed in multiple databases, so searching across databases w
 ```{r}
 # first, we will remove articles that have identical titles
 # this is a fairly conservative approach, so we will remove them without review
-df <- synthesisr::deduplicate(
+df <- deduplicate(
   imported_files,
   match_by = "title",
   match_function = "exact"
@@ -76,7 +79,7 @@ df$title[c(21,96)]
 df$title[c(47, 101)]
 
 # in this example, we will use string distance to identify likely duplicates
-duplicates_string <-  synthesisr::find_duplicates(
+duplicates_string <-  find_duplicates(
   df$title,
   match_function = "stringdist",
   to_lower = TRUE,
@@ -87,7 +90,7 @@ duplicates_string <-  synthesisr::find_duplicates(
 # we can extract the line numbers from the dataset that are likely duplicated
 # this lets us manually review those titles to confirm they are duplicates
 
-manual_checks <- synthesisr::review_duplicates(df$title, duplicates_string)
+manual_checks <- review_duplicates(df$title, duplicates_string)
 
 ```
 
@@ -106,7 +109,7 @@ new_duplicates <- synthesisr::override_duplicates(duplicates_string, 99)
 
 # now we can extract unique references from our dataset
 # we need to pass it the dataset (df) and the matching articles (new_duplicates)
-results <- synthesisr::extract_unique_references(df, new_duplicates)
+results <- extract_unique_references(df, new_duplicates)
 
 ```
 
@@ -122,9 +125,9 @@ To facilitate exporting results to other platforms after assembly and deduplicat
 # this makes it easier to view the output when working with a single article
 citation <- df[1,!is.na(df[1,])]
 
-synthesisr::format_citation(citation)
+format_citation(citation)
 
-synthesisr::write_refs(citation,
+write_refs(citation,
   format = "bib",
   write_file = FALSE
 )

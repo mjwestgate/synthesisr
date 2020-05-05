@@ -1,7 +1,7 @@
 # Duplicate of functions from the Python library fuzzywuzzy
 #github .com/seatgeek/fuzzywuzzy
 # these functions coded by Martin Westgate on 4th June 2018 based on description given here:
-#chairnerd.seatgeek .com/fuzzywuzzy-fuzzy-string-matching-in-python/
+#chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
 
 #' Detect duplicates with fuzzy matching
 #' @description This is a wrapper function for the different fuzzy matching methods.

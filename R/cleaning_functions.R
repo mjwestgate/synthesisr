@@ -4,7 +4,7 @@
 #' @param data A data.frame with bibliographic information.
 #' @return Returns the input data.frame cleaned and standardized.
 #' @example inst/examples/clean_df.R
-#' @rdname clean_
+#' @rdname clean
 clean_df <- function(data){
   colnames(data) <- clean_colnames(colnames(data))
   if(any(colnames(data) == "author")){
@@ -20,7 +20,7 @@ clean_df <- function(data){
 #' @param x Either a string or a vector of author names.
 #' @return Returns the input vector with standardized delimiters.
 #' @examples clean_authors(c("Darwin AND Wallace",  "Darwin & Wallace"))
-#' @rdname clean_
+#' @rdname clean
 clean_authors <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
     x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)
@@ -38,7 +38,7 @@ clean_authors <- function(x){
 #' @param x A string or vector of column names.
 #' @return Returns the input vector with common issues resolved.
 #' @examples clean_colnames(c(".title...", "X..YEAR", "authors.."))
-#' @rdname clean_
+#' @rdname clean
 clean_colnames <- function(
   x # colnames
 ){

@@ -7,8 +7,11 @@
 # ' @example inst/examples/match_columns.R
 match_columns <- function(df){
   # figure out which columns match known tags
-  hits <- as.numeric(match(code_lookup$code, colnames(df)))
-  newcolnames <- code_lookup$field[match(colnames(df), code_lookup$code)]
+  hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
+  newcolnames <- synthesisr::code_lookup$field[
+    match(colnames(df),
+    synthesisr::code_lookup$code)
+  ]
   colnames(df)[!is.na(newcolnames)] <- newcolnames[!is.na(newcolnames)]
 
   # rearrange data in standard(ish) order

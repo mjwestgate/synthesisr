@@ -4,7 +4,7 @@
 #' codes for different bibliographic fields across
 #' databases and merge them to a common format.
 #'
-#' @format A data frame with 207 obs of 4 variables
+#' @format A data frame with 226 obs of 12 variables
 #'
 #' \describe{
 #'  \item{code}{code used in search results}
@@ -14,6 +14,10 @@
 #'  \item{field}{bibliographic field that codes correspond to}
 #'  \item{ris_generic}{logical: if the code is used in generic ris files}
 #'  \item{ris_wos}{logical: if the code is used in Web of Science ris files}
-#'  \item{ris_pubmed}{logical: if the code is used in PubMed ris files}}
+#'  \item{ris_pubmed}{logical: if the code is used in PubMed ris files}
+#'  \item{ris_scopus}{logical: if the code is used in Scopus ris files}
+#'  \item{ris_asp}{logical: if the code is used in Academic Search Premier ris files}
+#'  \item{ris_ovid}{logical: if the code is used in Ovid ris files}
+#'  \item{ris_synthesisr}{logical: if the code is used in Ovid ris files}}
 #'
 "code_lookup"

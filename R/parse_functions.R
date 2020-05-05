@@ -1,10 +1,13 @@
-#' @rdname parse_
+#' @rdname parse
 parse_pubmed <- function(x){
 
   x <- prep_ris(x, detect_delimiter(x), type = "pubmed")
 
   x_merge <- merge(x,
-    code_lookup[code_lookup$ris_pubmed, c("code", "order", "field")],
+    synthesisr::code_lookup[
+      synthesisr::code_lookup$ris_pubmed,
+      c("code", "order", "field")
+    ],
     by.x = "ris",
     by.y = "code",
     all.x = TRUE,
@@ -70,25 +73,20 @@ parse_pubmed <- function(x){
 }
 
 
-#' Parse bibliographic text in a variety of formats
-#'
-#' @description Text in standard formats - such as imported via readLines(), for example - can be parsed using a variety of standard formats. Use detect_format() to determine which is the most appropriate parser for your situation.
-#' @param x A character vector containing bibliographic information in ris format.
-#' @return Returns an object of class bibliography.
-#' @example inst/examples/parse_ris.R
-#' @name parse_
-parse_ris <- function(x, replace_tags){
+#' @rdname parse
+#' @param tag_naming What format are ris tags is? Defaults to "default"
+parse_ris <- function(x, tag_naming = "best_guess"){
 
   x <- prep_ris(x, detect_delimiter(x), type = "generic")
 
   # create the appropriate lookup file for the specified tag
-  if(inherits(replace_tags, "data.frame")){
-    if(!any(colnames(replace_tags) == "order")){
-      replace_tags$order <- seq_len(nrow(replace_tags))
+  if(inherits(tag_naming, "data.frame")){
+    if(!any(colnames(tag_naming) == "order")){
+      tag_naming$order <- seq_len(nrow(tag_naming))
     }
-    code_lookup_thisfile <- replace_tags
+    code_lookup_thisfile <- tag_naming
   }else{
-    if(replace_tags == "none"){
+    if(tag_naming == "none"){
       ris_vals <- unique(x$ris)
       code_lookup_thisfile <- data.frame(
         code = ris_vals,
@@ -96,11 +94,14 @@ parse_ris <- function(x, replace_tags){
         order = seq_along(ris_vals),
         stringsAsFactors = FALSE
       )
-    }else if(replace_tags == "default"){
+    }else if(tag_naming == "best_guess"){
       code_lookup_thisfile <- detect_tags(tags = unique(x$ris))
-    }else if(any(c("wos", "scopus", "ovid", "asp") == replace_tags)){
-      rows <- which(code_lookup[, paste0("ris_", replace_tags)])
-      code_lookup_thisfile <- code_lookup[rows, c("code", "order", "field")]
+    }else if(any(c("wos", "scopus", "ovid", "asp", "synthesisr") == tag_naming)){
+      rows <- which(synthesisr::code_lookup[, paste0("ris_", tag_naming)])
+      code_lookup_thisfile <- synthesisr::code_lookup[
+        rows,
+        c("code", "order", "field")
+      ]
     }
   }
 
@@ -274,7 +275,7 @@ if(any(unlist(lapply(x_split, nrow))==1)){
 }
 
 
-#' @rdname parse_
+#' @rdname parse
 parse_bibtex <- function(x){
 
   # which lines start with @article?
@@ -393,7 +394,7 @@ parse_bibtex <- function(x){
 
 }
 
-#' @rdname parse_
+#' @rdname parse
 parse_csv <- function(x){
   z <- read.table(
     text = x,
@@ -407,7 +408,7 @@ parse_csv <- function(x){
   return(match_columns(z))
 }
 
-#' @rdname parse_
+#' @rdname parse
 parse_tsv <- function(x){
   z <- read.table(
     text = x,
