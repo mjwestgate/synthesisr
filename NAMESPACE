@@ -2,7 +2,7 @@ export(
   read_refs, read_ref,
   parse_bibtex, parse_ris, parse_pubmed, parse_csv, parse_tsv,
   clean_df, clean_authors, clean_colnames,
-  detect_delimiter, detect_format, detect_tags, detect_year,
+  detect_delimiter, detect_parser, detect_tags, detect_year,
   as.bibliography,
     summary.bibliography, print.bibliography, '[.bibliography', c.bibliography,
     as.data.frame.bibliography,

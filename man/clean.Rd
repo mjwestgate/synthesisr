@@ -16,43 +16,36 @@ clean_colnames(x)
 \arguments{
 \item{data}{A data.frame with bibliographic information.}
 
-\item{x}{A string or vector of column names.}
+\item{x}{A vector of strings}
 }
 \value{
-Returns the input data.frame cleaned and standardized.
-
-Returns the input vector with standardized delimiters.
-
-Returns the input vector with common issues resolved.
+Returns the input, but cleaner.
 }
 \description{
-Cleans column names and labels in data.frames into a format suitable for synthesisr applications.
-
-Cleans column names and labels in data.frames into a format suitable for synthesisr applications.
-
-This function standardizes delimiters between author names.
-
-Cleans column names from imports such as extra punctuation.
+Cleans column and author names
 }
 \examples{
-my_df <-  data.frame(
+df <-  data.frame(
   X..title. = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
-
     "revtools: An R package to support article screening for evidence synthesis",
-
     "An automated approach to identifying search terms for
       systematic reviews using keyword co‐occurrence networks",
-
     "Reproducible, flexible and high‐throughput data extraction
     from primary literature: The metaDigitise r package"),
-
   YEAR = c("2019", "2019", "2019", "2019"),
+  authors = c(
+    "Haddaway et al",
+    "Westgate",
+    "EM Grames AND AN Stillman  & MW Tingley and CS Elphick",
+    "Pick et al")
+)
 
-  authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al"))
+clean_df(df)
 
-clean_df(my_df)
-clean_authors(c("Darwin AND Wallace",  "Darwin & Wallace"))
-clean_colnames(c(".title...", "X..YEAR", "authors.."))
+# or use sub-functions
+colnames(df) <- clean_colnames(df)
+# colnames(df) <- clean_colnames(colnames(df)) # also works
+df$author <- clean_authors(df$author)
+
 }

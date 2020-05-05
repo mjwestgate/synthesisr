@@ -21,7 +21,7 @@ eviatlas <- c(
   "ER  - "
 )
 
-detect_format(eviatlas) # = "parse_ris"
+detect_parser(eviatlas) # = "parse_ris"
 
 df <- as.data.frame(parse_ris(eviatlas))
 
@@ -30,13 +30,13 @@ evi_bib <- write_refs(df, format = "bib")
 
 
 expect(
-  detect_format(evi_bib) == "parse_bibtex",
+  detect_parser(evi_bib) == "parse_bibtex",
   "Bibtex formatted references not exporting as expected"
 )
 
 # note that this does not necessarily mean external programs will be able to read the file
 expect(
-  detect_format(evi_ris) == "parse_ris",
+  detect_parser(evi_ris) == "parse_ris",
   "RIS formatted references not exporting as expected"
 )
 expect(

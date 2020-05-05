@@ -1,9 +1,4 @@
-#' Cleans data.frames into synthesisr format
-#'
-#' @description Cleans column names and labels in data.frames into a format suitable for synthesisr applications.
-#' @param data A data.frame with bibliographic information.
-#' @return Returns the input data.frame cleaned and standardized.
-#' @example inst/examples/clean_df.R
+# Cleans data.frames into synthesisr format
 #' @rdname clean
 clean_df <- function(data){
   colnames(data) <- clean_colnames(colnames(data))
@@ -14,12 +9,7 @@ clean_df <- function(data){
 }
 
 
-#' Standardize author delimiters
-#'
-#' @description This function standardizes delimiters between author names.
-#' @param x Either a string or a vector of author names.
-#' @return Returns the input vector with standardized delimiters.
-#' @examples clean_authors(c("Darwin AND Wallace",  "Darwin & Wallace"))
+# Standardize author delimiters
 #' @rdname clean
 clean_authors <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
@@ -32,16 +22,14 @@ clean_authors <- function(x){
 }
 
 
-#' Clean common issues with column names
-#'
-#' @description Cleans column names from imports such as extra punctuation.
-#' @param x A string or vector of column names.
-#' @return Returns the input vector with common issues resolved.
-#' @examples clean_colnames(c(".title...", "X..YEAR", "authors.."))
+# Clean common issues with column names
 #' @rdname clean
 clean_colnames <- function(
   x # colnames
 ){
+  if(inherits(x, "data.frame")){
+    x <- colnames(x)
+  }
   x <- sub("^(X|Y|Z)\\.+", "", x) # remove leading X
   x <- sub("^[[:punct:]]*", "", x) # leading punctuation
   x <- sub("[[:punct:]]*$", "", x) # trailing punctuation

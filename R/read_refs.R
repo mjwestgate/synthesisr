@@ -101,7 +101,7 @@ read_ref <- function(
 
   if(verbose){cat(paste0("Reading file ", filename, " ... "))}
   x <- readLines(filename, warn = FALSE)
-  parse_function <- detect_format(x[1:min(c(length(x), 200))])
+  parse_function <- detect_parser(x[1:min(c(length(x), 200))])
 
   if(parse_function != "unknown"){
 

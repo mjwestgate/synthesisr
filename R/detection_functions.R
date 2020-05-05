@@ -1,5 +1,5 @@
 # internal function to calculate the proportion of lines that contain a particular regex
-# called by detect_format
+# called by detect_parser
 proportion_delimited <- function(x, regex){
   delimiter_count <- unlist(lapply(
     gregexpr(regex, x, perl = TRUE),
@@ -11,14 +11,8 @@ proportion_delimited <- function(x, regex){
 }
 
 
-#' Detects if a file is bib-like or ris-like
-#'
-#' @description Because bibliographic data  can be stored in multiple file types, this function determines if the format of text is one of several likely probabilities: comma-separated; tab-separated; bibtex; and ris (medline or generic).
-#' @param x A character vector containing bibliographic data.
-#' @return Returns the format of a file: either bib, ris, or unknown.
-#' @example inst/examples/detect_format.R
 #' @rdname detect
-detect_format <- function(x){
+detect_parser <- function(x){
 
   # calculate proportional of lines containing likely tags
   proportions <- unlist(lapply(
@@ -54,12 +48,6 @@ detect_format <- function(x){
 }
 
 
-#' Detect delimiter type in bibliographic files
-#'
-#' @description The delimiter in ris files is often an endrow, a special character, or a space. This function detects which delimiter, if any, a file uses.
-#' @param x A character vector containing RIS-formatted bibliographic data.
-#' @return Returns the delimiter type used in a file.
-#' @example inst/examples/detect_delimiter.R
 #' @rdname detect
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
@@ -91,12 +79,6 @@ detect_delimiter <- function(x){
 }
 
 
-#' Match tags in a ris file to a library of replacement names
-#'
-#' @description Different databases use different conventions for ris tags, including the same tag for different meanings, hence the need to identify the naming convention in use. This function identifies the best match from a reference library and returns a dta.frame of proposed substitutions.
-#' @param tags A character vector containing RIS tags.
-#' @return Returns the a data/frame of proposed substitutions.
-#' @example inst/examples/detect_delimiter.R
 #' @rdname detect
 detect_tags <- function(
   tags # a vector of strings representing ris tags
@@ -140,41 +122,44 @@ detect_tags <- function(
 }
 
 
-#' Fill in probable year values
-#' @description Given a data.frame containing bibliographic data, this function attempts to detect the publication year based on date fields for articles missing a year.
-#' @param df a data.frame containing bibliographic data
-#' @return the input data.frame with years added for articles missing that information
-#' @example inst/examples/detect_year.R
+# internal function for detect_year
+guess_year <- function(x){
+  number_lookup <- regexpr("[[:alnum:]]{4}", as.character(x))
+  if(any(number_lookup > 0)){
+    x <- x[number_lookup > 0]
+    result_vec <- unlist(lapply(seq_along(x), function(a){
+      substr(x[a], start = number_lookup[a], stop = number_lookup[a] + 3)
+    }))
+    # return(max(as.numeric(result)))
+    result <- names(sort(xtabs(~result_vec), decreasing = TRUE)[1])
+    return(result)
+  }else{
+    return(NA)
+  }
+}
+
 #' @rdname detect
 detect_year <- function(df){
   if(!inherits(df, "data.frame")){
     stop(print("detect_year expects an object of class data.frame as input"))
   }
-  dates <- grep("date", tolower(colnames(df)))
-  if(any(grep("access", tolower(colnames(df))[dates]))){
-    dates <- dates[-grep("access", tolower(colnames(df)[dates]))]
-    }
-
-  guess_year <- function(x) {
-    possible_years <- strsplit(gsub("[[:punct:]]", " ", paste(x[dates], collapse = " ")), " ")[[1]]
-    possible_years <- suppressWarnings(possible_years[which(nchar(possible_years) == 4 &
-                                                              !is.na(as.numeric(possible_years)))])
-    if (any(!is.na(possible_years))) {
-      names(sort(table(possible_years), decreasing = TRUE))[1]
-    } else{
-      "<NA>"
-    }
-  }
-
+  lc_colnames <- tolower(colnames(df))
+  dates <- grepl("date", lc_colnames) & !grepl("access", lc_colnames)
   if(any(dates)){
     if(any(colnames(df) == "year")) {
-      need_years <- which(is.na(as.numeric(df$year)))
+      result <- df$year
     }else{
-      need_years <- seq(1, nrow(df), 1)
-      df$year <- rep("<NA>", nrow(df))
+      result <- rep(NA, nrow(df))
     }
-    df[need_years, 'year'] <- apply(df[need_years,],1, guess_year)
+    na_rows <- is.na(result)
+    if(any(na_rows)){
+      result[na_rows] <- unlist(lapply(
+        split(df[na_rows, dates], seq_along(na_rows)),
+        guess_year
+      ))
     }
-
-  return(df)
+  }else{
+    result <- rep(NA, nrow(df))
+  }
+  return(result)
 }

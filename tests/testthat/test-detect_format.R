@@ -161,13 +161,13 @@ res_synth_methods <-
     "      18."
   )
 
-expect(detect_format(eviatlas) == "parse_ris",
+expect(detect_parser(eviatlas) == "parse_ris",
        "RIS file not being detected")
 
-expect(detect_format(litsearchr) == "parse_bibtex",
+expect(detect_parser(litsearchr) == "parse_bibtex",
        ".bib file not being detected")
 
 expect(
-  detect_format(res_synth_methods) == "parse_pubmed",
+  detect_parser(res_synth_methods) == "parse_pubmed",
   "PubMed nbib file not being detected"
 )

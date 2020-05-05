@@ -74,7 +74,7 @@ parse_pubmed <- function(x){
 
 
 #' @rdname parse
-#' @param tag_naming What format are ris tags is? Defaults to "default"
+#' @param tag_naming What format are ris tags in? Defaults to "best_guess" See \code{\link{read_refs}} for a list of accepted arguments.
 parse_ris <- function(x, tag_naming = "best_guess"){
 
   x <- prep_ris(x, detect_delimiter(x), type = "generic")

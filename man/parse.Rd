@@ -22,13 +22,13 @@ parse_tsv(x)
 \arguments{
 \item{x}{A character vector containing bibliographic information in ris format.}
 
-\item{tag_naming}{What format are ris tags is? Defaults to "default"}
+\item{tag_naming}{What format are ris tags in? Defaults to "best_guess" See \code{\link{read_refs}} for a list of accepted arguments.}
 }
 \value{
 Returns an object of class bibliography.
 }
 \description{
-Text in standard formats - such as imported via readLines(), for example - can be parsed using a variety of standard formats. Use detect_format() to determine which is the most appropriate parser for your situation.
+Text in standard formats - such as imported via \code{\link{readLines}} - can be parsed using a variety of standard formats. Use \code{\link{detect_parser}} to determine which is the most appropriate parser for your situation.
 }
 \examples{
 eviatlas <- c(
@@ -54,7 +54,7 @@ eviatlas <- c(
   "ER  - "
 )
 
-detect_format(eviatlas) # = "parse_ris"
+detect_parser(eviatlas) # = "parse_ris"
 df <- as.data.frame(parse_ris(eviatlas))
 ris_out <- write_refs(df, format = "ris", write_file = FALSE)
 }

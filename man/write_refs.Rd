@@ -58,7 +58,7 @@ eviatlas <- c(
   "ER  - "
 )
 
-detect_format(eviatlas) # = "parse_ris"
+detect_parser(eviatlas) # = "parse_ris"
 df <- as.data.frame(parse_ris(eviatlas))
 ris_out <- write_refs(df, format = "ris", write_file = FALSE)
 }

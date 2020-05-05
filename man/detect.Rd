@@ -2,13 +2,13 @@
 % Please edit documentation in R/detect.R, R/detection_functions.R
 \name{detect}
 \alias{detect}
-\alias{detect_format}
+\alias{detect_parser}
 \alias{detect_delimiter}
 \alias{detect_tags}
 \alias{detect_year}
-\title{Detect information of file formatting}
+\title{Detect file formatting information}
 \usage{
-detect_format(x)
+detect_parser(x)
 
 detect_delimiter(x)
 
@@ -17,166 +17,48 @@ detect_tags(tags)
 detect_year(df)
 }
 \arguments{
-\item{x}{A character vector containing RIS-formatted bibliographic data.}
+\item{x}{A character vector containing bibliographic data}
 
 \item{tags}{A character vector containing RIS tags.}
 
 \item{df}{a data.frame containing bibliographic data}
 }
 \value{
-Returns the format of a file: either bib, ris, or unknown.
-
-Returns the delimiter type used in a file.
-
-Returns the a data/frame of proposed substitutions.
-
-the input data.frame with years added for articles missing that information
+\code{detect_parser} and \code{detect_delimiter} return a length-1 character; \code{detect_year} returns a character vector listing estimated publication years; and \code{detect_tags} returns a \code{data.frame}.
 }
 \description{
-Detect file info
-
-Because bibliographic data  can be stored in multiple file types, this function determines if the format of text is one of several likely probabilities: comma-separated; tab-separated; bibtex; and ris (medline or generic).
-
-The delimiter in ris files is often an endrow, a special character, or a space. This function detects which delimiter, if any, a file uses.
-
-Different databases use different conventions for ris tags, including the same tag for different meanings, hence the need to identify the naming convention in use. This function identifies the best match from a reference library and returns a dta.frame of proposed substitutions.
-
-Given a data.frame containing bibliographic data, this function attempts to detect the publication year based on date fields for articles missing a year.
+Bibliographic data can be stored in a number of different file types, meaning that detecting consistent attributes of those files is necessary if they are to be parsed accurately. These functions attempt to identify some of those key file attributes. Specifically, \code{detect_parser} determines which \code{\link{parse}} function to use; \code{detect_delimiter} and \code{detect_tags} identify different attributes of RIS files; and \code{detect_year} attempts to fill gaps in publication years from other information stored in a \code{data.frame}.
 }
 \examples{
-metafor <- c("@article{viechtbauer2010,
-  title={Conducting meta-analyses in R with the metafor package},
-  author={Viechtbauer, Wolfgang},
-  journal={Journal of Statistical Software},
-  volume={36},
-  number={3},
-  pages={1--48},
-  year={2010},
-  publisher={UCLA Statistics}
-}")
-
-detect_format(metafor)
-revtools <- c("",
-              "PMID- 31355546",
-              "OWN - NLM",
-              "STAT- In-Process",
-              "LR  - 20200226",
-              "IS  - 1759-2887 (Electronic)",
-              "IS  - 1759-2879 (Linking)",
-              "VI  - 10",
-              "IP  - 4",
-              "DP  - 2019 Dec",
-              "TI  - revtools: An R package to support article
-                     screening for evidence synthesis.",
-              "PG  - 606-614",
-              "LID - 10.1002/jrsm.1374 [doi]",
-              "AU  - Westgate MJ",
-              "LA  - eng",
-              "PT  - Journal Article",
-              "DEP - 20191018",
-              "TA  - Res Synth Methods",
-              "JT  - Research Synthesis Methods",
-              "JID - 101543738",
-              "SB  - IM",
-              "OTO - NOTNLM",
-              "OT  - data visualization",
-              "OT  - meta-analysis",
-              "OT  - natural language processing",
-              "OT  - systematic review",
-              "OT  - topic models",
-              "EDAT- 2019/07/30 06:00",
-              "MHDA- 2019/07/30 06:00",
-              "CRDT- 2019/07/30 06:00",
-              "PHST- 2019/02/25 00:00 [received]",
-              "PHST- 2019/06/12 00:00 [revised]",
-              "PHST- 2019/07/23 00:00 [accepted]",
-              "AID - 10.1002/jrsm.1374 [doi]",
-              "PST - ppublish",
-              "      18."
+revtools <- c(
+  "",
+  "PMID- 31355546",
+  "VI  - 10",
+  "IP  - 4",
+  "DP  - 2019 Dec",
+  "TI  - revtools: An R package to support article
+         screening for evidence synthesis.",
+  "PG  - 606-614",
+  "LID - 10.1002/jrsm.1374 [doi]",
+  "AU  - Westgate MJ",
+  "LA  - eng",
+  "PT  - Journal Article",
+  "JT  - Research Synthesis Methods",
+  ""
 )
 
+# detect basic attributes of ris files
+detect_parser(revtools)
 detect_delimiter(revtools)
-revtools <- c("",
-              "PMID- 31355546",
-              "OWN - NLM",
-              "STAT- In-Process",
-              "LR  - 20200226",
-              "IS  - 1759-2887 (Electronic)",
-              "IS  - 1759-2879 (Linking)",
-              "VI  - 10",
-              "IP  - 4",
-              "DP  - 2019 Dec",
-              "TI  - revtools: An R package to support article
-                     screening for evidence synthesis.",
-              "PG  - 606-614",
-              "LID - 10.1002/jrsm.1374 [doi]",
-              "AU  - Westgate MJ",
-              "LA  - eng",
-              "PT  - Journal Article",
-              "DEP - 20191018",
-              "TA  - Res Synth Methods",
-              "JT  - Research Synthesis Methods",
-              "JID - 101543738",
-              "SB  - IM",
-              "OTO - NOTNLM",
-              "OT  - data visualization",
-              "OT  - meta-analysis",
-              "OT  - natural language processing",
-              "OT  - systematic review",
-              "OT  - topic models",
-              "EDAT- 2019/07/30 06:00",
-              "MHDA- 2019/07/30 06:00",
-              "CRDT- 2019/07/30 06:00",
-              "PHST- 2019/02/25 00:00 [received]",
-              "PHST- 2019/06/12 00:00 [revised]",
-              "PHST- 2019/07/23 00:00 [accepted]",
-              "AID - 10.1002/jrsm.1374 [doi]",
-              "PST - ppublish",
-              "      18."
-)
 
-detect_delimiter(revtools)
-robvis <-
-  c(
-    "",
-    "PMID- 32336025",
-    "LR  - 20200426",
-    "DP  - 2020 Apr 26",
-    "TI  - Risk-Of-Bias VISualization (robvis): an R package and Shiny web app for",
-    "      visualizing risk-of-bias assessments.",
-    "LID - 10.1002/jrsm.1411 [doi]",
-    "FAU - Higgins, Julian Pt",
-    "LA  - eng",
-    "PT  - Journal Article",
-    "DEP - 20200426",
-    "PL  - England",
-    "TA  - Res Synth Methods",
-    "JT  - Research Synthesis Methods",
-    "OT  - Data visualization",
-    "OT  - Evidence synthesis",
-    "OT  - R",
-    "OT  - Risk of bias",
-    "EDAT- 2020/04/27 06:00",
-    "MHDA- 2020/04/27 06:00",
-    "CRDT- 2020/04/27 06:00",
-    "PHST- 2020/02/27 00:00 [received]",
-    "PHST- 2020/04/16 00:00 [revised]",
-    "PHST- 2020/04/18 00:00 [accepted]",
-    "PHST- 2020/04/27 06:00 [entrez]",
-    "PHST- 2020/04/27 06:00 [pubmed]",
-    "PHST- 2020/04/27 06:00 [medline]",
-    "AID - 10.1002/jrsm.1411 [doi]",
-    "SO  - Res Synth Methods. 2020 Apr 26. doi: 10.1002/jrsm.1411."
-  )
+# determine which tag format to use
+tags <- trimws(unlist(lapply(
+  strsplit(revtools, "- "),
+  function(a){a[1]}
+)))
+pubmed_tag_list <- detect_tags(tags[!is.na(tags)])
 
-tmp <- tempfile()
-
-writeLines(robvis, tmp)
-
-bib <- read_ref(tmp, return_df = TRUE, verbose = TRUE)
-bib$year # data does not exist
-
-
-df <- detect_year(bib)
-df$year # likely publication years filled in based on dates found in other fields
+# find year data in other columns
+df <- as.data.frame(parse_pubmed(revtools))
+df$year <- detect_year(df)
 }

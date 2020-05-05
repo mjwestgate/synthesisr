@@ -8,7 +8,7 @@
 #'  systematic reviews and merges results into a standardized format.
 #'
 #' @section Import & Export:
-#' The key task performed by \code{synthesisr} is flexible import and presentation of bibliographic data. This is typically achieved by \code{\link{read_refs}}, which can import multiple files at once and link them together into a single \code{data.frame}. Conversely, export if via \code{\link{write_refs}}. Users that require more detailed control can use the following functions:
+#' The key task performed by \code{synthesisr} is flexible import and presentation of bibliographic data. This is typically achieved by \code{\link{read_refs}}, which can import multiple files at once and link them together into a single \code{data.frame}. Conversely, export is via \code{\link{write_refs}}. Users that require more detailed control can use the following functions:
 #' \itemize{
 #'   \item \code{\link{detect}} Detect file attributes
 #'   \item \code{\link{parse}} Parse a vector containing bibliographic data
