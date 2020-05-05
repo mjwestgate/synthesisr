@@ -7,7 +7,7 @@
 override_duplicates(matches, overrides)
 }
 \arguments{
-\item{matches}{Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function.}
+\item{matches}{Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the \code{\link{find_duplicates}} function.}
 
 \item{overrides}{Numeric: a vector of group numbers that are not true duplicates.}
 }

@@ -145,12 +145,6 @@ find_duplicates <- function(
                 if(is.na(a[row])){rep(TRUE, length(a))}else{a == a[row]}
               }, row = row_start
             )
-            # match_list <- lapply(group_variables, function(a, data, row){
-            #   (data[, a] == data[row_start, a]) | is.na(data[, a])
-            #   },
-            #   data = data,
-            #   row = row_start
-            # )
             if(length(group_variables) == 1){
               rows_tr <- which(unlist(match_list))
             }else{
@@ -164,18 +158,14 @@ find_duplicates <- function(
           rows_tr <- rows_tr[which(rows_tr != row_start)]
 
           if(length(rows_tr) > 0){
-            # if(match_function == "exact"){
-            #   match_result <- (data[rows_tr] == data[row_start])
-            # }else{
-              match_result <- do.call(
-                match_function,
-                list(
-                  a = data[row_start],
-                  b = data[rows_tr],
-                  method = method
-                )
-              ) <= threshold
-            # }
+            match_result <- do.call(
+              match_function,
+              list(
+                a = data[row_start],
+                b = data[rows_tr],
+                method = method
+              )
+            ) <= threshold
             if(any(match_result, na.rm = TRUE)){
               rows_selected <- rows_tr[which(match_result)]
               checked[c(row_start, rows_selected)] <- TRUE
@@ -326,21 +316,22 @@ deduplicate <- function(
 #' Manually review potential duplicates
 #' @description Allows users to manually review articles classified as duplicates.
 #' @param text A character vector of the text that was used to identify potential duplicates.
-#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function.
-#' @return A data.frame of potential duplicates grouped together.
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the \code{\link{find_duplicates}} function.
+#' @return A \code{data.frame} of potential duplicates grouped together.
 review_duplicates <- function(text, matches){
   likely_duplicates <- unique(matches)[table(matches)>1]
-
-  review <- data.frame(title=text[matches %in% likely_duplicates],
-                       matches=matches[matches %in% likely_duplicates])
-
+  review <- data.frame(
+    title = text[matches %in% likely_duplicates],
+    matches = matches[matches %in% likely_duplicates],
+    stringsAsFactors = FALSE
+  )
   review <- review[order(review[,2]),]
   return(review)
 }
 
 #' Manually override duplicates
 #' @description Re-assign group numbers to text that was classified as duplicated but is unique.
-#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function.
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the \code{\link{find_duplicates}} function.
 #' @param overrides Numeric: a vector of group numbers that are not true duplicates.
 #' @return The input \code{matches} vector with unique group numbers for members of groups that the user overrides.
 override_duplicates <- function(matches, overrides){

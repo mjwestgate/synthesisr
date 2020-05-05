@@ -9,10 +9,10 @@ review_duplicates(text, matches)
 \arguments{
 \item{text}{A character vector of the text that was used to identify potential duplicates.}
 
-\item{matches}{Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the find_duplicates function.}
+\item{matches}{Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the \code{\link{find_duplicates}} function.}
 }
 \value{
-A data.frame of potential duplicates grouped together.
+A \code{data.frame} of potential duplicates grouped together.
 }
 \description{
 Allows users to manually review articles classified as duplicates.
