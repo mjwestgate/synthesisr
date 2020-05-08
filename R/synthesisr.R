@@ -10,7 +10,6 @@
 #' @section Import & Export:
 #' The key task performed by \code{synthesisr} is flexible import and presentation of bibliographic data. This is typically achieved by \code{\link{read_refs}}, which can import multiple files at once and link them together into a single \code{data.frame}. Conversely, export is via \code{\link{write_refs}}. Users that require more detailed control can use the following functions:
 #' \itemize{
-#'   \item \code{\link{read_ref}} Workhorse function underneath \code{read_refs}
 #'   \item \code{\link{detect_}} Detect file attributes
 #'   \item \code{\link{parse_}} Parse a vector containing bibliographic data
 #'   \item \code{\link{clean_}} Cleaning functions for author and column names
@@ -30,8 +29,9 @@
 #'\itemize{
 #'   \item \code{\link{find_duplicates}} Locate potentially duplicated references
 #'   \item \code{\link{extract_unique_references}} Return a data.frame with only 'unique' references
-#'   \item \code{\link{fuzzdist}} Fuzzy string matching
 #'   \item \code{\link{review_duplicates}} Manually review potential duplicates
+#'   \item \code{\link{override_duplicates}} Manually override identified duplicates
+#'   \item \code{\link{fuzzdist}} Fuzzy string matching
 #'}
 #'
 #' @docType package

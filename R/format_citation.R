@@ -25,13 +25,16 @@ format_citation <- function(
     data <- as.data.frame(data)
   }
 
-    colnames(data) <- clean_colnames(colnames(data))
+  colnames(data) <- clean_colnames(colnames(data))
   if(any(names(data) == "journal")){
     source <- "journal"
   }else{
     source_check <- grepl("source", names(data))
     if(any(source_check)){
-      source <- names(data)[which(source_check)[1]]
+      source <- names(data)[which(source_check)]
+      if(length(source) > 1){
+        source <- source[which.max(nchar(data[source], type = "bytes"))]
+      }
     }else{
       source <- NA
     }

@@ -20,7 +20,7 @@ detect_parser <- function(x){
       ",(\"|[[:alnum:]])",
       "\t",
       "\\{|\\}",
-      "^([[:upper:]]{2,4}\\s*-\\s)|(([[:upper:]]{2}|[[:upper:]][[:digit:]])\\s*-{0,2}\\s*)"
+      "(^[[:upper:]]{2,4}\\s*-\\s)|(^([[:upper:]]{2}|[[:upper:]][[:digit:]])\\s*-{0,2}\\s*)"
     ),
     function(a, z){proportion_delimited(z, a)},
     z = x
