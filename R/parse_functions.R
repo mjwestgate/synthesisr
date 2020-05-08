@@ -403,7 +403,7 @@ parse_csv <- function(x){
     quote = "\"",
     dec = ".",
     fill = TRUE,
-    stringsAsFactors = FALSE
+    stringsAsFactors = FALSE, row.names = NULL
   )
   return(match_columns(z))
 }
@@ -417,7 +417,7 @@ parse_tsv <- function(x){
     quote = "\"",
     dec = ".",
     fill = TRUE,
-    stringsAsFactors = FALSE
+    stringsAsFactors = FALSE, row.names = NULL
   )
   return(match_columns(z))
 }
