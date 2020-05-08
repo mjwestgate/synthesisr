@@ -1,11 +1,4 @@
-^.*/.Rproj$
-^/.Rproj/.user$
-./synthesisr_hex.png
-./test_script.R
-^.*\.Rproj$
-^\.Rproj\.user$
 synthesisr_hex.png
-test_script.R
-old_make_dtm.R
 synthesisr.Rproj
 ./inst/ris_tags
+README.md

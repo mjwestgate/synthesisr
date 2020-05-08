@@ -30,24 +30,18 @@ This is a wrapper function to \code{find_duplicates} and \code{extract_unique_re
 my_df <-  data.frame(
   title = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
-
     "revtools: An R package to support article screening for evidence synthesis",
-
     "An automated approach to identifying search terms for systematic reviews
     using keyword co‐occurrence networks",
-
     "Reproducible, flexible and high‐throughput data extraction from primary literature:
     The metaDigitise r package",
-
     "eviatlas:tool for visualizing evidence synthesis databases.",
-
     "REVTOOLS a package to support article-screening for evidence synthsis"
   ),
-
   year = c("2019", "2019", "2019", "2019", NA, NA),
-
   authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al", NA, NA)
+              "Grames et al", "Pick et al", NA, NA),
+  stringsAsFactors = FALSE
 )
 
 # run deduplication
@@ -61,7 +55,10 @@ dups <- find_duplicates(
 extract_unique_references(my_df, matches = dups)
 
 # or, in one line:
-deduplicate(my_df, "title")
+deduplicate(my_df, "title",
+  match_function = "stringdist",
+  rm_punctuation = TRUE,
+  to_lower = TRUE)
 }
 \seealso{
 \code{\link{find_duplicates}} and \code{\link{extract_unique_references}} for underlying functions.
