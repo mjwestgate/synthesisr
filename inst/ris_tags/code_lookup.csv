@@ -1,219 +1,227 @@
-code,order,category_description,entry_description,field,ris_generic,ris_wos,ris_pubmed
-DB,1.09,File & document metadata,Database (Scopus tag),database,TRUE,FALSE,FALSE
-FN,1.1,File & document metadata,File Name,file_name,FALSE,TRUE,FALSE
-N,1.1,File & document metadata,File name,file_name,FALSE,TRUE,FALSE
-DA,1.15,File & document metadata,Date this report was generated,date_generated,TRUE,TRUE,TRUE
-DT,1.2,File & document metadata,Document Type,document_type,FALSE,TRUE,FALSE
-TY,1.2,File & document metadata,Source/document type,document_type,TRUE,FALSE,FALSE
-LT,1.3,File & document metadata,Literature Type,publication_type,TRUE,FALSE,FALSE
-PT,1.3,File & document metadata,Publication Type,publication_type,TRUE,TRUE,TRUE
-LA,1.4,File & document metadata,Language,language,TRUE,TRUE,TRUE
-PST,1.5,File & document metadata,Publication status,status,FALSE,FALSE,TRUE
-SA,1.5,File & document metadata,Status,status,TRUE,FALSE,FALSE
-STAT,1.5,File & document metadata,Status,status,FALSE,FALSE,TRUE
-A1,2.01,Authorship,Author,author,TRUE,FALSE,FALSE
-A2,2.01,Authorship,Author,author,TRUE,FALSE,FALSE
-A3,2.01,Authorship,Author,author,TRUE,FALSE,FALSE
-A4,2.01,Authorship,Author,author,TRUE,FALSE,FALSE
-A5,2.01,Authorship,Author,author,TRUE,FALSE,FALSE
-AU,2.01,Authorship,Author,author,TRUE,TRUE,TRUE
-AF,2.02,Authorship,Author full name,author_full,TRUE,TRUE,FALSE
-FAU,2.02,Authorship,Author full name,author_full,FALSE,FALSE,TRUE
-BA,2.03,Authorship,Book Authors,author_book,FALSE,TRUE,FALSE
-BF,2.03,Authorship,Book Authors Full Name,author_book_full,FALSE,TRUE,FALSE
-CA,2.04,Authorship,Group Authors,author_group,FALSE,TRUE,FALSE
-GP,2.04,Authorship,Group Authors (generic) or Book Group authors (WoS),author_group,FALSE,TRUE,FALSE
-CN,2.05,Authorship,Author (corporate),author_corporate,FALSE,FALSE,TRUE
-CNx,2.05,Authorship,Author (corporate),author_corporate,TRUE,FALSE,FALSE
-Z2,2.06,Authorship,Author(s) (in second language),author_otherlang,FALSE,TRUE,FALSE
-IR,2.07,Authorship,Investigator,investigator,FALSE,FALSE,TRUE
-IV,2.07,Authorship,Investigators,investigator,TRUE,FALSE,FALSE
-FIR,2.08,Authorship,Investigator name (full),investigator_full,FALSE,FALSE,TRUE
-A2x,2.09,Authorship,Editor,editor,TRUE,FALSE,FALSE
-BE,2.09,Authorship,Editor(s),editor,FALSE,TRUE,FALSE
-ED,2.09,Authorship,Editor(s),editor,FALSE,FALSE,TRUE
-EDx,2.09,Authorship,Editor(s),editor,TRUE,FALSE,FALSE
-FED,2.1,Authorship,Editor(s) full,editor_full,FALSE,FALSE,TRUE
-EM,2.11,Authorship,E-mail Address,email,FALSE,TRUE,FALSE
-OI,2.12,Authorship,ORCID Identifier Open Researcher and Contributor ID,orcid_id,TRUE,TRUE,FALSE
-AD,2.13,Authorship,Address or Affilliation,address,TRUE,FALSE,TRUE
-ADx,2.13,Authorship,Affiliations,address,TRUE,FALSE,FALSE
-C1,2.13,Authorship,Author Address,address,FALSE,TRUE,FALSE
-CY,2.13,Authorship,Institution,address,TRUE,FALSE,FALSE
-IRAD,2.13,Authorship,Investigator affiliation,address,FALSE,FALSE,TRUE
-RP,2.14,Authorship,Reprint Address,reprint_address,FALSE,TRUE,FALSE
-PS,2.2,Authorship,Personal Name Subject,personal_name_as_subject,FALSE,FALSE,TRUE
-FPS,2.21,Authorship,personal_name_as_subject_full,personal_name_as_subject_full,FALSE,FALSE,TRUE
-PSx,2.21,Authorship,personal_name_as_subject,personal_name_as_subject,TRUE,FALSE,FALSE
-RI,2.3,Authorship,ResearcherID Number,researcher_id,FALSE,TRUE,FALSE
-AUID,2.31,Authorship,Author ID,author_id,FALSE,FALSE,TRUE
-PY,3,Publication dates,Year Published,year,TRUE,TRUE,FALSE
-Y1,3,Publication dates,Year,year,TRUE,FALSE,FALSE
-EY,3.01,Publication dates,Early access year,year_early_access,FALSE,TRUE,FALSE
-CRDT,3.02,Publication dates,Date created,date_created,FALSE,FALSE,TRUE
-RC,3.02,Publication dates,"Date Created, Date Completed, Date Revised",date_created,TRUE,FALSE,FALSE
-LR,3.03,Publication dates,Date revised,date_revised,FALSE,FALSE,TRUE
-DCOM,3.04,Publication dates,Date completed,date_completed,FALSE,FALSE,TRUE
-EDAT,3.05,Publication dates,Date added,date_added,TRUE,FALSE,TRUE
-EA,3.06,Publication dates,Early access date,date_early_access,FALSE,TRUE,FALSE
-DEP,3.07,Publication dates,Date published (electronically),date_published_elec,FALSE,FALSE,TRUE
-DP,3.08,Publication dates,Date published,date_published,TRUE,FALSE,TRUE
-PD,3.08,Publication dates,Publication Date,date_published,FALSE,TRUE,FALSE
-PHST,3.09,Publication dates,Publication history status,publication_history_status,FALSE,FALSE,TRUE
-T1,4,Reference information,Title,title,TRUE,FALSE,FALSE
-TI,4,Reference information,Title,title,TRUE,TRUE,TRUE
-BTI,4.01,Reference information,Book title,title_book,FALSE,FALSE,TRUE
-FT,4.02,Reference information,Foreign title,title_foreign,FALSE,TRUE,FALSE
-Z1,4.03,Reference information,Title (in second language),title_otherlang,FALSE,TRUE,FALSE
-TT,4.04,Reference information,Title (transliterated),title_transliterated,FALSE,FALSE,TRUE
-JA,4.1,Reference information,Journal,journal,TRUE,FALSE,FALSE
-JF,4.1,Reference information,Journal,journal,TRUE,FALSE,FALSE
-JO,4.1,Reference information,Journal,journal,TRUE,FALSE,FALSE
-JT,4.1,Reference information,Journal,journal,TRUE,FALSE,TRUE
-T3,4.1,Reference information,Journal,journal,TRUE,FALSE,FALSE
-TA,4.11,Reference information,Journal (abbreviated),journal_abbreviated,FALSE,FALSE,TRUE
-SO,4.2,Reference information,Source,source,TRUE,TRUE,TRUE
-T2,4.2,Reference information,Source title,source,TRUE,FALSE,FALSE
-J2,4.21,Reference information,Abbreviated source title,source_abbreviated,TRUE,FALSE,FALSE
-J9,4.21,Reference information,29-Character Source Abbreviation,source_abbreviated,FALSE,TRUE,FALSE
-JI,4.21,Reference information,ISO Source Abbreviation,source_abbreviated,FALSE,TRUE,FALSE
-Z3,4.22,Reference information,Full Source Title (in second language) (includes title and subtitle),source_otherlang,FALSE,TRUE,FALSE
-SI,4.23,Reference information,Secondary source ID,secondary_source_id,FALSE,FALSE,TRUE
-C3,4.24,Reference information,Proceedings title,proceedings_title,TRUE,FALSE,FALSE
-VTI,4.25,Reference information,Volume title,volume_title,FALSE,FALSE,TRUE
-SE,4.26,Reference information,Book series title,book_series_title,FALSE,TRUE,FALSE
-BS,4.27,Reference information,Book series subtitle,book_series_subtitle,FALSE,TRUE,FALSE
-ED,4.28,Reference information,Edition,edition,TRUE,FALSE,FALSE
-EN,4.28,Reference information,Edition,edition,TRUE,FALSE,TRUE
-CTI,4.29,Reference information,Collection title,collection_title,FALSE,FALSE,TRUE
-VI,4.3,Reference information,Volume,volume,FALSE,FALSE,TRUE
-VL,4.3,Reference information,Volume,volume,TRUE,TRUE,FALSE
-IP,4.4,Reference information,Issue,issue,FALSE,FALSE,TRUE
-IS,4.4,Reference information,Issue,issue,TRUE,TRUE,TRUE
-SI,4.41,Reference information,Special Issue,special_issue,FALSE,TRUE,FALSE
-AR,4.42,Reference information,Article number,article_number,FALSE,TRUE,FALSE
-C7,4.42,Reference information,Article number,article_number,TRUE,FALSE,FALSE
-SU,4.43,Reference information,Supplement,supplement,FALSE,TRUE,FALSE
-PG,4.5,Reference information,Pages,pages,FALSE,FALSE,TRUE
-BP,4.51,Reference information,Beginning page,start_page,TRUE,TRUE,FALSE
-SP,4.51,Reference information,Start page,start_page,TRUE,FALSE,FALSE
-EP,4.52,Reference information,End page,end_page,TRUE,TRUE,FALSE
-PG,4.53,Reference information,Page count,n_pages,FALSE,TRUE,FALSE
-PS,4.53,Reference information,Page span,n_pages,TRUE,FALSE,FALSE
-P2,4.54,Reference information,Chapter Count (Book Citation Index),n_chapters,FALSE,TRUE,FALSE
-AB,4.6,Reference information,Abstract,abstract,TRUE,TRUE,TRUE
-N2,4.6,Reference information,Abstract,abstract,TRUE,FALSE,FALSE
-A2x,4.61,Reference information,Other abstract,abstract_other,TRUE,FALSE,FALSE
-OAB,4.61,Reference information,Abstract (other),abstract_other,FALSE,FALSE,TRUE
-Z4,4.62,Reference information,Abstract (in second language),abstract_otherlang,FALSE,TRUE,FALSE
-DE,4.7,Reference information,Descriptors data,keywords,FALSE,TRUE,FALSE
-KW,4.7,Reference information,Keywords,keywords,TRUE,FALSE,FALSE
-MI,4.7,Reference information,Miscellaneous descriptors,keywords,TRUE,FALSE,FALSE
-ID,4.71,Reference information,Keywords Plus ,keywords_plus,FALSE,TRUE,FALSE
-MH,4.72,Reference information,MeSH terms,mesh_terms,FALSE,FALSE,TRUE
-MHDA,4.73,Reference information,MeSH date,mesh_date,FALSE,FALSE,TRUE
-VR,4.8,Reference information,Version Number,version,FALSE,TRUE,FALSE
-DI,5.01,Indexing,Digital Object Identifier (DOI),doi,TRUE,TRUE,FALSE
-DO,5.01,Indexing,Digital Object Identifier (DOI),doi,TRUE,FALSE,FALSE
-D2,5.02,Indexing,Book Digital Object Identifier (DOI),doi_book,FALSE,TRUE,FALSE
-BN,5.03,Indexing,International Standard Book Number (ISBN),isbn,FALSE,TRUE,FALSE
-ISBN,5.03,Indexing,isbn,isbn,FALSE,FALSE,TRUE
-ISx,5.04,Indexing,issn,issn,TRUE,FALSE,FALSE
-SN,5.04,Indexing,International Standard Serial Number ISSN,issn,TRUE,TRUE,FALSE
-EI,5.05,Indexing,Electronic International Standard Serial Number (eISSN),eissn,FALSE,TRUE,FALSE
-CN,5.07,Indexing,Call number,call_number,TRUE,FALSE,FALSE
-AID,5.08,Indexing,Article ID,article_id,FALSE,FALSE,TRUE
-MID,5.08,Indexing,Manuscript ID,manuscript_id,FALSE,FALSE,TRUE
-C2,5.1,Indexing,PMID/PMCID,pubmed_id,TRUE,FALSE,FALSE
-PM,5.1,Indexing,PubMed ID,pubmed_id,FALSE,TRUE,FALSE
-PMID,5.1,Indexing,PubMed ID,pubmed_id,FALSE,FALSE,TRUE
-PMC,5.11,Indexing,PubMed central identifier,pubmed_central_identitfier,FALSE,FALSE,TRUE
-PMCR,5.12,Indexing,PubMed central release,pubmed_central_release,FALSE,FALSE,TRUE
-JC,5.13,Indexing,NLM Unique ID,nlm_id,TRUE,FALSE,FALSE
-JID,5.13,Indexing,NLM Unique ID,nlm_id,FALSE,FALSE,TRUE
-OID,5.14,Indexing,Other ID (PubMed),other_id,FALSE,FALSE,TRUE
-RN,5.15,Indexing,registry_number,registry_number,TRUE,FALSE,TRUE
-UT,5.2,Indexing,Unique Article Identifier,accession_number,FALSE,TRUE,FALSE
-AN,5.21,Indexing,Zoological Record Accession Number,accession_zr,TRUE,FALSE,FALSE
-GA,5.22,Indexing,Document Delivery Number,document_delivery_id,FALSE,TRUE,FALSE
-UR,5.3,Indexing,Journal URL,url_journal,TRUE,FALSE,FALSE
-AW,5.31,Indexing,Item URL,url_item,TRUE,FALSE,FALSE
-U1,5.5,Indexing,ID from EPPI-reviewer,eppi_id,TRUE,FALSE,FALSE
-SF,5.6,Indexing,Space Flight Mission,space_flight_mission,TRUE,FALSE,FALSE
-SFM,5.6,Indexing,Space Flight Mission,space_flight_mission,FALSE,FALSE,TRUE
-PE,5.61,Indexing,Published Electronically,published_elec,TRUE,FALSE,FALSE
-CT,6.01,Conference information,Conference title,conference_name,FALSE,TRUE,FALSE
-NA,6.01,Conference information,Conference name,conference_name,TRUE,FALSE,FALSE
-HO,6.02,Conference information,Conference host,conference_host,FALSE,TRUE,FALSE
-CL,6.03,Conference information,Conference location,conference_location,FALSE,TRUE,FALSE
-CYx,6.03,Conference information,Conference location,conference_location,TRUE,FALSE,FALSE
-CY,6.04,Conference information,Conference date,conference_date,FALSE,TRUE,FALSE
-CYx,6.04,Conference information,Meeting date,conference_date,TRUE,FALSE,FALSE
-Y2,6.04,Conference information,Conference date,conference_date,TRUE,FALSE,FALSE
-A4x,6.05,Conference information,Conference sponsors,conference_sponsor,TRUE,FALSE,FALSE
-SP,6.05,Conference information,Conference sponsors,conference_sponsor,FALSE,TRUE,FALSE
-SPx,6.05,Conference information,Meeting sponsor,conference_sponsor,TRUE,FALSE,FALSE
-MA,6.06,Conference information,Meeting abstract,meeting_abstract,FALSE,TRUE,FALSE
-PB,7.01,Publishing & Copyright,Publisher,publisher,TRUE,FALSE,FALSE
-PU,7.01,Publishing & Copyright,Publisher,publisher,TRUE,TRUE,FALSE
-PA,7.02,Publishing & Copyright,Publisher address,place_published,TRUE,FALSE,FALSE
-PI,7.02,Publishing & Copyright,Publisher city,place_published,FALSE,TRUE,FALSE
-PL,7.02,Publishing & Copyright,Place published,place_published,FALSE,FALSE,TRUE
-PP,7.02,Publishing & Copyright,Place published,place_published,TRUE,FALSE,FALSE
-PA,7.03,Publishing & Copyright,Publisher address,publisher_address,FALSE,TRUE,FALSE
-AE,7.1,Publishing & Copyright,Patent assignee,patent_assignee,FALSE,TRUE,FALSE
-PN,7.11,Publishing & Copyright,Part / Patent number,patent_number,FALSE,TRUE,FALSE
-CI,7.2,Publishing & Copyright,Copyright information,copyright_info,FALSE,FALSE,TRUE
-COI,7.21,Publishing & Copyright,Conflict of interest,conflict_of_interest,FALSE,FALSE,TRUE
-OCI,7.22,Publishing & Copyright,Copyright information (other),copyright_info_other,FALSE,FALSE,TRUE
-GN,7.3,Publishing & Copyright,Gene name data,gene_name,TRUE,FALSE,FALSE
-GS,7.31,Publishing & Copyright,gene_symbol,gene_symbol,FALSE,FALSE,TRUE
-N1,7.32,Publishing & Copyright,Chemical name and CAS registry number,chemicals,TRUE,FALSE,FALSE
-OA,7.4,Publishing & Copyright,Open access indicator,open_access,FALSE,TRUE,FALSE
-PUBM,7.41,Publishing & Copyright,publishing_model,publishing_model,TRUE,FALSE,TRUE
-OWN,7.5,Publishing & Copyright,owner,owner,FALSE,FALSE,FALSE
-OB,7.51,Publishing & Copyright,Record owner,record_owner,TRUE,FALSE,FALSE
-FU,8.1,Funding,Funding Agency and Grant Number,funding_agency,FALSE,TRUE,FALSE
-FX,8.2,Funding,Funding text,funding_text,FALSE,TRUE,FALSE
-GR,8.3,Funding,Grant number,grant_number,FALSE,FALSE,TRUE
-GI,8.4,Funding,Grant information,grant_information,TRUE,FALSE,FALSE
-LID,9.01,Metadata,Location ID,location_id,FALSE,FALSE,TRUE
-OT,9.02,Metadata,term_other,term_other,FALSE,FALSE,TRUE
-OTO,9.03,Metadata,term_owner_other,term_owner_other,FALSE,FALSE,TRUE
-SB,9.04,Metadata,subset,subset,FALSE,FALSE,TRUE
-NM,9.05,Metadata,Substance name,substance_name,FALSE,FALSE,TRUE
-WC,9.11,Metadata,Web of Science Categories,wos_categories,FALSE,TRUE,FALSE
-SC,9.12,Metadata,Research areas,research_areas,FALSE,TRUE,FALSE
-CH,9.2,Metadata,Chemicals & Biochemicals,chemicals,TRUE,FALSE,FALSE
-DS,9.21,Metadata,Diseases,diseases,TRUE,FALSE,FALSE
-PR,9.22,Metadata,"Parts, Structures & Systems",parts,TRUE,FALSE,FALSE
-OR,9.23,Metadata,Systematics,systematics,TRUE,FALSE,FALSE
-MQ,9.24,Metadata,Methods & Equipment,methods,TRUE,FALSE,FALSE
-ME,9.25,Metadata,Medium,medium,TRUE,FALSE,FALSE
-NM,9.26,Metadata,Personal Name Subject,subject_name,TRUE,FALSE,FALSE
-GE,9.3,Metadata,Geographic Data,geographic_data,TRUE,FALSE,FALSE
-TM,9.31,Metadata,Geologic Time Data,geologic_data,TRUE,FALSE,FALSE
-SD,9.32,Metadata,Sequence Data,sequence_data,TRUE,FALSE,FALSE
-TAx,9.33,Metadata,Taxonomic Data,taxonomic_data,TRUE,FALSE,FALSE
-ST,9.34,Metadata,Super Taxa,supertaxa,TRUE,FALSE,FALSE
-TN,9.35,Metadata,Taxa Notes,taxa_notes,TRUE,FALSE,FALSE
-BD,9.4,Metadata,Broad Terms,concepts,TRUE,FALSE,FALSE
-CC,9.4,Metadata,Concept Codes,concepts,TRUE,FALSE,FALSE
-MC,9.4,Metadata,Major Concepts,concepts,TRUE,FALSE,FALSE
-TC,10.1,Citation data,Times cited,n_cited,FALSE,TRUE,FALSE
-Z9,10.11,Citation data,"Total Times Cited Count (wos Core Collection, BIOSIS Citation Index, Chinese Science Citation Database, Data Citation Index, Russian Science Citation Index, SciELO Citation Index)",n_cited_allwos,FALSE,TRUE,FALSE
-Z8,10.12,Citation data,Times Cited in Chinese Science Citation Database,n_cited_csc,FALSE,TRUE,FALSE
-ZB,10.13,Citation data,Times Cited in BIOSIS Citation Index,n_cited_biosis,FALSE,TRUE,FALSE
-HC,10.14,Citation data,ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers,esi_highly_cited,FALSE,TRUE,FALSE
-HP,10.15,Citation data,ESI Hot Paper. Note that this field is valued only for ESI subscribers,esi_hot_paper,FALSE,TRUE,FALSE
-U1,10.21,Citation data,Usage Count Last 180 Days,usage_180days,FALSE,TRUE,FALSE
-U2,10.22,Citation data,Usage Count Since 2013,usage_2013,FALSE,TRUE,FALSE
-NR,10.3,Citation data,Cited Reference Count,references_n,FALSE,FALSE,FALSE
-RF,10.3,Citation data,Number of references,references_n,FALSE,FALSE,TRUE
-CR,10.31,Citation data,Cited references,cited_references,FALSE,TRUE,FALSE
-SS,10.32,Citation data,Citation subset,citation_subset,TRUE,FALSE,FALSE
-GN,11.1,Misc,General note,notes_general,FALSE,FALSE,TRUE
-NT,11.1,Misc,Notes,notes_general,TRUE,FALSE,FALSE
-NO,11.2,Misc,"Comments, Corrections, Erratum",comments,TRUE,FALSE,FALSE
-ER,12.01,Closing info,End of Record,end_record,FALSE,TRUE,FALSE
-EF,12.02,Closing info,End of File,end_of_file,FALSE,TRUE,FALSE
+"code","order","category_description","entry_description","field","ris_generic","ris_wos","ris_pubmed","ris_scopus","ris_asp","ris_ovid","ris_synthesisr"
+"DB",1.09,"File & document metadata","Database","database",TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE
+"FN",1.1,"File & document metadata","File Name","file_name",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"N",1.1,"File & document metadata","File name","file_name",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"DA",1.15,"File & document metadata","Date this report was generated","date_generated",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE
+"DT",1.2,"File & document metadata","Document Type","document_type",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"M3",1.2,"File & document metadata","Document Type","document_type",FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE
+"TY",1.2,"File & document metadata","Source/document type","source_type",TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE
+"LT",1.3,"File & document metadata","Literature Type","publication_type",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PT",1.3,"File & document metadata","Publication Type","publication_type",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE
+"LA",1.4,"File & document metadata","Language","language",TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE
+"PST",1.5,"File & document metadata","Publication status","status",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"SA",1.5,"File & document metadata","Status","status",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"STAT",1.5,"File & document metadata","Status","status",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"A1",2.01,"Authorship","Author","author",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+"A2",2.01,"Authorship","Author","author",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"A3",2.01,"Authorship","Author","author",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"A4",2.01,"Authorship","Author","author",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"A5",2.01,"Authorship","Author","author",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AU",2.01,"Authorship","Author","author",TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE
+"AF",2.02,"Authorship","Author full name","author_full",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"FAU",2.02,"Authorship","Author full name","author_full",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"BA",2.03,"Authorship","Book Authors","author_book",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"BF",2.03,"Authorship","Book Authors Full Name","author_book_full",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CA",2.04,"Authorship","Group Authors","author_group",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"GP",2.04,"Authorship","Group Authors (generic) or Book Group authors (WoS)","author_group",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CN",2.05,"Authorship","Author (corporate)","author_corporate",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"CNx",2.05,"Authorship","Author (corporate)","author_corporate",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"Z2",2.06,"Authorship","Author(s) (in second language)","author_otherlang",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"IR",2.07,"Authorship","Investigator","investigator",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"IV",2.07,"Authorship","Investigators","investigator",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"FIR",2.08,"Authorship","Investigator name (full)","investigator_full",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"A2x",2.09,"Authorship","Editor","editor",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"BE",2.09,"Authorship","Editor(s)","editor",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"ED",2.09,"Authorship","Editor(s)","editor",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE
+"EDx",2.09,"Authorship","Editor(s)","editor",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"FED",2.1,"Authorship","Editor(s) full","editor_full",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"EM",2.11,"Authorship","E-mail Address","email",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"OI",2.12,"Authorship","ORCID Identifier Open Researcher and Contributor ID","orcid_id",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"AD",2.13,"Authorship","Address or Affilliation","address",TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE
+"ADx",2.13,"Authorship","Affiliations","address",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"C1",2.13,"Authorship","Author Address","address",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"M1",2.13,"Authorship","Author Address","address",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+"CY",2.13,"Authorship","Institution","address",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"IRAD",2.13,"Authorship","Investigator affiliation","address",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"RP",2.14,"Authorship","Reprint Address","reprint_address",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PS",2.2,"Authorship","Personal Name Subject","personal_name_as_subject",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"FPS",2.21,"Authorship","personal_name_as_subject_full","personal_name_as_subject_full",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"PSx",2.21,"Authorship","personal_name_as_subject","personal_name_as_subject",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"RI",2.3,"Authorship","ResearcherID Number","researcher_id",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AUID",2.31,"Authorship","Author ID","author_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"PY",3,"Publication dates","Year Published","year",TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE
+"Y1",3,"Publication dates","Year","year",FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE
+"EY",3.01,"Publication dates","Early access year","year_early_access",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CRDT",3.02,"Publication dates","Date created","date_created",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"RC",3.02,"Publication dates","Date Created, Date Completed, Date Revised","date_created",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"LR",3.03,"Publication dates","Date revised","date_revised",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"DCOM",3.04,"Publication dates","Date completed","date_completed",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"EDAT",3.05,"Publication dates","Date added","date_added",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"EA",3.06,"Publication dates","Early access date","date_early_access",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"DEP",3.07,"Publication dates","Date published (electronically)","date_published_elec",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"DP",3.08,"Publication dates","Date published","date_published",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"PD",3.08,"Publication dates","Publication Date","date_published",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PHST",3.09,"Publication dates","Publication history status","publication_history_status",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"T1",4,"Reference information","Title","title",TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE
+"TI",4,"Reference information","Title","title",TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE
+"BTI",4.01,"Reference information","Book title","title_book",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"FT",4.02,"Reference information","Foreign title","title_foreign",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"Z1",4.03,"Reference information","Title (in second language)","title_otherlang",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"TT",4.04,"Reference information","Title (transliterated)","title_transliterated",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"JA",4.1,"Reference information","Journal","journal",TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+"JF",4.1,"Reference information","Journal","journal",TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE
+"JO",4.1,"Reference information","Journal","journal",TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE
+"JT",4.1,"Reference information","Journal","journal",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"T3",4.1,"Reference information","Journal","journal",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"TA",4.11,"Reference information","Journal (abbreviated)","journal_abbreviated",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"SO",4.2,"Reference information","Source","source",TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE
+"T2",4.2,"Reference information","Source title","source",TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE
+"J2",4.21,"Reference information","Abbreviated source title","source_abbreviated",TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE
+"J9",4.21,"Reference information","29-Character Source Abbreviation","source_abbreviated",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"JI",4.21,"Reference information","ISO Source Abbreviation","source_abbreviated",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"Z3",4.22,"Reference information","Full Source Title (in second language) (includes title and subtitle)","source_otherlang",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SI",4.23,"Reference information","Secondary source ID","secondary_source_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"C3",4.24,"Reference information","Proceedings title","proceedings_title",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"VTI",4.25,"Reference information","Volume title","volume_title",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"SE",4.26,"Reference information","Book series title","book_series_title",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"BS",4.27,"Reference information","Book series subtitle","book_series_subtitle",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"ED",4.28,"Reference information","Edition","edition",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"EN",4.28,"Reference information","Edition","edition",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"CTI",4.29,"Reference information","Collection title","collection_title",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"VI",4.3,"Reference information","Volume","volume",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"VL",4.3,"Reference information","Volume","volume",TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,TRUE
+"IP",4.4,"Reference information","Issue","issue",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"IS",4.4,"Reference information","Issue","issue",TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
+"SI",4.41,"Reference information","Special Issue","special_issue",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AR",4.42,"Reference information","Article number","article_number",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"C7",4.42,"Reference information","Article number","article_number",TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE
+"SU",4.43,"Reference information","Supplement","supplement",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PG",4.5,"Reference information","Pages","pages",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"BP",4.51,"Reference information","Beginning page","start_page",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SP",4.51,"Reference information","Start page","start_page",TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE
+"EP",4.52,"Reference information","End page","end_page",TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,TRUE
+"PG",4.53,"Reference information","Page count","n_pages",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PS",4.53,"Reference information","Page span","n_pages",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"P2",4.54,"Reference information","Chapter Count (Book Citation Index)","n_chapters",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AB",4.6,"Reference information","Abstract","abstract",TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE
+"N2",4.6,"Reference information","Abstract","abstract",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+"A2x",4.61,"Reference information","Other abstract","abstract_other",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"OAB",4.61,"Reference information","Abstract (other)","abstract_other",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"Z4",4.62,"Reference information","Abstract (in second language)","abstract_otherlang",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"DE",4.7,"Reference information","Descriptors data","keywords",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"KW",4.7,"Reference information","Keywords","keywords",TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE
+"MI",4.7,"Reference information","Miscellaneous descriptors","keywords",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"ID",4.71,"Reference information","Keywords Plus ","keywords_plus",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"MH",4.72,"Reference information","MeSH terms","mesh_terms",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"MHDA",4.73,"Reference information","MeSH date","mesh_date",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"VR",4.8,"Reference information","Version Number","version",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"DI",5.01,"Indexing","Digital Object Identifier (DOI)","doi",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"DO",5.01,"Indexing","Digital Object Identifier (DOI)","doi",TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE
+"L3",5.01,"Indexing","Digital Object Identifier (DOI)","doi",FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE
+"D2",5.02,"Indexing","Book Digital Object Identifier (DOI)","doi_book",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"BN",5.03,"Indexing","International Standard Book Number (ISBN)","isbn",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"ISBN",5.03,"Indexing","isbn","isbn",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"ISx",5.04,"Indexing","issn","issn",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SN",5.04,"Indexing","International Standard Serial Number ISSN","issn",TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE
+"EI",5.05,"Indexing","Electronic International Standard Serial Number (eISSN)","eissn",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CN",5.07,"Indexing","Call number","call_number",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AID",5.08,"Indexing","Article ID","article_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"ID",5.08,"Indexing","Article ID","article_id",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+"MID",5.08,"Indexing","Manuscript ID","manuscript_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"C2",5.1,"Indexing","PMID/PMCID","pubmed_id",TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE
+"PM",5.1,"Indexing","PubMed ID","pubmed_id",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"PMID",5.1,"Indexing","PubMed ID","pubmed_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"PMC",5.11,"Indexing","PubMed central identifier","pubmed_central_identitfier",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"PMCR",5.12,"Indexing","PubMed central release","pubmed_central_release",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"JC",5.13,"Indexing","NLM Unique ID","nlm_id",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"JID",5.13,"Indexing","NLM Unique ID","nlm_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"OID",5.14,"Indexing","Other ID (PubMed)","other_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"RN",5.15,"Indexing","registry_number","registry_number",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"UT",5.2,"Indexing","Unique Article Identifier","accession_number",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AN",5.21,"Indexing","Zoological Record Accession Number","accession_zr",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"GA",5.22,"Indexing","Document Delivery Number","document_delivery_id",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"UR",5.3,"Indexing","Journal URL","url",TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE
+"AW",5.31,"Indexing","Item URL","url",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"U1",5.5,"Indexing","ID from EPPI-reviewer","eppi_id",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SF",5.6,"Indexing","Space Flight Mission","space_flight_mission",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SFM",5.6,"Indexing","Space Flight Mission","space_flight_mission",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"PE",5.61,"Indexing","Published Electronically","published_elec",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CT",6.01,"Conference information","Conference title","conference_name",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+NA,6.01,"Conference information","Conference name","conference_name",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"HO",6.02,"Conference information","Conference host","conference_host",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CL",6.03,"Conference information","Conference location","conference_location",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CYx",6.03,"Conference information","Conference location","conference_location",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CY",6.04,"Conference information","Conference date","conference_date",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CYx",6.04,"Conference information","Meeting date","conference_date",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"Y2",6.04,"Conference information","Conference date","conference_date",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"A4x",6.05,"Conference information","Conference sponsors","conference_sponsor",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SP",6.05,"Conference information","Conference sponsors","conference_sponsor",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SPx",6.05,"Conference information","Meeting sponsor","conference_sponsor",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"MA",6.06,"Conference information","Meeting abstract","meeting_abstract",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PB",7.01,"Publishing & Copyright","Publisher","publisher",TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE
+"PU",7.01,"Publishing & Copyright","Publisher","publisher",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PA",7.02,"Publishing & Copyright","Publisher address","place_published",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AD",7.02,"Publishing & Copyright","Publisher city","place_published",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+"CY",7.02,"Publishing & Copyright","Publisher country","place_published",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
+"PI",7.02,"Publishing & Copyright","Publisher city","place_published",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PL",7.02,"Publishing & Copyright","Place published","place_published",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE
+"PP",7.02,"Publishing & Copyright","Place published","place_published",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PA",7.03,"Publishing & Copyright","Publisher address","publisher_address",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"AE",7.1,"Publishing & Copyright","Patent assignee","patent_assignee",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PN",7.11,"Publishing & Copyright","Part / Patent number","patent_number",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CI",7.2,"Publishing & Copyright","Copyright information","copyright_info",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"COI",7.21,"Publishing & Copyright","Conflict of interest","conflict_of_interest",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"OCI",7.22,"Publishing & Copyright","Copyright information (other)","copyright_info_other",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"GN",7.3,"Publishing & Copyright","Gene name data","gene_name",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"GS",7.31,"Publishing & Copyright","gene_symbol","gene_symbol",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"N1",7.32,"Publishing & Copyright","Chemical name and CAS registry number","chemicals",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"OA",7.4,"Publishing & Copyright","Open access indicator","open_access",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PUBM",7.41,"Publishing & Copyright","publishing_model","publishing_model",TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"OWN",7.5,"Publishing & Copyright","owner","owner",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"OB",7.51,"Publishing & Copyright","Record owner","record_owner",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"DP",7.52,"Publishing & Copyright","Data provider","data_provider",FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE
+"FU",8.1,"Funding","Funding Agency and Grant Number","funding_agency",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"FX",8.2,"Funding","Funding text","funding_text",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"GR",8.3,"Funding","Grant number","grant_number",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"GI",8.4,"Funding","Grant information","grant_information",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"LID",9.01,"Metadata","Location ID","location_id",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"OT",9.02,"Metadata","term_other","term_other",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"OTO",9.03,"Metadata","term_owner_other","term_owner_other",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"SB",9.04,"Metadata","subset","subset",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"NM",9.05,"Metadata","Substance name","substance_name",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"WC",9.11,"Metadata","Web of Science Categories","wos_categories",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SC",9.12,"Metadata","Research areas","research_areas",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CH",9.2,"Metadata","Chemicals & Biochemicals","chemicals",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"DS",9.21,"Metadata","Diseases","diseases",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"PR",9.22,"Metadata","Parts, Structures & Systems","parts",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"OR",9.23,"Metadata","Systematics","systematics",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"MQ",9.24,"Metadata","Methods & Equipment","methods",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"ME",9.25,"Metadata","Medium","medium",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"NM",9.26,"Metadata","Personal Name Subject","subject_name",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"GE",9.3,"Metadata","Geographic Data","geographic_data",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"TM",9.31,"Metadata","Geologic Time Data","geologic_data",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"SD",9.32,"Metadata","Sequence Data","sequence_data",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"TAx",9.33,"Metadata","Taxonomic Data","taxonomic_data",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"ST",9.34,"Metadata","Super Taxa","supertaxa",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"TN",9.35,"Metadata","Taxa Notes","taxa_notes",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"BD",9.4,"Metadata","Broad Terms","concepts",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"CC",9.4,"Metadata","Concept Codes","concepts",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"MC",9.4,"Metadata","Major Concepts","concepts",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"TC",10.1,"Citation data","Times cited","n_cited",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"Z9",10.11,"Citation data","Total Times Cited Count (wos Core Collection, BIOSIS Citation Index, Chinese Science Citation Database, Data Citation Index, Russian Science Citation Index, SciELO Citation Index)","n_cited_allwos",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"Z8",10.12,"Citation data","Times Cited in Chinese Science Citation Database","n_cited_csc",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"ZB",10.13,"Citation data","Times Cited in BIOSIS Citation Index","n_cited_biosis",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"HC",10.14,"Citation data","ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers","esi_highly_cited",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"HP",10.15,"Citation data","ESI Hot Paper. Note that this field is valued only for ESI subscribers","esi_hot_paper",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"U1",10.21,"Citation data","Usage Count Last 180 Days","usage_180days",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"U2",10.22,"Citation data","Usage Count Since 2013","usage_2013",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"NR",10.3,"Citation data","Cited Reference Count","references_n",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"RF",10.3,"Citation data","Number of references","references_n",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"CR",10.31,"Citation data","Cited references","cited_references",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE
+"SS",10.32,"Citation data","Citation subset","citation_subset",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"GN",11.1,"Misc","General note","notes",FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+"NT",11.1,"Misc","Notes","notes",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"N1",11.1,"Misc","Notes","notes",TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE
+"NO",11.2,"Misc","Comments, Corrections, Erratum","comments",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
+"ER",12.01,"Closing info","End of Record","end_record",TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE
+"EF",12.02,"Closing info","End of File","end_file",TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE

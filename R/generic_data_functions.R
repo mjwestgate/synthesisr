@@ -1,27 +1,28 @@
-#' Matches imported data to reference codes
-#'
-#' @description Takes an imported data.frame and rearranges it to match lookup codes.
-#' @param df A data.frame that contains bibliographic information.
-#' @return Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
-#' @example inst/examples/match_columns.R
+# internal function used by parse_csv and parse_tsv
+# ' Matches imported data to reference codes
+# '
+# ' @description Takes an imported data.frame and rearranges it to match lookup codes.
+# ' @param df A data.frame that contains bibliographic information.
+# ' @return Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
+# ' @example inst/examples/match_columns.R
 match_columns <- function(df){
   # figure out which columns match known tags
   hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
+  newcolnames <- synthesisr::code_lookup$field[
+    match(colnames(df),
+    synthesisr::code_lookup$code)
+  ]
+  colnames(df)[!is.na(newcolnames)] <- newcolnames[!is.na(newcolnames)]
 
   # rearrange data in standard(ish) order
   if(any(is.na(hits))){
-    newdat <- df[, hits[!is.na(hits)]]
-  }else{newdat <- df[,hits]}
+    hits <- hits[!is.na(hits)]
+  }
 
   # retain columns even if they did not match lookup
-  newcolnames <- synthesisr::code_lookup$field[match(colnames(newdat), synthesisr::code_lookup$code)]
-  newcolnames[which(is.na(newcolnames) | newcolnames=="")] <- colnames(newdat)[which(is.na(newcolnames) | newcolnames=="")]
-  colnames(newdat) <- newcolnames
+  retain <- append(hits, seq(1, length(df), 1)[!(seq(1, length(df), 1) %in% hits)])
 
-  # drop duplicate columns that matched more than one tag
-  newdat <- newdat[,-which(duplicated(colnames(newdat)))]
-
-  return(newdat)
+  return(df[,retain])
 }
 
 #' Bind two or more data frames with different columns
@@ -77,18 +78,16 @@ merge_columns <- function(
 
 }
 
-#' Remove factors from an object
-#'
-#' @description This function converts factors to characters to avoid errors with levels.
-#' @param z A data.frame
-#' @return Returns the input data.frame with all factors converted to character.
-#' @examples remove_factors(list(as.factor(c("a", "b"))))
+# internal functions called by merge_columns
+# ' Remove factors from an object
+# '
+# ' @description This function converts factors to characters to avoid errors with levels.
+# ' @param z A data.frame
+# ' @return Returns the input data.frame with all factors converted to character.
+# ' @examples remove_factors(list(as.factor(c("a", "b"))))
 remove_factors <- function(z){
   z[] <- lapply(z, function(x){
     if(is.factor(x)){as.character(x)}else{x}
   })
   return(z)
 }
-
-
-

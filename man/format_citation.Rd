@@ -2,9 +2,6 @@
 % Please edit documentation in R/format_citation.R
 \name{format_citation}
 \alias{format_citation}
-\alias{format_citation.list}
-\alias{format_citation.bibliography}
-\alias{format_citation.data.frame}
 \title{Format a citation}
 \usage{
 format_citation(
@@ -15,36 +12,9 @@ format_citation(
   line_breaks = FALSE,
   ...
 )
-
-\method{format_citation}{list}(
-  data,
-  details = TRUE,
-  abstract = FALSE,
-  add_html = FALSE,
-  line_breaks = FALSE,
-  ...
-)
-
-\method{format_citation}{bibliography}(
-  data,
-  details = TRUE,
-  abstract = FALSE,
-  add_html = FALSE,
-  line_breaks = FALSE,
-  ...
-)
-
-\method{format_citation}{data.frame}(
-  data,
-  details = TRUE,
-  abstract = FALSE,
-  add_html = FALSE,
-  line_breaks = FALSE,
-  ...
-)
 }
 \arguments{
-\item{data}{An object of class data.frame or bibliography.}
+\item{data}{An object of class data.frame, list, or or bibliography.}
 
 \item{details}{Logical: Should identifying information such as author names & journal titles be displayed? Defaults to TRUE.}
 
@@ -57,45 +27,28 @@ format_citation(
 \item{...}{any other arguments.}
 }
 \value{
-Returns a string of length equal to length(x) that contains formatted citations.
+Returns a string of length equal to length(data) that contains formatted citations.
 }
 \description{
-This function takes an object of class data.frame or bibliography and returns a formatted citation.
+This function takes an object of class data.frame, list, or bibliography and returns a formatted citation.
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{list}: Format citation from a list
-
-\item \code{bibliography}: Format citation from a bibliography
-
-\item \code{data.frame}: Format citation from a data.frame
-}}
-
 \examples{
-file <- c(
-  "TY  - JOUR",
-  "AU  - Haddaway, Neal R.",
-  "AU  - Feierman, Andrew",
-  "AU  - Grainger, Matthew J.",
-  "AU  - Gray, Charles T.",
-  "AU  - Tanriver-Ayder, Ezgi",
-  "AU  - Dhaubanjar, Sanita",
-  "AU  - Westgate, Martin J.",
-  "PY  - 2019",
-  "DA  - 2019/06/04",
-  "TI  - EviAtlas: a tool for visualising evidence synthesis databases",
-  "JO  - Environmental Evidence",
-  "SP  - 22",
-  "VL  - 8",
-  "IS  - 1",
-  "SN  - 2047-2382",
-  "UR  - https://doi.org/10.1186/s13750-019-0167-1",
-  "DO  - 10.1186/s13750-019-0167-1",
-  "ID  - Haddaway2019",
-  "ER  - "
-)
+roses <- c("@article{haddaway2018,
+  title={ROSES RepOrting standards for Systematic Evidence Syntheses:
+  pro forma, flow-diagram and descriptive summary of the plan and
+  conduct of environmental systematic reviews and systematic maps},
+  author={Haddaway, Neal R and Macura, Biljana and Whaley, Paul and Pullin, Andrew S},
+  journal={Environmental Evidence},
+  volume={7},
+  number={1},
+  pages={7},
+  year={2018},
+  publisher={Springer}
+}")
 
-delim <- detect_delimiter(file)
-citation <- parse_ris(file)
+tmp <- tempfile()
+writeLines(roses, tmp)
+
+citation <- read_ref(tmp)
 format_citation(citation)
 }

@@ -1,7 +1,7 @@
 # Duplicate of functions from the Python library fuzzywuzzy
 #github .com/seatgeek/fuzzywuzzy
 # these functions coded by Martin Westgate on 4th June 2018 based on description given here:
-#chairnerd.seatgeek .com/fuzzywuzzy-fuzzy-string-matching-in-python/
+#chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
 
 #' Detect duplicates with fuzzy matching
 #' @description This is a wrapper function for the different fuzzy matching methods.
@@ -36,7 +36,7 @@ fuzz_m_ratio <- function(a, b){
       z_list <- lapply(strsplit(z, ""),
         function(x, minval){x[1:minval]},
         minval = min(nchar(z))
-      )
+        )
       z_match <- apply(
         do.call(cbind, z_list),
         1,
@@ -92,16 +92,36 @@ fuzz_token_sort_ratio <- function(a, b){
     if(any(is.na(z))){
       return(NA)
     }else{
-      z_list <- lapply(
-        strsplit(z, " "),
-        function(x){paste(sort(x), collapse = " ")}
+      z_split <- strsplit(z, " ")
+      z_split <- lapply(z_split, make.unique, sep="_XDUP_")
+      in_check <- z_split[[1]] %in% z_split[[2]]
+      intersection <- sort(z_split[[1]][which(in_check)])
+      string_list <- list(
+        t0 = intersection,
+        t1 = c(intersection,
+               sort(z_split[[1]][which(!in_check)])
+        ),
+        t2 = c(intersection,
+               unlist(lapply(z_split[[2]][which(!(z_split[[2]] %in% intersection))], function(x){strsplit(x, "_XDUP_")[[1]][1]}))
+        )
       )
-      return(
-        fuzz_m_ratio(z_list[[1]], z_list[[2]])
+      string_list <- lapply(string_list, function(x){
+        if(length(x) < 1){
+          return("")
+        }else{
+          return(paste(x, collapse = " "))
+        }
+      })
+      result <- c(
+        fuzz_m_ratio(string_list$t0, string_list$t1),
+        fuzz_m_ratio(string_list$t0, string_list$t2),
+        fuzz_m_ratio(string_list$t1, string_list$t2)
       )
+      return(max(result))
     }
   },
   a = a)
+  return(as.numeric(out))
   return(as.numeric(out))
 }
 

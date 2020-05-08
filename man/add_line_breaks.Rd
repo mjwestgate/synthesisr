@@ -4,14 +4,18 @@
 \alias{add_line_breaks}
 \title{Add line breaks to one or more strings}
 \usage{
-add_line_breaks(x, n = 50, html = FALSE)
+add_line_breaks(x, n = 50, max_n = 80, html = FALSE, max_time = 60)
 }
 \arguments{
 \item{x}{Either a string or a vector; if the vector is not of class character if will be coerced to one using as.character.}
 
-\item{n}{Numeric: The number of characters that should separate consecutive line breaks.}
+\item{n}{Numeric: The desired number of characters that should separate consecutive line breaks.}
+
+\item{max_n}{Numeric: The maximum number of characters that may separate consecutive line breaks.}
 
 \item{html}{logical: Should the line breaks be specified in html?}
+
+\item{max_time}{Numeric: What is the maximum amount of time (in seconds) allowed to adjust groups until character thresholds are reached?}
 }
 \value{
 Returns the input vector unaltered except for the addition of line breaks.
@@ -20,7 +24,7 @@ Returns the input vector unaltered except for the addition of line breaks.
 This function takes a vector of strings and adds line breaks every n characters. Primarily built to be called internally by format_citation, this function has been made available as it can be useful in other contexts.
 }
 \details{
-Line breaks are only added between words, so the value of n is acutally a threshold value rather than being matched exactly.
+Line breaks are only added between words, so the value of n is actually a threshold value rather than being matched exactly. max_n is matched exactly if a limit is set and max_time is not reached finding new break points between words.
 }
 \examples{
 add_line_breaks(c("On the Origin of Species"), n = 10)

@@ -4,7 +4,7 @@
 #' @param data A character vector containing duplicate bibliographic entries.
 #' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.
 #' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches.
-#' @param method A string indicating the method to use for fuzzdist or stringdist.
+#' @param method A string indicating the method to use for fuzzdist or stringdist. Options for fuzzdist are fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, and fuzz_token_set_ratio.
 #' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
 #' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to TRUE.
 #' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates? Defaults to TRUE.
@@ -24,9 +24,14 @@ find_duplicates <- function(
   # check for stringdist
   if(match_function == "stringdist"){
     if(!requireNamespace("stringdist")){
-      match_function <- "fuzzdist"
-      print("Note: stringdist must be installed to use stringdist method. Using fuzzdist instead.")
-    }else{requireNamespace("stringdist")}
+      match_function <- "exact"
+      print("Note: stringdist must be installed to use stringdist method. Using exact matching instead.")
+    }else{
+      if(!any(search() == "package:stringdist")){
+        loadNamespace("stringdist")
+        attachNamespace("stringdist")
+      }
+    }
   }
 
   # data
@@ -91,7 +96,9 @@ find_duplicates <- function(
 
   # transformations
   if(to_lower){data <- tolower(data)}
-  if(rm_punctuation){data <- synthesisr::remove_punctuation(data)}
+  if(rm_punctuation){
+      data <- gsub("[[:punct:]]", "", data)
+    }
 
   # quick option for exact matching based on split()
   if(match_function == "exact"){
@@ -138,12 +145,6 @@ find_duplicates <- function(
                 if(is.na(a[row])){rep(TRUE, length(a))}else{a == a[row]}
               }, row = row_start
             )
-            # match_list <- lapply(group_variables, function(a, data, row){
-            #   (data[, a] == data[row_start, a]) | is.na(data[, a])
-            #   },
-            #   data = data,
-            #   row = row_start
-            # )
             if(length(group_variables) == 1){
               rows_tr <- which(unlist(match_list))
             }else{
@@ -157,18 +158,14 @@ find_duplicates <- function(
           rows_tr <- rows_tr[which(rows_tr != row_start)]
 
           if(length(rows_tr) > 0){
-            # if(match_function == "exact"){
-            #   match_result <- (data[rows_tr] == data[row_start])
-            # }else{
-              match_result <- do.call(
-                match_function,
-                list(
-                  a = data[row_start],
-                  b = data[rows_tr],
-                  method = method
-                )
-              ) <= threshold
-            # }
+            match_result <- do.call(
+              match_function,
+              list(
+                a = data[row_start],
+                b = data[rows_tr],
+                method = method
+              )
+            ) <= threshold
             if(any(match_result, na.rm = TRUE)){
               rows_selected <- rows_tr[which(match_result)]
               checked[c(row_start, rows_selected)] <- TRUE
@@ -200,7 +197,7 @@ find_duplicates <- function(
 #' @description Given a list of duplicate entries and a data set, this function extracts only unique references.
 #' @param data A \code{data.frame} containing bibliographic information.
 #' @param matches A vector showing which entries in \code{data} are duplicates.
-#' @param type How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
+#' @param type How should entries be selected to retain? Default is \code{"merge"} which selects the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
 #' @return Returns a \code{data.frame} of unique references.
 #' @seealso \code{\link{find_duplicates}}, \code{\link{deduplicate}}
 #' @example inst/examples/deduplicate.R
@@ -314,4 +311,33 @@ deduplicate <- function(
   return(
     extract_unique_references(data, matches = result, type = type)
   )
+}
+
+#' Manually review potential duplicates
+#' @description Allows users to manually review articles classified as duplicates.
+#' @param text A character vector of the text that was used to identify potential duplicates.
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the \code{\link{find_duplicates}} function.
+#' @return A \code{data.frame} of potential duplicates grouped together.
+review_duplicates <- function(text, matches){
+  likely_duplicates <- unique(matches)[table(matches)>1]
+  review <- data.frame(
+    title = text[matches %in% likely_duplicates],
+    matches = matches[matches %in% likely_duplicates],
+    stringsAsFactors = FALSE
+  )
+  review <- review[order(review[,2]),]
+  return(review)
+}
+
+#' Manually override duplicates
+#' @description Re-assign group numbers to text that was classified as duplicated but is unique.
+#' @param matches Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the \code{\link{find_duplicates}} function.
+#' @param overrides Numeric: a vector of group numbers that are not true duplicates.
+#' @return The input \code{matches} vector with unique group numbers for members of groups that the user overrides.
+override_duplicates <- function(matches, overrides){
+  matches <- as.numeric(matches)
+  for(i in 1:length(overrides)){
+    matches[max(which(matches==overrides[i]))] <- max(matches)+1
+  }
+  return(matches)
 }
