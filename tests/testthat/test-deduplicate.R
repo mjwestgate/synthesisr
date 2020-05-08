@@ -18,7 +18,8 @@ my_df <-  data.frame(
   year = c("2019", "2019", "2019", "2019", NA, NA),
 
   authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al", NA, NA)
+              "Grames et al", "Pick et al", NA, NA),
+  stringsAsFactors = FALSE
 )
 
 # run deduplication
@@ -44,7 +45,9 @@ expect(
   "Not all duplicate entries ignored when extracting unique references"
 )
 
-deduped2 <- deduplicate(my_df, "title")
+deduped2 <- deduplicate(my_df, "title",
+  rm_punctuation = TRUE,
+  to_lower = TRUE)
 
 expect(
   all.equal(deduped, deduped2),
