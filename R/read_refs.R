@@ -15,9 +15,6 @@ read_refs <- function(
   verbose = FALSE
 ){
 
-  invisible(Sys.setlocale("LC_ALL", "C"))
-  on.exit(invisible(Sys.setlocale("LC_ALL", "")))
-
   if(missing(filename)){
     stop("filename is missing with no default")
   }
@@ -86,6 +83,9 @@ read_ref <- function(
   return_df = TRUE,
   verbose = FALSE
 ){
+  invisible(Sys.setlocale("LC_ALL", "C"))
+  on.exit(invisible(Sys.setlocale("LC_ALL", "")))
+
   # error checking for replace tags
   valid_tags <- c("best_guess", "none", "wos", "scopus", "ovid", "asp", "synthesisr")
   if(inherits(tag_naming, "character")){
