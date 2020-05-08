@@ -105,28 +105,24 @@ read_ref <- function(
 
   if(parse_function != "unknown"){
 
+    # parse correctly
     if(parse_function == "parse_ris"){
       df <- do.call(
         parse_function,
         list(x = x, tag_naming = tag_naming)
       )
     }else{
-      df <- do.call(
-        parse_function,
-        list(x = x)
-      )
+      df <- do.call(parse_function, list(x = x))
     }
 
-    if(!inherits(df, "data.frame") & return_df){
-      df <- as.data.frame.bibliography(df)
-    }
-
+    # return object in correct format
     if(inherits(df, "data.frame")){
-      df <- clean_df(df)
+      if(!return_df){df <- as.bibliography(df)}
+    }else{
+      if(return_df){df <- as.data.frame.bibliography(df)}
     }
-
+    if(inherits(df, "data.frame")){df <- clean_df(df)}
     if(verbose){cat("done\n")}
-
     return(df)
 
   }else{

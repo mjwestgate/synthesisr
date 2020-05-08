@@ -1,4 +1,4 @@
-#' @rdname parse
+#' @rdname parse_
 parse_pubmed <- function(x){
 
   x <- prep_ris(x, detect_delimiter(x), type = "pubmed")
@@ -73,7 +73,7 @@ parse_pubmed <- function(x){
 }
 
 
-#' @rdname parse
+#' @rdname parse_
 #' @param tag_naming What format are ris tags in? Defaults to "best_guess" See \code{\link{read_refs}} for a list of accepted arguments.
 parse_ris <- function(x, tag_naming = "best_guess"){
 
@@ -95,7 +95,7 @@ parse_ris <- function(x, tag_naming = "best_guess"){
         stringsAsFactors = FALSE
       )
     }else if(tag_naming == "best_guess"){
-      code_lookup_thisfile <- detect_tags(tags = unique(x$ris))
+      code_lookup_thisfile <- detect_lookup(tags = unique(x$ris))
     }else if(any(c("wos", "scopus", "ovid", "asp", "synthesisr") == tag_naming)){
       rows <- which(synthesisr::code_lookup[, paste0("ris_", tag_naming)])
       code_lookup_thisfile <- synthesisr::code_lookup[
@@ -275,7 +275,7 @@ if(any(unlist(lapply(x_split, nrow))==1)){
 }
 
 
-#' @rdname parse
+#' @rdname parse_
 parse_bibtex <- function(x){
 
   # which lines start with @article?
@@ -394,7 +394,7 @@ parse_bibtex <- function(x){
 
 }
 
-#' @rdname parse
+#' @rdname parse_
 parse_csv <- function(x){
   z <- read.table(
     text = x,
@@ -408,7 +408,7 @@ parse_csv <- function(x){
   return(match_columns(z))
 }
 
-#' @rdname parse
+#' @rdname parse_
 parse_tsv <- function(x){
   z <- read.table(
     text = x,

@@ -24,7 +24,7 @@ tags <- trimws(unlist(lapply(
   strsplit(revtools, "- "),
   function(a){a[1]}
 )))
-pubmed_tag_list <- detect_tags(tags[!is.na(tags)])
+pubmed_tag_list <- detect_lookup(tags[!is.na(tags)])
 
 # find year data in other columns
 df <- as.data.frame(parse_pubmed(revtools))

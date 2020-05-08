@@ -11,7 +11,7 @@ proportion_delimited <- function(x, regex){
 }
 
 
-#' @rdname detect
+#' @rdname detect_
 detect_parser <- function(x){
 
   # calculate proportional of lines containing likely tags
@@ -48,7 +48,7 @@ detect_parser <- function(x){
 }
 
 
-#' @rdname detect
+#' @rdname detect_
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
     delimiter <- "endrow"
@@ -79,8 +79,8 @@ detect_delimiter <- function(x){
 }
 
 
-#' @rdname detect
-detect_tags <- function(
+#' @rdname detect_
+detect_lookup <- function(
   tags # a vector of strings representing ris tags
 ){
   rows <- which(synthesisr::code_lookup$code %in% tags)
@@ -138,7 +138,7 @@ guess_year <- function(x){
   }
 }
 
-#' @rdname detect
+#' @rdname detect_
 detect_year <- function(df){
   if(!inherits(df, "data.frame")){
     stop(print("detect_year expects an object of class data.frame as input"))

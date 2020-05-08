@@ -105,7 +105,7 @@ write_ris <- function(x,
 #' @param tag_naming what naming convention should be used to write RIS files? See details for options.
 #' @param write_file Either logical indicating whether a file should be written (defaulting to FALSE), or a character giving the name of the file to be written.
 #' @return Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
-#' @example inst/examples/parse_ris.R
+#' @example inst/examples/parse_.R
 write_refs <- function(
   x,
   format = "ris",

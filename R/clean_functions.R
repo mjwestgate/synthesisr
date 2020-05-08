@@ -1,5 +1,5 @@
 # Cleans data.frames into synthesisr format
-#' @rdname clean
+#' @rdname clean_
 clean_df <- function(data){
   colnames(data) <- clean_colnames(colnames(data))
   if(any(colnames(data) == "author")){
@@ -10,7 +10,7 @@ clean_df <- function(data){
 
 
 # Standardize author delimiters
-#' @rdname clean
+#' @rdname clean_
 clean_authors <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
     x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)
@@ -23,7 +23,7 @@ clean_authors <- function(x){
 
 
 # Clean common issues with column names
-#' @rdname clean
+#' @rdname clean_
 clean_colnames <- function(
   x # colnames
 ){
