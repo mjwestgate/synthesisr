@@ -3,22 +3,22 @@
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
 #' @param data A character vector containing duplicate bibliographic entries.
 #' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.
-#' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches.
+#' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} (the default) for exact matches.
 #' @param method A string indicating the method to use for fuzzdist or stringdist. Options for fuzzdist are fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, and fuzz_token_set_ratio.
 #' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
-#' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to TRUE.
-#' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates? Defaults to TRUE.
+#' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to FALSE.
+#' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates? Defaults to FALSE.
 #' @return Returns a vector of duplicate matches and methods used.
 #' @seealso \code{\link{extract_unique_references}}, \code{\link{deduplicate}}
 #' @example inst/examples/deduplicate.R
 find_duplicates <- function(
   data, # string
   group_by, # either a vector or a data.frame or list containing vectors
-  match_function = "stringdist",
-  method = "osa",
+  match_function = "exact",
+  method,
   threshold,
-  to_lower = TRUE,
-  rm_punctuation = TRUE
+  to_lower = FALSE,
+  rm_punctuation = FALSE
 ){
 
   # check for stringdist
@@ -60,7 +60,7 @@ find_duplicates <- function(
   }
 
   # methods
-  if(missing(match_function)){match_function <- "stringdist"}
+  if(missing(match_function)){match_function <- "exact"}
   if(!any(c("fuzzdist", "stringdist", "exact") == match_function)){
     stop(
       paste0(

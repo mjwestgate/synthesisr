@@ -7,11 +7,11 @@
 find_duplicates(
   data,
   group_by,
-  match_function = "stringdist",
-  method = "osa",
+  match_function = "exact",
+  method,
   threshold,
-  to_lower = TRUE,
-  rm_punctuation = TRUE
+  to_lower = FALSE,
+  rm_punctuation = FALSE
 )
 }
 \arguments{
@@ -19,15 +19,15 @@ find_duplicates(
 
 \item{group_by}{An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.}
 
-\item{match_function}{The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches.}
+\item{match_function}{The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} (the default) for exact matches.}
 
 \item{method}{A string indicating the method to use for fuzzdist or stringdist. Options for fuzzdist are fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, and fuzz_token_set_ratio.}
 
 \item{threshold}{Numeric: the cutoff threshold for stringdist or fuzzdist.}
 
-\item{to_lower}{Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to TRUE.}
+\item{to_lower}{Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to FALSE.}
 
-\item{rm_punctuation}{Logical: Should punctuation should be removed when detecting duplicates? Defaults to TRUE.}
+\item{rm_punctuation}{Logical: Should punctuation should be removed when detecting duplicates? Defaults to FALSE.}
 }
 \value{
 Returns a vector of duplicate matches and methods used.

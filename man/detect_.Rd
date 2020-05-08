@@ -27,7 +27,7 @@ detect_year(df)
 \code{detect_parser} and \code{detect_delimiter} return a length-1 character; \code{detect_year} returns a character vector listing estimated publication years; and \code{detect_lookup} returns a \code{data.frame}.
 }
 \description{
-Bibliographic data can be stored in a number of different file types, meaning that detecting consistent attributes of those files is necessary if they are to be parsed accurately. These functions attempt to identify some of those key file attributes. Specifically, \code{detect_parser} determines which \code{\link{parse}} function to use; \code{detect_delimiter} and \code{detect_lookup} identify different attributes of RIS files; and \code{detect_year} attempts to fill gaps in publication years from other information stored in a \code{data.frame}.
+Bibliographic data can be stored in a number of different file types, meaning that detecting consistent attributes of those files is necessary if they are to be parsed accurately. These functions attempt to identify some of those key file attributes. Specifically, \code{detect_parser} determines which \code{\link{parse_}} function to use; \code{detect_delimiter} and \code{detect_lookup} identify different attributes of RIS files; and \code{detect_year} attempts to fill gaps in publication years from other information stored in a \code{data.frame}.
 }
 \examples{
 revtools <- c(
