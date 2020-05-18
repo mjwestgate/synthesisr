@@ -31,10 +31,8 @@ my_df <-  data.frame(
   title = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
     "revtools: An R package to support article screening for evidence synthesis",
-    "An automated approach to identifying search terms for systematic reviews
-    using keyword co‐occurrence networks",
-    "Reproducible, flexible and high‐throughput data extraction from primary literature:
-    The metaDigitise r package",
+    "An automated approach to identifying search terms for systematic reviews",
+    "Reproducible, flexible and high-throughput data extraction from primary literature",
     "eviatlas:tool for visualizing evidence synthesis databases.",
     "REVTOOLS a package to support article-screening for evidence synthsis"
   ),

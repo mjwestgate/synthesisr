@@ -4,7 +4,8 @@
 \name{code_lookup}
 \alias{code_lookup}
 \title{Bibliographic code lookup for search results assembly}
-\format{A data frame with 226 obs of 12 variables
+\format{
+A data frame with 226 obs of 12 variables
 
 \describe{
  \item{code}{code used in search results}
@@ -18,7 +19,8 @@
  \item{ris_scopus}{logical: If the code is used in Scopus ris files}
  \item{ris_asp}{logical: If the code is used in Academic Search Premier ris files}
  \item{ris_ovid}{logical: If the code is used in Ovid ris files}
- \item{ris_synthesisr}{logical: If the code used in synthesisr imports & exports}}}
+ \item{ris_synthesisr}{logical: If the code used in synthesisr imports & exports}}
+}
 \usage{
 code_lookup
 }

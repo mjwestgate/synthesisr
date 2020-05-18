@@ -2,3 +2,5 @@ synthesisr_hex.png
 synthesisr.Rproj
 ./inst/ris_tags
 README.md
+^doc$
+^Meta$
