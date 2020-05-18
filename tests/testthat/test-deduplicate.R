@@ -25,7 +25,7 @@ my_df <-  data.frame(
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
-  match_function = "stringdist",
+  method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE
 )
@@ -35,8 +35,10 @@ expect(
   "Not all rows in df have been classified as duplicates or unique entries"
 )
 
-expect(all(dups[5:6] == dups[1:2]),
-       "Not detecting duplicated titles in example df")
+expect(
+  all(dups[5:6] == dups[1:2]),
+  "Not detecting duplicated titles in example df"
+)
 
 deduped <- extract_unique_references(my_df, matches = dups)
 

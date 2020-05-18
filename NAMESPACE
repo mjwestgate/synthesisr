@@ -8,6 +8,8 @@ export(
     as.data.frame.bibliography,
   fuzzdist,
     fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, fuzz_token_set_ratio,
+  string_osa, string_lv, string_dl, string_hamming, string_lcs, string_qgram,
+    string_cosine, string_jaccard, string_jw, string_soundex,
   deduplicate,
     find_duplicates, extract_unique_references, review_duplicates, override_duplicates,
   format_citation, add_line_breaks,
@@ -15,6 +17,7 @@ export(
   merge_columns
 )
 importFrom("stats", "dist", "xtabs")
+importFrom("stringdist", "stringdist")
 importFrom("utils", "read.csv", "read.table", "write.csv", "read.delim", "head", "tail", "write.table")
 S3method(c, bibliography)
 S3method(print, bibliography)

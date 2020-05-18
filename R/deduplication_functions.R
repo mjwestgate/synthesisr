@@ -2,38 +2,22 @@
 #'
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
 #' @param data A character vector containing duplicate bibliographic entries.
-#' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.
-#' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} (the default) for exact matches.
-#' @param method A string indicating the method to use for fuzzdist or stringdist. Options for fuzzdist are fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, and fuzz_token_set_ratio.
-#' @param threshold Numeric: the cutoff threshold for stringdist or fuzzdist.
-#' @param to_lower Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to FALSE.
-#' @param rm_punctuation Logical: Should punctuation should be removed when detecting duplicates? Defaults to FALSE.
-#' @return Returns a vector of duplicate matches and methods used.
+#' @param method A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance (e.g. see \code{link{string_}} or \code{link{fuzz_}})
+#' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{method = "exact"}.
+#' @param threshold Numeric: the cutoff threshold for deciding if two strings are duplcates. Sensible values depend on the \code{method} chosen. Defaults to 5 is \code{method = "string_osa"} and must be specified in all other instances except \code{method = "exact"} (where no threshold is required).
+#' @param to_lower Logical: Should all entries be converted to lower case before calculating string distance? Defaults to FALSE.
+#' @param rm_punctuation Logical: Should punctuation should be removed before calculating string distance? Defaults to FALSE.
+#' @return Returns a vector of duplicate matches, with \code{attributes} listing methods used.
 #' @seealso \code{\link{extract_unique_references}}, \code{\link{deduplicate}}
 #' @example inst/examples/deduplicate.R
 find_duplicates <- function(
   data, # string
+  method = "exact",
   group_by, # either a vector or a data.frame or list containing vectors
-  match_function = "exact",
-  method,
   threshold,
   to_lower = FALSE,
   rm_punctuation = FALSE
 ){
-
-  # check for stringdist
-  if(match_function == "stringdist"){
-    if(!requireNamespace("stringdist")){
-      match_function <- "exact"
-      print("Note: stringdist must be installed to use stringdist method. Using exact matching instead.")
-    }else{
-      if(!any(search() == "package:stringdist")){
-        loadNamespace("stringdist")
-        attachNamespace("stringdist")
-      }
-    }
-  }
-
   # data
   if(missing(data)){
     stop("'data' is missing: Please provide a data.frame")
@@ -59,61 +43,37 @@ find_duplicates <- function(
     )
   }
 
-  # methods
-  if(missing(match_function)){match_function <- "exact"}
-  if(!any(c("fuzzdist", "stringdist", "exact") == match_function)){
-    stop(
-      paste0(
-        match_function,
-        " is an invalid input to match_function; please specify one of 'fuzzdist', 'stringdist' or 'exact'."
-      )
-    )
-  }
-  if(missing(method)){
-    if(match_function == "stringdist"){method <- "osa"}
-    if(match_function == "fuzzdist"){method <- "fuzz_m_ratio"}
-  }
+  # threshold
   if(missing(threshold)){
-    if(match_function == "stringdist"){threshold <- 5}
-    if(match_function == "fuzzdist"){threshold <- 0.1}
-  }
-  if(match_function == "exact"){
-    method <- NA
-    threshold <- NA
-  }else{
-    valid_methods <- eval(formals(match_function)$method)
-    if(!any(valid_methods == method)){
-      stop(paste0("'",
-        method,
-        "' is not a valid method for function '",
-        match_function,
-        "'; Please specify one of the following arguments: '",
-        paste(valid_methods, collapse = "', '"),
-        "'"
-      ))
+    if(method == "exact"){
+      threshold <- NULL
+    }else if(method == "string_osa"){
+      threshold <- 5
+    }else{
+      stop("threshold is missing, with no default")
     }
   }
 
   # transformations
   if(to_lower){data <- tolower(data)}
-  if(rm_punctuation){
-      data <- gsub("[[:punct:]]", "", data)
-    }
+  if(rm_punctuation){data <- gsub("[[:punct:]]", "", data)}
 
   # quick option for exact matching based on split()
-  if(match_function == "exact"){
+  if(method == "exact"){
     order_initial <- seq_along(data)
     # ensure NAs are always given a unique value
     data[is.na(data)] <- paste0("MISSING_VALUE_", seq_along(which(is.na(data))))
     # split data by name
     order_list <- split(order_initial, data)
     order_list <- order_list[order(unlist(lapply(order_list, min)))]
-    result <- do.call(c, lapply(seq_along(order_list), function(a, ol){
-        rep(a, length(ol[[a]]))
-      }, ol = order_list))
+    result <- do.call(c, lapply(
+      seq_along(order_list),
+      function(a, ol){rep(a, length(ol[[a]]))},
+      ol = order_list
+    ))
     result <- result[order(do.call(c, order_list))]
 
-  }else{ # i.e. if a stringdist-based method is requested
+  }else{ # i.e. if a distance-based method is requested
 
     # prep vectors to track progress
     checked <- rep(FALSE, length(data))
@@ -134,7 +94,7 @@ find_duplicates <- function(
           checked[row_start] <- TRUE
           group[row_start] <- progress
         }else{
-          # include only those entries in the same grouping categories as the current entry
+          # include only those entries in the same grouping categories as the current entry,
           # plus any entries that are missing those values
           if(is.null(group_variables)){
             rows_tr <- remaining_rows
@@ -159,11 +119,10 @@ find_duplicates <- function(
 
           if(length(rows_tr) > 0){
             match_result <- do.call(
-              match_function,
+              method,
               list(
                 a = data[row_start],
-                b = data[rows_tr],
-                method = method
+                b = data[rows_tr]
               )
             ) <= threshold
             if(any(match_result, na.rm = TRUE)){
@@ -186,9 +145,10 @@ find_duplicates <- function(
   }
 
   # add attributes
-  attr(result, "match_function") <- match_function
   attr(result, "method") <- method
   attr(result, "threshold") <- threshold
+  attr(result, "to_lower") <- to_lower
+  attr(result, "rm_punctuation") <- rm_punctuation
   return(result)
 }
 
@@ -259,8 +219,8 @@ extract_unique_references <- function(
 #'
 #' @param data A \code{data.frame} containing bibliographic information.
 #' @param match_by Name of the column in \code{data} where duplicates should be sought.
-#' @param match_function The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches. Passed to \code{find_duplicates}.
-#' @param type How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.
+#' @param method The duplicate detection function to use; see see \code{link{string_}} or \code{link{fuzz_}} for examples. Passed to \code{find_duplicates}.
+#' @param type How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} returns the row with the highest total number of characters.
 #' @param \dots Arguments passed to \code{find_duplicates}.
 #' @return A \code{data.frame} containing data identified as unique.
 #' @details
@@ -270,7 +230,7 @@ extract_unique_references <- function(
 deduplicate <- function(
   data,
   match_by,
-  match_function,
+  method,
   type = "merge",
   ... # args passed to find_duplicates
 ){
@@ -282,11 +242,11 @@ deduplicate <- function(
   if(missing(match_by)){
     if(any(colnames(data) == "doi")){
       data_fd <- data[, "doi"]
-      if(missing(match_function)){match_function <- "exact"}
+      if(missing(method)){method <- "exact"}
     }else{
       if(any(colnames(data) == "title")){
         data_fd <- data[, "title"]
-        if(missing(match_function)){match_function <- "stringdist"}
+        if(missing(method)){method <- "string_osa"}
       }else{
         stop("'match_by' is missing, with no default;
           please specify which column should be searched for duplicates"
@@ -303,11 +263,11 @@ deduplicate <- function(
       ))
     }else{
       data_fd <- data[, match_by]
-      if(missing(match_function)){match_function <- "stringdist"}
+      if(missing(method)){method <- "string_osa"}
     }
   }
 
-  result <- find_duplicates(data_fd, match_function = match_function, ...)
+  result <- find_duplicates(data_fd, method = method, ...)
   return(
     extract_unique_references(data, matches = result, type = type)
   )

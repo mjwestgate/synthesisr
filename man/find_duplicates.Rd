@@ -6,9 +6,8 @@
 \usage{
 find_duplicates(
   data,
+  method = "exact",
   group_by,
-  match_function = "exact",
-  method,
   threshold,
   to_lower = FALSE,
   rm_punctuation = FALSE
@@ -17,20 +16,18 @@ find_duplicates(
 \arguments{
 \item{data}{A character vector containing duplicate bibliographic entries.}
 
-\item{group_by}{An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{match_function = "exact"}.}
+\item{method}{A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance (e.g. see \code{link{string_}} or \code{link{fuzz_}})}
 
-\item{match_function}{The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} (the default) for exact matches.}
+\item{group_by}{An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{method = "exact"}.}
 
-\item{method}{A string indicating the method to use for fuzzdist or stringdist. Options for fuzzdist are fuzz_m_ratio, fuzz_partial_ratio, fuzz_token_sort_ratio, and fuzz_token_set_ratio.}
+\item{threshold}{Numeric: the cutoff threshold for deciding if two strings are duplcates. Sensible values depend on the \code{method} chosen. Defaults to 5 is \code{method = "string_osa"} and must be specified in all other instances except \code{method = "exact"} (where no threshold is required).}
 
-\item{threshold}{Numeric: the cutoff threshold for stringdist or fuzzdist.}
+\item{to_lower}{Logical: Should all entries be converted to lower case before calculating string distance? Defaults to FALSE.}
 
-\item{to_lower}{Logical: Should all entries should be considered in lowercase when detecting duplicates? Defaults to FALSE.}
-
-\item{rm_punctuation}{Logical: Should punctuation should be removed when detecting duplicates? Defaults to FALSE.}
+\item{rm_punctuation}{Logical: Should punctuation should be removed before calculating string distance? Defaults to FALSE.}
 }
 \value{
-Returns a vector of duplicate matches and methods used.
+Returns a vector of duplicate matches, with \code{attributes} listing methods used.
 }
 \description{
 Identifies duplicate bibliographic entries using different duplicate detection methods.
@@ -56,7 +53,7 @@ my_df <-  data.frame(
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
-  match_function = "stringdist",
+  method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE
 )
@@ -65,7 +62,7 @@ extract_unique_references(my_df, matches = dups)
 
 # or, in one line:
 deduplicate(my_df, "title",
-  match_function = "stringdist",
+  method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE)
 }

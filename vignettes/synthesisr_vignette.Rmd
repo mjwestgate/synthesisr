@@ -58,7 +58,7 @@ Many journals are indexed in multiple databases, so searching across databases w
 df <- deduplicate(
   imported_files,
   match_by = "title",
-  match_function = "exact"
+  method = "exact"
 )
 
 ```
@@ -81,7 +81,7 @@ df$title[c(47, 101)]
 # in this example, we will use string distance to identify likely duplicates
 duplicates_string <- find_duplicates(
   df$title,
-  match_function = "stringdist",
+  method = "string_osa",
   to_lower = TRUE,
   rm_punctuation = TRUE,
   threshold = 7

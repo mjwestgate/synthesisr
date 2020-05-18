@@ -24,9 +24,9 @@ Description: A critical first step in systematic literature reviews
   merging and de-duplicating of the resulting dataset.
 License: GPL-3
 LazyData: true
-Suggests: stringdist, knitr, rmarkdown, testthat
+Suggests: knitr, rmarkdown, testthat
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.5.0), stringdist
 Date: 2020-05-04
 Encoding: UTF-8

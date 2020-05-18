@@ -4,16 +4,16 @@
 \alias{deduplicate}
 \title{Remove duplicates from a bibliographic data set}
 \usage{
-deduplicate(data, match_by, match_function, type = "merge", ...)
+deduplicate(data, match_by, method, type = "merge", ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing bibliographic information.}
 
 \item{match_by}{Name of the column in \code{data} where duplicates should be sought.}
 
-\item{match_function}{The duplicate detection method to use; options are \code{"stringdist"} for similarity, \code{"fuzzdist"} for fuzzy matching, or \code{"exact"} for exact matches. Passed to \code{find_duplicates}.}
+\item{method}{The duplicate detection function to use; see see \code{link{string_}} or \code{link{fuzz_}} for examples. Passed to \code{find_duplicates}.}
 
-\item{type}{How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.}
+\item{type}{How should entries be selected? Default is \code{"merge"} which selected the entries with the largest number of characters in each column. Alternatively \code{"select"} returns the row with the highest total number of characters.}
 
 \item{\dots}{Arguments passed to \code{find_duplicates}.}
 }
@@ -47,7 +47,7 @@ my_df <-  data.frame(
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
-  match_function = "stringdist",
+  method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE
 )
@@ -56,7 +56,7 @@ extract_unique_references(my_df, matches = dups)
 
 # or, in one line:
 deduplicate(my_df, "title",
-  match_function = "stringdist",
+  method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE)
 }

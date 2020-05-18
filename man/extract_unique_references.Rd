@@ -40,7 +40,7 @@ my_df <-  data.frame(
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
-  match_function = "stringdist",
+  method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE
 )
@@ -49,7 +49,7 @@ extract_unique_references(my_df, matches = dups)
 
 # or, in one line:
 deduplicate(my_df, "title",
-  match_function = "stringdist",
+  method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE)
 }
