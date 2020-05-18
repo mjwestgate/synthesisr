@@ -16,7 +16,7 @@ find_duplicates(
 \arguments{
 \item{data}{A character vector containing duplicate bibliographic entries.}
 
-\item{method}{A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance (e.g. see \code{link{string_}} or \code{link{fuzz_}})}
+\item{method}{A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance (e.g. see \code{\link{string_}} or \code{\link{fuzz_}})}
 
 \item{group_by}{An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{method = "exact"}.}
 

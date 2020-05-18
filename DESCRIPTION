@@ -20,13 +20,14 @@ Description: A critical first step in systematic literature reviews
   sources, particularly academic databases such as 'Web of Science' or
   'Scopus'. These databases often export in different formats or with
   different metadata tags. 'Synthesisr' imports bibliographic data in a
-  range of formats ('bibtex', 'ris', 'ciw') in a standard way, and allows
+  range of formats (such as 'bibtex', 'ris', 'ciw') in a standard way, and allows
   merging and de-duplicating of the resulting dataset.
+Depends: R (>= 3.5.0)
+Imports: stringdist
+Suggests: knitr, rmarkdown, testthat
+Date: 2020-05-18
 License: GPL-3
 LazyData: true
-Suggests: knitr, rmarkdown, testthat
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
-Depends: R (>= 3.5.0), stringdist
-Date: 2020-05-04
 Encoding: UTF-8

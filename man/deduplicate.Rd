@@ -24,7 +24,7 @@ A \code{data.frame} containing data identified as unique.
 Removes duplicates using sensible defaults
 }
 \details{
-This is a wrapper function to \code{find_duplicates} and \code{extract_unique_references}, which tries to choose some sensible defaults. Use with care.
+This is a wrapper function to \code{\link{find_duplicates}} and \code{extract_unique_references}, which tries to choose some sensible defaults. Use with care.
 }
 \examples{
 my_df <-  data.frame(

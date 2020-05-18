@@ -2,7 +2,7 @@
 #'
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
 #' @param data A character vector containing duplicate bibliographic entries.
-#' @param method A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance (e.g. see \code{link{string_}} or \code{link{fuzz_}})
+#' @param method A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance (e.g. see \code{\link{string_}} or \code{\link{fuzz_}})
 #' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{method = "exact"}.
 #' @param threshold Numeric: the cutoff threshold for deciding if two strings are duplcates. Sensible values depend on the \code{method} chosen. Defaults to 5 is \code{method = "string_osa"} and must be specified in all other instances except \code{method = "exact"} (where no threshold is required).
 #' @param to_lower Logical: Should all entries be converted to lower case before calculating string distance? Defaults to FALSE.
@@ -224,7 +224,7 @@ extract_unique_references <- function(
 #' @param \dots Arguments passed to \code{find_duplicates}.
 #' @return A \code{data.frame} containing data identified as unique.
 #' @details
-#' This is a wrapper function to \code{find_duplicates} and \code{extract_unique_references}, which tries to choose some sensible defaults. Use with care.
+#' This is a wrapper function to \code{\link{find_duplicates}} and \code{extract_unique_references}, which tries to choose some sensible defaults. Use with care.
 #' @seealso \code{\link{find_duplicates}} and \code{\link{extract_unique_references}} for underlying functions.
 #' @example inst/examples/deduplicate.R
 deduplicate <- function(
