@@ -10,7 +10,7 @@
 #' @examples add_line_breaks(c("On the Origin of Species"), n = 10)
 add_line_breaks <- function(x, n = 50, max_n=80, html = FALSE, max_time=60){
   if(html){break_string <- "<br>"}else{break_string <- "\n"}
-	split_text <- strsplit(as.character(x), " ")
+  split_text <- strsplit(as.character(x), " ")
   out_list <- lapply(split_text, function(a){
     if(length(a) == 0){
       return("")
@@ -23,41 +23,41 @@ add_line_breaks <- function(x, n = 50, max_n=80, html = FALSE, max_time=60){
       if(any(is.na(result$nchars))){
         result$nchars[which(is.na(result$nchars))] <- 2
       }
-    	result$sum <- cumsum(result$nchars)
+      result$sum <- cumsum(result$nchars)
 
-    	result$group <- cut(result$sum,
-    		breaks = seq(0, max(result$sum)+n-1, n),
-    		labels = FALSE)
+      result$group <- cut(result$sum,
+        breaks = seq(0, max(result$sum)+n-1, n),
+        labels = FALSE)
 
-    	result_list <- split(result$text, result$group)
+      result_list <- split(result$text, result$group)
 
-    	start_time <- Sys.time()
-    	elapsed <- 0
+      start_time <- Sys.time()
+      elapsed <- 0
 
 
-    	while(any(lapply(result_list, function(x){
-    	  sum(nchar(x))
-    	})>max_n) & elapsed < max_time){
-    	  error_start <- min(which(lapply(result_list, function(x){
-    	    sum(nchar(x))
-    	  })>max_n))
-    	  error_range <- min(which(result$group==error_start)):nrow(result)
+      while(any(lapply(result_list, function(x){
+        sum(nchar(x))
+      })>max_n) & elapsed < max_time){
+        error_start <- min(which(lapply(result_list, function(x){
+          sum(nchar(x))
+        })>max_n))
+        error_range <- min(which(result$group==error_start)):nrow(result)
 
-    	  result$sum[error_range] <- cumsum(result$nchars[error_range])
+        result$sum[error_range] <- cumsum(result$nchars[error_range])
 
-    	  result$group[error_range] <- cut(result$sum[error_range],
-    	                      breaks = seq(0, max(result$sum[error_range])+n-1, n),
-    	                      labels = FALSE)+result$group[error_range[1]-1]
+        result$group[error_range] <- cut(result$sum[error_range],
+                            breaks = seq(0, max(result$sum[error_range])+n-1, n),
+                            labels = FALSE)+result$group[error_range[1]-1]
 
-    	  result_list <- split(result$text, result$group)
-    	  current_time <- Sys.time()
-    	  elapsed <- as.numeric(difftime(current_time, start_time, units = "secs"))
-    	  if(elapsed>max_time){
-    	    stop(print("Maximum time limit for parsing lines reached"))
-    	  }
-    	}
+        result_list <- split(result$text, result$group)
+        current_time <- Sys.time()
+        elapsed <- as.numeric(difftime(current_time, start_time, units = "secs"))
+        if(elapsed>max_time){
+          stop(print("Maximum time limit for parsing lines reached"))
+        }
+      }
 
-    	result <- paste(
+      result <- paste(
         unlist(
           lapply(result_list, function(a){paste(a, collapse = " ")})
         ),

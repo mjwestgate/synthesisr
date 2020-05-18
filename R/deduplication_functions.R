@@ -81,14 +81,14 @@ find_duplicates <- function(
 
     # run 'while' loop
     progress <- 1
-  	while(all(checked) == FALSE){
+    while(all(checked) == FALSE){
       remaining_rows <- which(checked == FALSE)
       if(length(remaining_rows) == 1){
-  			group[remaining_rows] <- progress
-  		  checked[remaining_rows] <- TRUE
-  		}else{
+        group[remaining_rows] <- progress
+        checked[remaining_rows] <- TRUE
+      }else{
         # locate relevant information
-  			row_start <- remaining_rows[1]
+        row_start <- remaining_rows[1]
         # if this entry is empty, then skip (i.e. never match NAs)
         if(is.na(data[row_start])){
           checked[row_start] <- TRUE

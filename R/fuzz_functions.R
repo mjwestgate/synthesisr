@@ -51,12 +51,12 @@ fuzz_partial_ratio <- function(a, b){
         keep = seq_len(min(zn))
       )
       z_ratio <- lapply(z_list, function(x, comparison){
-      	match_value <- apply(
+        match_value <- apply(
           cbind(x, comparison),
           1,
           function(y){y[1] == y[2]}
         )
-      	length(which(match_value))/length(x)
+        length(which(match_value))/length(x)
       },
       comparison = strsplit(z[which.min(zn)], "")[[1]]
       )
@@ -131,9 +131,9 @@ fuzz_token_set_ratio <- function(a, b){
       string_list <- lapply(string_list, function(x){
         if(length(x) < 1){
           return("")
-    	  }else{
+        }else{
           return(paste(x, collapse = " "))
-    	  }
+        }
       })
       result <- c(
         fuzz_m_ratio(string_list$t0, string_list$t1),
