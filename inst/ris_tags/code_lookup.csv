@@ -102,7 +102,7 @@
 "EP",4.52,"Reference information","End page","end_page",TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,TRUE
 "PG",4.53,"Reference information","Page count","n_pages",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 "PS",4.53,"Reference information","Page span","n_pages",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
-"P2",4.54,"Reference information","Chapter Count (Book Citation Index)","n_chapters",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+"P2",4.54,"Reference information","Chapter Count (Book Citation Index)","n_chapters",FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 "AB",4.6,"Reference information","Abstract","abstract",TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE
 "N2",4.6,"Reference information","Abstract","abstract",FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
 "A2x",4.61,"Reference information","Other abstract","abstract_other",TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE

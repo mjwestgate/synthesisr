@@ -2,13 +2,13 @@
 #'
 #' @description Identifies duplicate bibliographic entries using different duplicate detection methods.
 #' @param data A character vector containing duplicate bibliographic entries.
-#' @param method A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance (e.g. see \code{\link{string_}} or \code{\link{fuzz_}})
+#' @param method A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance.
 #' @param group_by An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{method = "exact"}.
 #' @param threshold Numeric: the cutoff threshold for deciding if two strings are duplcates. Sensible values depend on the \code{method} chosen. Defaults to 5 is \code{method = "string_osa"} and must be specified in all other instances except \code{method = "exact"} (where no threshold is required).
 #' @param to_lower Logical: Should all entries be converted to lower case before calculating string distance? Defaults to FALSE.
 #' @param rm_punctuation Logical: Should punctuation should be removed before calculating string distance? Defaults to FALSE.
 #' @return Returns a vector of duplicate matches, with \code{attributes} listing methods used.
-#' @seealso \code{\link{extract_unique_references}}, \code{\link{deduplicate}}
+#' @seealso \code{\link{string_}} or \code{\link{fuzz_}} for suitable functions to pass to \code{methods}; \code{\link{extract_unique_references}} and \code{\link{deduplicate}} for higher-level functions.
 #' @example inst/examples/deduplicate.R
 find_duplicates <- function(
   data, # string

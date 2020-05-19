@@ -12,7 +12,7 @@
 #' @note \code{fuzz_partial_ratio} calculates the extent to which one string is a subset of the other. If one string is a perfect subset, then this will be zero.
 #' @note \code{fuzz_token_sort_ratio} sorts the words in both strings into alphabetical order, and checks their similarity using fuzz_m_ratio.
 #' @note \code{fuzz_token_set_ratio} is similar to fuzz_token_sort_ratio, but compares both sorted strings to each other, and to a third group made of words common to both strings. It then returns the maximum value of fuzz_m_ratio from these comparisons.
-#' @note \code{fuzzdist} is a wrapper function, for compatability with \code{\link{stringdist}}.
+#' @note \code{fuzzdist} is a wrapper function, for compatability with \code{stringdist}.
 #' @return Returns a score of same length as b, giving the proportional dissimilarity between a and b.
 #' @example inst/examples/fuzzdist.R
 #' @name fuzz_

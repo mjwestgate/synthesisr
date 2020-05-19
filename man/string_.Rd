@@ -43,5 +43,5 @@ string_soundex(a, b)
 Returns a score of same length as b, giving the dissimilarity between a and b.
 }
 \description{
-These functions each access a specific \code{"methods"} argument provided by \code{\link{stringdist}}, and are provided for convenient calling by \code{\link{find_duplicates}}. They do not include any new functionality beyond that given by \code{\link{stringdist}}, which you should use for your own analyses.
+These functions each access a specific \code{"methods"} argument provided by \code{stringdist}, and are provided for convenient calling by \code{\link{find_duplicates}}. They do not include any new functionality beyond that given by \code{stringdist}, which you should use for your own analyses.
 }

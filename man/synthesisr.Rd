@@ -42,7 +42,7 @@ When importing from multiple databases, it is likely that there will be duplicat
   \item \code{\link{review_duplicates}} Manually review potential duplicates
   \item \code{\link{override_duplicates}} Manually override identified duplicates
   \item \code{\link{fuzz_}} Fuzzy string matching c/o 'fuzzywuzzy'
-  \item \code{\link{string_}} Fuzzy string matching c/o \code{\link{stringdist}}
+  \item \code{\link{string_}} Fuzzy string matching c/o \code{stringdist}
 }
 }
 

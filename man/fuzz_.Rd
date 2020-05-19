@@ -46,7 +46,7 @@ These functions duplicate the approach of the 'fuzzywuzzy' Python library for ca
 
 \code{fuzz_token_set_ratio} is similar to fuzz_token_sort_ratio, but compares both sorted strings to each other, and to a third group made of words common to both strings. It then returns the maximum value of fuzz_m_ratio from these comparisons.
 
-\code{fuzzdist} is a wrapper function, for compatability with \code{\link{stringdist}}.
+\code{fuzzdist} is a wrapper function, for compatability with \code{stringdist}.
 }
 \examples{
 fuzzdist("On the Origin of Species",
