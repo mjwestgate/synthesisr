@@ -129,7 +129,7 @@ format_citation(citation)
 
 write_refs(citation,
   format = "bib",
-  write_file = FALSE
+  file = FALSE
 )
 
 ```

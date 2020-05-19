@@ -3,7 +3,7 @@
 \docType{package}
 \name{synthesisr}
 \alias{synthesisr}
-\title{synthesisr: Import, Assemble, and Deduplicate Bibiliographic Datasets}
+\title{synthesisr: Import, assemble, and deduplicate bibiliographic datasets}
 \description{
 Systematic review searches include multiple databases
  that export results in a variety of formats with overlap in

@@ -40,6 +40,7 @@ write_ris <- function(x,
   tag_naming = "synthesisr"
 ){
   result <- lapply(x, function(a, lookup) {
+
     # convert to tagged vector
     b <- do.call(c, a)
     b <- b[!is.na(b)]
@@ -53,19 +54,29 @@ write_ris <- function(x,
 
     # page information needs to be treated separately
     if(any(b$tag == "pages")){
-      page.row <- which(b$tag == "pages")
-      page.sep <- strsplit(b$entry[page.row], "-")[[1]]
-      if (length(page.sep) > 1) {
-        new.rows <- data.frame(
-          tag = c("startpage", "endpage"),
-          entry = page.sep,
-          stringsAsFactors = FALSE
+      page_row <- which(b$tag == "pages")
+      page_text <- b$entry[page_row]
+      if(grepl("-", page_text)){
+        text_lookup <- list(
+          regexpr("^[[:digit:]]+", page_text),
+          regexpr("-[[:digit:]]+", page_text)
         )
-        b <- as.data.frame(rbind(
-          b[c(1:(page.row - 1)),],
-          new.rows,
-          b[c((page.row + 1):nrow(b)),]
-        ))
+        if(all(text_lookup > 0)){
+          text_cleaned <- unlist(lapply(
+            text_lookup,
+            function(b){substr(page_text, b, b + attr(b, "match.length") - 1)}
+          ))
+          new_rows <- data.frame(
+            tag = c("startpage", "endpage"),
+            entry = gsub("[[:punct:]]", "", text_cleaned),
+            stringsAsFactors = FALSE
+          )
+          b <- as.data.frame(rbind(
+            b[c(1:(page_row - 1)),],
+            new_rows,
+            b[c((page_row + 1):nrow(b)),]
+          ))
+        }
       }
     }
     b$order <- seq_len(nrow(b))
@@ -103,15 +114,14 @@ write_ris <- function(x,
 #' @param x Either a data.frame containing bibliographic information or an object of class bibliography.
 #' @param format What format should the data be exported as? Options are ris or bib.
 #' @param tag_naming what naming convention should be used to write RIS files? See details for options.
-#' @param write_file Either logical indicating whether a file should be written (defaulting to FALSE), or a character giving the name of the file to be written.
-#' @return Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
+#' @param file Either logical indicating whether a file should be written (defaulting to FALSE), or a character giving the name of the file to be written.
+#' @return Returns a character vector containing bibliographic information in the specified format if \code{file} is FALSE, or saves output to a file if TRUE.
 #' @example inst/examples/parse_.R
 write_refs <- function(
   x,
   format = "ris",
   tag_naming = "synthesisr",
-  write_file = FALSE # either logical or a character (i.e. a file name)
-  # filename
+  file = FALSE # either logical or a character (i.e. a file name)
 ){
   # check input data
   if(!any(c("bibliography", "data.frame") == class(x))) {
@@ -140,24 +150,26 @@ write_refs <- function(
     }
   }
 
-  # check file out information (write_file and filename)
-  if(length(write_file) > 1){
-    stop("write_file should be a length-1 character or logical")
-  }else{
-    if(inherits(write_file, "character")){
-      file_out <- TRUE
-      if(grepl("\\.[[:alpha:]]{2,4}$", filename)){
-        filename <- write_file
-      }else{
-        filename <- paste(filename, format, sep = ".")
-      }
+  # check file information
+  if(length(file) > 1){
+    stop("argument 'file' should be a length-1 character or logical")
+  }
+  if(!inherits(file, c("logical", "character"))){
+    stop("argument 'file' should be either logical or character")
+  }
+  if(inherits(file, "character")){
+    file_out <- TRUE
+    if(grepl("\\.[[:alpha:]]{2,4}$", file)){
+      filename <- file
     }else{
-      if(write_file){
-        file_out <- TRUE
-        filename <- paste("synthesisr_bibliography", format, sep = ".")
-      }else{
-        file_out <- FALSE
-      }
+      filename <- paste(file, format, sep = ".")
+    }
+  }else{ # i.e. logical
+    if(file){
+      file_out <- TRUE
+      filename <- paste("synthesisr_bibliography", format, sep = ".")
+    }else{
+      file_out <- FALSE
     }
   }
 
@@ -175,7 +187,7 @@ write_refs <- function(
       row.names = FALSE,
       col.names = FALSE
     )
-  } else{
+  }else{
     invisible(return(export))
   }
 }

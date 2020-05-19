@@ -1,4 +1,4 @@
-#' synthesisr: Import, Assemble, and Deduplicate Bibiliographic Datasets
+#' synthesisr: Import, assemble, and deduplicate bibiliographic datasets
 #'
 #'  Systematic review searches include multiple databases
 #'  that export results in a variety of formats with overlap in

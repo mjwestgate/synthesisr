@@ -10,7 +10,7 @@ write_bib(x)
 
 write_ris(x, tag_naming = "synthesisr")
 
-write_refs(x, format = "ris", tag_naming = "synthesisr", write_file = FALSE)
+write_refs(x, format = "ris", tag_naming = "synthesisr", file = FALSE)
 }
 \arguments{
 \item{x}{Either a data.frame containing bibliographic information or an object of class bibliography.}
@@ -19,10 +19,10 @@ write_refs(x, format = "ris", tag_naming = "synthesisr", write_file = FALSE)
 
 \item{format}{What format should the data be exported as? Options are ris or bib.}
 
-\item{write_file}{Either logical indicating whether a file should be written (defaulting to FALSE), or a character giving the name of the file to be written.}
+\item{file}{Either logical indicating whether a file should be written (defaulting to FALSE), or a character giving the name of the file to be written.}
 }
 \value{
-Returns a character vector containing bibliographic information in the specified format if write_file is FALSE, or saves output to a file if write_file is TRUE.
+Returns a character vector containing bibliographic information in the specified format if \code{file} is FALSE, or saves output to a file if TRUE.
 }
 \description{
 This function exports data.frames containing bibliographic information to either a .ris or .bib file.
@@ -60,5 +60,5 @@ eviatlas <- c(
 
 detect_parser(eviatlas) # = "parse_ris"
 df <- as.data.frame(parse_ris(eviatlas))
-ris_out <- write_refs(df, format = "ris", write_file = FALSE)
+ris_out <- write_refs(df, format = "ris", file = FALSE)
 }
