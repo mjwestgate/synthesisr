@@ -22,7 +22,7 @@ Description: A critical first step in systematic literature reviews
   tags. 'synthesisr' expands on the tools outlined by Westgate (2019)
   <doi:10.1002/jrsm.137> to import bibliographic data from a range of formats
   (such as 'bibtex', 'ris', or 'ciw') in a standard way, and allows merging
-  and de-duplicating of the resulting dataset.
+  and deduplication of the resulting dataset.
 Depends: R (>= 3.5.0)
 Imports: stringdist
 Suggests: knitr, rmarkdown, testthat
