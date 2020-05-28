@@ -20,7 +20,7 @@ Description: A critical first step in systematic literature reviews
   of sources, particularly databases such as 'Web of Science' or 'Scopus'.
   These databases often export in different formats or with different metadata
   tags. 'synthesisr' expands on the tools outlined by Westgate (2019)
-  <doi:10.1002/jrsm.137> to import bibliographic data from a range of formats
+  <doi:10.1002/jrsm.1374> to import bibliographic data from a range of formats
   (such as 'bibtex', 'ris', or 'ciw') in a standard way, and allows merging
   and deduplication of the resulting dataset.
 Depends: R (>= 3.5.0)
