@@ -278,6 +278,12 @@ if(any(unlist(lapply(x_split, nrow))==1)){
 #' @rdname parse_
 parse_bibtex <- function(x){
 
+  ### Remove lines that start with a percentage symbol (comments)
+  x <- grep("^\\s*%.*",
+            x,
+            invert = TRUE,
+            value=TRUE)
+
   # which lines start with @article?
   group_vec <- rep(0, length(x))
   row_id <- which(regexpr("^@", x) == 1)
