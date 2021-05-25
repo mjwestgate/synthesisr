@@ -21,7 +21,8 @@ prep_ris <- function(
   if(type == "pubmed"){
     ris_regex <- "^[[:upper:]]{2,4}\\s*-\\s"
   }else{ # i.e. generic
-    ris_regex <- "(^[[:upper:]]{2}|^[[:upper:]][[:digit:]])\\s*(-|:){0,2}\\s*"
+    ris_regex <- "(^([[:upper:]]{2}|[[:upper:]][[:digit:]])\\s+)|^ER$"
+    # NOTE: "^ER$" is a bug fix for .ciw end rows
   }
   tags <- regexpr(ris_regex, perl = TRUE, z)
   z_dframe <- data.frame(
@@ -55,7 +56,7 @@ prep_ris <- function(
 
   # clean up obvious errors
   z_dframe$ris <- gsub("[[:punct:]]", "", z_dframe$ris)
-  z_dframe$text <- sub("^[[:punct:]]{0,1}\\s{2,}", "", z_dframe$text)
+  z_dframe$text <- sub("^[[:punct:]]{0,1}\\s*", "", z_dframe$text)
 
   # replace tag information for delimiter == character | space
   if(delimiter == "character"){ # i.e. a single character repeated many times
@@ -100,7 +101,7 @@ prep_ris <- function(
     # new option:
     }else{
       row_df <- data.frame(
-        start = c(1, end_rows[1:(length(end_rows)-1)] - 1),
+        start = c(1, end_rows[seq_len(length(end_rows) - 1)]),
         end = end_rows
       )
     }
