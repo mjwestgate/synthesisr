@@ -14,6 +14,8 @@ clean_df <- function(data){
 clean_authors <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
     x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)
+  }else if(grepl(";", x)){
+    x <- gsub(";(?=\\s[[:alpha:]]{2,})", " and ", x, perl = TRUE)
   }else{
     x <- gsub(",(?=\\s[[:alpha:]]{2,})", " and ", x, perl = TRUE)
   }
