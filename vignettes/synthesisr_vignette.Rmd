@@ -1,5 +1,5 @@
 ---
-title: "Import, assemble, deduplicate, and write bibliographic data with synthesisr"
+title: "Import, assemble, deduplicate, and write bibliographic data"
 author: Eliza M. Grames and Martin J. Westgate
 output: rmarkdown::html_vignette
 vignette: >

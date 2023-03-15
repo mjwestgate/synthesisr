@@ -1,0 +1,32 @@
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+img.hex {
+  float: right;
+  width: 129px;
+  height: 150px;
+  vertical-align: middle;
+  margin-top: 20px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 20px;
+}
+
+.navbar.bg-dark {
+  background-image: linear-gradient(to bottom, #35B779, #63b08b);
+}
+
+.navbar-dark .navbar-brand:hover {
+    color: #3B528B;
+}
+
+.nav-item:selection {
+  background-color: #3B528B;
+}
+
+.nav-item:hover {
+  background-color: #3B528B;
+}

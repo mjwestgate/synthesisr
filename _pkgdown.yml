@@ -1,0 +1,8 @@
+url: https://mjwestgate.github.io/synthesisr
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#3B528B"
+navbar:
+  bg: dark
+  type: dark
