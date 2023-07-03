@@ -3,7 +3,7 @@ title: "Import, assemble, deduplicate, and write bibliographic data"
 author: Eliza M. Grames and Martin J. Westgate
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Import, assemble, deduplicate, and manipulate bibliographic data}
+  %\VignetteIndexEntry{Import, assemble, deduplicate, and write bibliographic data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,15 +17,31 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-Systematic review searches include multiple databases that export results in a variety of formats with overlap in coverage between databases. To streamline the process of importing, assembling, and deduplicating results, synthesisr recognizes bibliographic files exported from databases commonly used for systematic reviews and merges results into a standardized format.  
+Systematic review searches include multiple databases that export results in a 
+variety of formats with overlap in coverage between databases. To streamline the 
+process of importing, assembling, and deduplicating results, `synthesisr` 
+recognizes bibliographic files exported from databases commonly used for 
+systematic reviews and merges results into a standardized format.  
 
-If you run into issues with the package, please open an issue at https://github.com/rmetaverse/synthesisr or email martinjwestgate@gmail.com or eliza.grames@uconn.edu.
+If you run into issues with the package, please open an issue at 
+https://github.com/rmetaverse/synthesisr or email martinjwestgate@gmail.com.
 
 ## Read and assemble bibliographic files
 
-synthesisr can read any BibTex or RIS formatted bibliographic data files. It detects whether files are more bib-like or ris-like and imports them accordingly. Note that files from some databases may contain non-standard fields or non-standard characters that cause import failure in rare cases; if this happens, we recommend converting the file in open source bibliographic management software such as Zotero.
+`synthesisr` can read any BibTex or RIS formatted bibliographic data files. It 
+detects whether files are more bib-like or ris-like and imports them 
+accordingly. Note that files from some databases may contain non-standard fields 
+or non-standard characters that cause import failure in rare cases; if this 
+happens, we recommend converting the file in open source bibliographic 
+management software such as Zotero.
 
-In the code below, we will demonstrate how to read and assemble bibliographic data files with example datasets included in the synthesisr package. Note that if you are using the code with your own data, you will not need to use system.file() and instead will want to pass a character vector of the path(s) to the file(s) you want to import. For example, if you have saved all your search results in a directory called "search_results", you may want to use list.files("./search_results/") instead.
+In the code below, we will demonstrate how to read and assemble bibliographic 
+data files with example datasets included in the `synthesisr` package. Note that 
+if you are using the code with your own data, you will not need to use 
+`system.file()` and instead will want to pass a character vector of the path(s) 
+to the file(s) you want to import. For example, if you have saved all your 
+search results in a directory called "search_results", you may want to use 
+`list.files("./search_results/")` instead.
 
 ```{r}
 # system.file will look for the path to where synthesisr is installed
@@ -50,7 +66,12 @@ imported_files <- read_refs(
 
 ## Deduplicate bibliographic data
 
-Many journals are indexed in multiple databases, so searching across databases will retrieve duplicates. After import, synthesisr can detect duplicates and retain only unique bibliographic records using a variety of methods such as string distance or fuzzy matching records. A good place to start is removing articles that have identical titles, especially since this reduces computational time for more sophisticated deduplication methods.
+Many journals are indexed in multiple databases, so searching across databases 
+will retrieve duplicates. After import, `synthesisr` can detect duplicates and 
+retain only unique bibliographic records using a variety of methods such as 
+string distance or fuzzy matching records. A good place to start is removing 
+articles that have identical titles, especially since this reduces computational 
+time for more sophisticated deduplication methods.
 
 ```{r}
 # first, we will remove articles that have identical titles
@@ -63,7 +84,15 @@ df <- deduplicate(
 
 ```
 
-In some cases, it may be useful to know which articles were identified as duplicates so they can be manually reviewed or so that information from two records can be merged. Using our partially-deduplicated dataset, we check a few titles and use string distance methods to find additional duplicate articles in the code below and then remove them by extracting unique references. Although here we only use one secondary deduplication method (string distance), we could look for additional duplicates based on fuzzy matching abstracts, for example.
+In some cases, it may be useful to know which articles were identified as 
+duplicates so they can be manually reviewed or so that information from two 
+records can be merged. Using our partially-deduplicated dataset, we check a few 
+titles and use string distance methods to find additional duplicate articles in 
+the code below and then remove them by extracting unique references. Although 
+here we only use one secondary deduplication method (string distance), we could 
+look for additional duplicates based on fuzzy matching abstracts, for example.
+
+*NOTE: the examples below don't match now; need updating*
 
 ```{r}
 # there are still some duplicate articles that were not removed
@@ -96,13 +125,12 @@ manual_checks <- review_duplicates(df$title, duplicates_string)
 
 ```{r, include=FALSE, eval=TRUE}
 manual_checks[,1] <- substring(manual_checks[,1], 1, 60)
-manual_checks
+
+print(manual_checks[1:10, ])
 ```
 
 
 ```{r}
-print(manual_checks)
-
 # the titles under match #99 are not duplicates, so we need to keep them both
 # we can use the override_duplicates function to manually mark them as unique
 new_duplicates <- synthesisr::override_duplicates(duplicates_string, 99)
@@ -115,7 +143,9 @@ results <- extract_unique_references(df, new_duplicates)
 
 ## Write bibliographic files
 
-To facilitate exporting results to other platforms after assembly and deduplication, synthesisr can write bibliographic data to .ris or .bib files. Optionally, write_refs can write directly to a text file stored locally.
+To facilitate exporting results to other platforms after assembly and 
+deduplication, `synthesisr` can write bibliographic data to .ris or .bib files. 
+Optionally, `write_refs()` can write directly to a text file stored locally.
 
 ```{r paged.print=TRUE}
 
@@ -123,7 +153,7 @@ To facilitate exporting results to other platforms after assembly and deduplicat
 # but in this example, we will just write the first citation
 # we also want it to be a nice clean bibliographic file, so we remove NA data
 # this makes it easier to view the output when working with a single article
-citation <- df[1,!is.na(df[1,])]
+citation <- df[1, !is.na(df[1,])]
 
 format_citation(citation)
 

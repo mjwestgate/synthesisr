@@ -41,8 +41,8 @@
 #'   \item \code{\link{extract_unique_references}} Return a data.frame with only 'unique' references
 #'   \item \code{\link{review_duplicates}} Manually review potential duplicates
 #'   \item \code{\link{override_duplicates}} Manually override identified duplicates
-#'   \item \code{\link{fuzz_}} Fuzzy string matching c/o 'fuzzywuzzy'
-#'   \item \code{\link{string_}} Fuzzy string matching c/o \code{stringdist}
+#'   \item \code{\link{fuzz_}} Fuzzy string matching c/o `fuzzywuzzy`
+#'   \item \code{\link{string_}} Fuzzy string matching c/o `stringdist`
 #'}
 #'
 #' @docType package
