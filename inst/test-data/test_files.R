@@ -34,7 +34,6 @@ litsearchr <- c(
 }"
 )
 
-
 res_synth_methods <-
   c(
     "",
@@ -161,22 +160,6 @@ res_synth_methods <-
     "      18."
   )
 
-tmp1 <- tempfile(pattern = "eviatlas")
-tmp2 <- tempfile(pattern = "litsearchr")
-tmp3 <- tempfile(pattern = "res_synth")
-
-writeLines(eviatlas, tmp1)
-writeLines(litsearchr, tmp2)
-writeLines(res_synth_methods, tmp3)
-
-df <-
-  read_refs(c(tmp1, tmp2, tmp3), return_df = TRUE, verbose = TRUE)
-
-expect(nrow(df) == 4,
-       "Number of imported example files differs from expectation")
-
-expect(any(grep("EviAtlas", df[1,])), "First article is not expected article")
-
-expect(any(grep("litsearchr", df[2,])), "Second article is not expected article")
-
-expect(any(grep("robvis", df[3,])), "Third article is not expected article")
+writeLines(eviatlas, "tests/testthat/testdata/eviatlas.txt")
+writeLines(litsearchr, "tests/testthat/testdata/litsearchr.txt")
+writeLines(res_synth_methods, "tests/testthat/testdata/res_synth_methods.txt")

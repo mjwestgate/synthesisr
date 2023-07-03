@@ -25,7 +25,7 @@ write_refs <- function(
     file = FALSE # either logical or a character (i.e. a file name)
 ){
   # check input data
-  if(!any(c("bibliography", "data.frame") == class(x))) {
+  if(!inherits(x, c("bibliography", "data.frame"))) {
     abort("write_bibliography only accepts objects of class 'data.frame' or 'bibliography'")
   }
   if(inherits(x, "data.frame")){
