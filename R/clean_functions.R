@@ -1,5 +1,12 @@
-# Cleans data.frames into synthesisr format
+#' Clean a `data.frame` or vector
+#'
+#' Cleans column and author names
+#' @param data A `data.frame` with bibliographic information.
+#' @param x A vector of strings
+#' @return Returns the input, but cleaner.
+#' @example inst/examples/clean_.R
 #' @rdname clean_
+#' @export
 clean_df <- function(data){
   colnames(data) <- clean_colnames(colnames(data))
   if(any(colnames(data) == "author")){
@@ -11,6 +18,7 @@ clean_df <- function(data){
 
 # Standardize author delimiters
 #' @rdname clean_
+#' @export
 clean_authors <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
     x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)
@@ -24,6 +32,7 @@ clean_authors <- function(x){
 
 # Clean common issues with column names
 #' @rdname clean_
+#' @export
 clean_colnames <- function(
   x # colnames
 ){

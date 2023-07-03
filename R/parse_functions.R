@@ -1,4 +1,16 @@
+#' Parse bibliographic text in a variety of formats
+#'
+#' @description Text in standard formats - such as imported via
+#' `base::readLines()` - can be parsed using a variety of standard formats. Use
+#' `detect_parser()` to determine which is the most appropriate parser for your
+#' situation.
+#' @param x A character vector containing bibliographic information in ris
+#' format.
+#' @return Returns an object of class `bibliography` (ris, bib, or pubmed
+#' formats) or `data.frame` (csv or tsv).
+#' @example inst/examples/parse_.R
 #' @rdname parse_
+#' @export
 parse_pubmed <- function(x){
 
   x <- prep_ris(x, detect_delimiter(x), type = "pubmed")
@@ -74,7 +86,9 @@ parse_pubmed <- function(x){
 
 
 #' @rdname parse_
-#' @param tag_naming What format are ris tags in? Defaults to "best_guess" See \code{\link{read_refs}} for a list of accepted arguments.
+#' @param tag_naming What format are ris tags in? Defaults to `"best_guess"` See
+#' `read_refs()` for a list of accepted arguments.
+#' @export
 parse_ris <- function(x, tag_naming = "best_guess"){
 
   x <- prep_ris(x, detect_delimiter(x), type = "generic")
@@ -195,9 +209,9 @@ parse_ris <- function(x, tag_naming = "best_guess"){
 
   # there is an issue with date accessed creating non-existing records
   # removing datasets with 1 row fixes this
-if(any(unlist(lapply(x_split, nrow))==1)){
-  x_split <- x_split[  -which(unlist(lapply(x_split, nrow))==1)]
-}
+  if(any(unlist(lapply(x_split, nrow))==1)){
+    x_split <- x_split[  -which(unlist(lapply(x_split, nrow))==1)]
+  }
 
   # convert to list format
   x_final <- lapply(x_split, function(a){
@@ -276,6 +290,7 @@ if(any(unlist(lapply(x_split, nrow))==1)){
 
 
 #' @rdname parse_
+#' @export
 parse_bibtex <- function(x){
 
   ### Remove lines that start with a percentage symbol (comments)
@@ -401,6 +416,7 @@ parse_bibtex <- function(x){
 }
 
 #' @rdname parse_
+#' @export
 parse_csv <- function(x){
   z <- read.table(
     text = x,
@@ -415,6 +431,7 @@ parse_csv <- function(x){
 }
 
 #' @rdname parse_
+#' @export
 parse_tsv <- function(x){
   z <- read.table(
     text = x,

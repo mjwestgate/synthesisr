@@ -1,10 +1,15 @@
-# internal function used by parse_csv and parse_tsv
-# ' Matches imported data to reference codes
-# '
-# ' @description Takes an imported data.frame and rearranges it to match lookup codes.
-# ' @param df A data.frame that contains bibliographic information.
-# ' @return Returns a data.frame rearranged and coded to match standard bibliographic fields, with unrecognized fields appended.
-# ' @example inst/examples/match_columns.R
+# internal function used by parse_csv and parse_tsv:
+
+#' Matches imported data to reference codes
+#'
+#' @description Takes an imported data.frame and rearranges it to match lookup
+#' codes.
+#' @param df A data.frame that contains bibliographic information.
+#' @return Returns a data.frame rearranged and coded to match standard
+#' bibliographic fields, with unrecognized fields appended.
+#' @noRd
+#' @keywords Internal
+#' @example inst/examples/match_columns.R
 match_columns <- function(df){
   # figure out which columns match known tags
   hits <- as.numeric(match(synthesisr::code_lookup$code, colnames(df)))
@@ -27,31 +32,35 @@ match_columns <- function(df){
 
 #' Bind two or more data frames with different columns
 #'
-#' @description Takes two or more data.frames with different column names or different column orders and binds them to a single data.frame.
+#' @description Takes two or more data.frames with different column names or
+#' different column orders and binds them to a single data.frame.
+#' NOTE: Should be possible to replace this with `dplyr::bind_rows()`
 #' @param x Either a data.frame or a list of data.frames.
 #' @param y A data.frame, optional if x is a list.
 #' @return Returns a single data.frame with all the input data frames merged.
 #' @example inst/examples/merge_columns.R
+#' @importFrom rlang abort
+#' @export
 merge_columns <- function(
   x, # either a data.frame or a list of the same
   y # a data.frame, optional
 ){
   if(missing(x)){
-    stop("object x is missing with no default")
+    abort("object x is missing with no default")
   }
 
   if(!any(c("data.frame", "list") == class(x))){
-    stop("object x must be either a data.frame or a list")
+    abort("object x must be either a data.frame or a list")
   }
 
   if(class(x) == "data.frame"){
     if(missing(y)){
-      stop("If x is a data.frame, then y must be supplied")
+      abort("If x is a data.frame, then y must be supplied")
     }
     x <- list(x, y)
   }else{ # i.e. for lists
     if(!all(unlist(lapply(x, class)) == "data.frame")){
-      stop("x must only contain data.frames")
+      abort("x must only contain data.frames")
     }
   }
 
@@ -78,13 +87,15 @@ merge_columns <- function(
 
 }
 
-# internal functions called by merge_columns
-# ' Remove factors from an object
-# '
-# ' @description This function converts factors to characters to avoid errors with levels.
-# ' @param z A data.frame
-# ' @return Returns the input data.frame with all factors converted to character.
-# ' @examples remove_factors(list(as.factor(c("a", "b"))))
+#' Remove factors from an object
+#'
+#' Internal functions called by merge_columns:
+#' @description This function converts factors to characters to avoid errors with
+#' levels.
+#' @param z A data.frame
+#' @return Returns the input data.frame with all factors converted to character.
+#' @noRd
+#' @keywords Internal
 remove_factors <- function(z){
   z[] <- lapply(z, function(x){
     if(is.factor(x)){as.character(x)}else{x}

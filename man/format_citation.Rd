@@ -14,23 +14,30 @@ format_citation(
 )
 }
 \arguments{
-\item{data}{An object of class data.frame, list, or or bibliography.}
+\item{data}{An object of class \code{data.frame}, \code{list}, or \code{bibliography.}}
 
-\item{details}{Logical: Should identifying information such as author names & journal titles be displayed? Defaults to TRUE.}
+\item{details}{Logical: Should identifying information such as author names &
+journal titles be displayed? Defaults to \code{TRUE}.}
 
-\item{abstract}{Logical: Should the abstract be shown (if available)? Defaults to FALSE.}
+\item{abstract}{Logical: Should the abstract be shown (if available)?
+Defaults to \code{FALSE.}}
 
-\item{add_html}{Logical: Should the journal title be italicized using html codes? Defaults to FALSE.}
+\item{add_html}{Logical: Should the journal title be italicized using html
+codes? Defaults to \code{FALSE}.}
 
-\item{line_breaks}{Either logical, stating whether line breaks should be added, or numeric stating how many characters should separate consecutive line breaks. Defaults to FALSE.}
+\item{line_breaks}{Either logical, stating whether line breaks should be
+added, or numeric stating how many characters should separate consecutive
+line breaks. Defaults to \code{FALSE}.}
 
 \item{...}{any other arguments.}
 }
 \value{
-Returns a string of length equal to length(data) that contains formatted citations.
+Returns a string of length equal to \code{length(data)} that contains
+formatted citations.
 }
 \description{
-This function takes an object of class data.frame, list, or bibliography and returns a formatted citation.
+This function takes an object of class \code{data.frame}, \code{list}, or
+\code{bibliography} and returns a formatted citation.
 }
 \examples{
 roses <- c("@article{haddaway2018,

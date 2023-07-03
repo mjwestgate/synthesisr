@@ -15,7 +15,9 @@ merge_columns(x, y)
 Returns a single data.frame with all the input data frames merged.
 }
 \description{
-Takes two or more data.frames with different column names or different column orders and binds them to a single data.frame.
+Takes two or more data.frames with different column names or
+different column orders and binds them to a single data.frame.
+NOTE: Should be possible to replace this with \code{dplyr::bind_rows()}
 }
 \examples{
 df_1 <-  data.frame(
