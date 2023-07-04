@@ -24,7 +24,7 @@ recognizes bibliographic files exported from databases commonly used for
 systematic reviews and merges results into a standardized format.  
 
 If you run into issues with the package, please open an issue at 
-https://github.com/rmetaverse/synthesisr or email martinjwestgate@gmail.com.
+https://github.com/mjwestgate/synthesisr or email martinjwestgate@gmail.com.
 
 ## Read and assemble bibliographic files
 

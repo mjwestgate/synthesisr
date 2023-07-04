@@ -2,7 +2,9 @@ url: https://mjwestgate.github.io/synthesisr
 template:
   bootstrap: 5
   bslib:
-    primary: "#3B528B"
-navbar:
-  bg: dark
-  type: dark
+    code_font: {google: "Source Code Pro"}
+    pkgdown-nav-height: 130px
+  params:
+    bootswatch: lux
+development:
+  mode: auto

@@ -1,32 +1,17 @@
-.clearfix:after {
-  content: "";
-  display: table;
-  clear: both;
+@import url(https://fonts.googleapis.com/css?family=Lato);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+h1, h2, h3, h4, .h1, .h2, .h3, .main-title, .main-subtitle {
+  font-family: Lato;
+  font-weight: normal;
+  color: #67258F;
 }
 
-img.hex {
-  float: right;
-  width: 129px;
-  height: 150px;
-  vertical-align: middle;
-  margin-top: 20px;
-  margin-right: 0px;
-  margin-bottom: 0px;
-  margin-left: 20px;
+a {
+    color: #B232FF;
+    text-decoration: none;
 }
 
-.navbar.bg-dark {
-  background-image: linear-gradient(to bottom, #35B779, #63b08b);
-}
-
-.navbar-dark .navbar-brand:hover {
-    color: #3B528B;
-}
-
-.nav-item:selection {
-  background-color: #3B528B;
-}
-
-.nav-item:hover {
-  background-color: #3B528B;
+a:hover {
+  color: #D0AFFF;
 }
