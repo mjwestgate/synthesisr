@@ -12,6 +12,7 @@ clean_df <- function(data){
   if(any(colnames(data) == "author")){
     data$author <- clean_authors(data$author)
   }
+  data <- remove_factors(data)
   return(data)
 }
 
@@ -49,4 +50,20 @@ clean_colnames <- function(
   x <- make.unique(x, sep = "_")
   x <- gsub(" ", "_", x)
   return(x)
+}
+
+#' Remove factors from an object
+#'
+#' Internal functions called by `clean_df()`:
+#' @description This function converts factors to characters to avoid errors with
+#' levels.
+#' @param z A data.frame
+#' @return Returns the input data.frame with all factors converted to character.
+#' @noRd
+#' @keywords Internal
+remove_factors <- function(z){
+  z[] <- lapply(z, function(x){
+    if(is.factor(x)){as.character(x)}else{x}
+  })
+  return(z)
 }

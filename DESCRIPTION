@@ -26,7 +26,8 @@ Description: A critical first step in systematic literature reviews
 Depends: R (>= 3.5.0)
 Imports:
     rlang,
-    stringdist
+    stringdist,
+    tibble
 Suggests: 
     knitr, 
     rmarkdown, 

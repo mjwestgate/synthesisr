@@ -41,7 +41,7 @@ find_duplicates <- function(
   if(inherits(data, "data.frame")){
     abort("'data' must be a character vector, not a data.frame")
   }
-  if(class(data) != "character"){
+  if(!inherits(data, "character")){
     data <- as.character(data)
   }
 

@@ -95,6 +95,7 @@ read_refs <- function(
 #' @return Returns a data.frame or list of assembled search results.
 #' @importFrom rlang abort
 #' @importFrom rlang warn
+#' @importFrom tibble tibble
 #' @noRd
 #' @keywords Internal
 read_ref <- function(
@@ -141,7 +142,7 @@ read_ref <- function(
     }else{
       if(return_df){df <- as.data.frame.bibliography(df)}
     }
-    if(inherits(df, "data.frame")){df <- clean_df(df)}
+    if(inherits(df, "data.frame")){df <- tibble(clean_df(df))}
     if(verbose){cat("done\n")}
     return(df)
 

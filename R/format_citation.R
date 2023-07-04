@@ -30,7 +30,7 @@ format_citation <- function(
     abort("format_citation expects input data to be an object of class data.frame, bibliography, or list")
   }
 
-  if(class(data)!="data.frame"){
+  if(!inherits(data, "data.frame")){
     data <- as.data.frame(data)
   }
 

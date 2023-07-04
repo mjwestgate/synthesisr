@@ -162,7 +162,7 @@ as.data.frame.bibliography <- function(x, ...){
 #' @export
 as.bibliography <- function(x, ...){
 
-  if(class(x) != "data.frame"){
+  if(!inherits(x, "data.frame")){
     abort("as.bibliography can only be called for objects of class 'data.frame'")
   }
 

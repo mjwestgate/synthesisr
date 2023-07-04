@@ -32,13 +32,15 @@ match_columns <- function(df){
 
 #' Bind two or more data frames with different columns
 #'
-#' @description Takes two or more data.frames with different column names or
-#' different column orders and binds them to a single data.frame.
-#' NOTE: Should be possible to replace this with `dplyr::bind_rows()`
+#' @description Takes two or more `data.frames` with different column names or
+#' different column orders and binds them to a single `data.frame.` This
+#' function is maintained for backwards compatibility, but it is synonymous with
+#' `dplyr::bind_rows()` and will be depracated in future.
 #' @param x Either a data.frame or a list of data.frames.
 #' @param y A data.frame, optional if x is a list.
 #' @return Returns a single data.frame with all the input data frames merged.
 #' @example inst/examples/merge_columns.R
+#' @importFrom dplyr bind_rows
 #' @importFrom rlang abort
 #' @export
 merge_columns <- function(
@@ -48,57 +50,20 @@ merge_columns <- function(
   if(missing(x)){
     abort("object x is missing with no default")
   }
-
-  if(!any(c("data.frame", "list") == class(x))){
+  if(!(inherits(x, "data.frame") | inherits(x, "list"))){
     abort("object x must be either a data.frame or a list")
   }
-
-  if(class(x) == "data.frame"){
+  if(inherits(x, "data.frame")){
     if(missing(y)){
-      abort("If x is a data.frame, then y must be supplied")
+      return(x)
+      # abort("If x is a data.frame, then y must be supplied")
+    }else{
+      x <- list(x, y)
     }
-    x <- list(x, y)
   }else{ # i.e. for lists
-    if(!all(unlist(lapply(x, class)) == "data.frame")){
+    if(!all(unlist(lapply(x, function(a){inherits(a, "data.frame")})))){
       abort("x must only contain data.frames")
     }
   }
-
-  x <- lapply(x, remove_factors)
-
-  col_names_all <- unique(unlist(lapply(x, colnames)))
-
-  result_list <- lapply(x, function(a, cn){
-    missing_names <- !(cn %in% colnames(a))
-    if(any(missing_names)){
-      new_names <- cn[missing_names]
-      result <- data.frame(
-        c(a, sapply(new_names, function(b){NA})),
-        stringsAsFactors = FALSE)
-      return(result[, cn])
-    }else{
-      return(a[, cn])
-    }
-  },
-  cn = col_names_all
-  )
-
-  return(do.call(rbind, result_list))
-
-}
-
-#' Remove factors from an object
-#'
-#' Internal functions called by merge_columns:
-#' @description This function converts factors to characters to avoid errors with
-#' levels.
-#' @param z A data.frame
-#' @return Returns the input data.frame with all factors converted to character.
-#' @noRd
-#' @keywords Internal
-remove_factors <- function(z){
-  z[] <- lapply(z, function(x){
-    if(is.factor(x)){as.character(x)}else{x}
-  })
-  return(z)
+  bind_rows(x)
 }
