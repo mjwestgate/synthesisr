@@ -4,14 +4,14 @@
 h1, h2, h3, h4, .h1, .h2, .h3, .main-title, .main-subtitle {
   font-family: Lato;
   font-weight: normal;
-  color: #67258F;
+  color: #D9565C;
 }
 
 a {
-    color: #B232FF;
+    color: #14A7B3;
     text-decoration: none;
 }
 
 a:hover {
-  color: #D0AFFF;
+  color: #84AFAC;
 }

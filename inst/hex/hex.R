@@ -6,7 +6,9 @@ library(showtext)
 library(sf)
 library(ggplot2)
 library(hexSticker)
-library(viridis)
+# library(viridis)
+# remotes::install_github("johannesbjork/LaCroixColoR")
+library(LaCroixColoR)
 
 # get 'synthesisr' text as a polygon
 final_size <- 1.4
@@ -52,7 +54,7 @@ external_hexagon <- create_hexagon(scale = 1.00)
 internal_hexagon <- create_hexagon(scale = 0.935)
 
 # now create vertical lines that intersect with words
-x_vec <- seq(-0.87, 0.87, 0.005)
+x_vec <- seq(-0.87, 0.87, by = 0.005)
 result_internal <- lapply(x_vec, function(a){
   b <- data.frame(x = a, y = c(-1, 1)) |>
     st_as_sf(coords = c("x", "y")) |>
@@ -60,15 +62,9 @@ result_internal <- lapply(x_vec, function(a){
     st_cast("LINESTRING") |>
     st_intersection(words)
 
-  b |>
-    mutate(x = a,
-           length = st_length(b))
+  tibble(x = a, length = sum(st_length(b)))
 }) |>
   bind_rows()
-
-internal_df <- data.frame(
-  x = result_internal$x,
-  length = result_internal$length)
 
 result_external <- lapply(x_vec, function(a){
   b <- data.frame(x = a, y = c(-1, 1)) |>
@@ -83,9 +79,8 @@ result_external <- lapply(x_vec, function(a){
 
 # merge
 background_lines <- left_join(result_external,
-                              internal_df,
+                              result_internal,
                               by = "x")
-background_lines$length[is.na(background_lines$length)] <- 0
 
 # clean up
 rm(x_vec)
@@ -94,12 +89,29 @@ rm(x_vec)
 font_add("spacemono", "inst/hex/Space_Mono/SpaceMono-Regular.ttf")
 showtext_auto()
 
-edge_color <- "#b951c9"
+edge_color <- "#000000" # "#b951c9"
+palette <- lacroix_palette("CranRaspberry", n = 15, type = "continuous") |>
+  as.character()
+
+# example colors:
+# x <- lacroix_palette("CranRaspberry", n = 7, type = "continuous") |> as.character()
+simple_palette <- c("#D9565C",
+                    "#ED8182",
+                    "#EE9EA0",
+                    "#84AFAC",
+                    "#14A7B3",
+                    "#0A7AAF",
+                    "#172869")
+
 p <- ggplot() +
   geom_sf(data = external_hexagon, fill = "white", color = NA) +
-  geom_sf(data = background_lines, mapping = aes(color = length ^ 1.2), linewidth = 0.2) +
-  geom_sf(data = internal_hexagon, fill = NA, color = edge_color, linewidth = 0.2) +
-  geom_sf(data = words, fill = "white", color = edge_color, linewidth = 0.05) +
+  geom_sf(data = background_lines,
+          mapping = aes(
+            color = x,
+            alpha = -(length ^ 1.2)),
+          linewidth = 0.3) +
+  geom_sf(data = internal_hexagon, fill = NA, color = edge_color, linewidth = 0.1) +
+  geom_sf(data = words, fill = "white", color = edge_color, linewidth = 0.1) +
   annotate(geom = "text",
            x = 0.7,
            y = -0.17,
@@ -107,8 +119,12 @@ p <- ggplot() +
            family = "spacemono",
            size = 8,
            hjust = 1,
-           color = "white") +
-  scale_color_gradient(low = "#800194", high = "#b951c9") +
+           color = "#000000") +
+  # geom_vline(xintercept = 0.35) +
+  scale_colour_gradientn(colors = palette) +
+  # scale_color_viridis(option = "H") +
+  scale_alpha(range = c(0.3, 1)) +
+  # scale_color_gradient(low = "#800194", high = "#b951c9") +
   theme_void() +
   theme(legend.position = "none")
 
