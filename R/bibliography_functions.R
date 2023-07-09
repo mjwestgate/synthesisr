@@ -183,3 +183,19 @@ as.bibliography <- function(x, ...){
   class(x_list) <- "bibliography"
   return(x_list)
 }
+
+#' @rdname bibliography-class
+#' @param .rows currently ignored
+#' @param .name_repair currently ignored
+#' @param rownames currently ignored
+#' @importFrom purrr list_transpose
+#' @importFrom tibble as_tibble
+#' @export
+as_tibble.bibliography <- function(x,
+                                   ...,
+                                   .rows,
+                                   .name_repair,
+                                   rownames){
+  class(x) <- "list"
+  as_tibble(list_transpose(x))
+}

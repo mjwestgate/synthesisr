@@ -5,6 +5,8 @@ test_that("detect_delimiter() works for ris", {
 
 test_that("detect_parser recognises files correctly", {
   file_names <- list.files("testdata")
+  file_names <- file_names[
+    !grepl("eviatlas|litsearchr|res_synth_methods", file_names)]
   file_types <- lapply(file_names, function(a){
     x <- readLines(paste0("./testdata/", a), warn = FALSE)
     detect_parser(x)

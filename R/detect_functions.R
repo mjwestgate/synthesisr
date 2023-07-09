@@ -40,7 +40,7 @@ detect_parser <- function(x){
       "tab" = "parse_tsv",
       "bibtex" = "parse_bibtex",
       "ris" = {
-        if(length(which(grepl("$PMID", x))) > 0){
+        if(length(which(grepl("PMID", x))) > 0){
           "parse_pubmed"
         }else{
           "parse_ris"

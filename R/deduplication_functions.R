@@ -36,7 +36,7 @@ find_duplicates <- function(
 ){
   # data
   if(missing(data)){
-    abort("'data' is missing: Please provide a data.frame")
+    abort("'data' is missing: Please provide a vector")
   }
   if(inherits(data, "data.frame")){
     abort("'data' must be a character vector, not a data.frame")
@@ -81,6 +81,7 @@ find_duplicates <- function(
     data[is.na(data)] <- paste0("MISSING_VALUE_", seq_along(which(is.na(data))))
     # split data by name
     order_list <- split(order_initial, data)
+    names(order_list) <- NULL
     order_list <- order_list[order(unlist(lapply(order_list, min)))]
     result <- do.call(c, lapply(
       seq_along(order_list),
@@ -297,7 +298,8 @@ deduplicate <- function(
     }
   }
 
-  result <- find_duplicates(data_fd, method = method, ...)
+  result <- find_duplicates(as.character(data_fd),
+                            method = method, ...)
   return(
     extract_unique_references(data, matches = result, type = type)
   )

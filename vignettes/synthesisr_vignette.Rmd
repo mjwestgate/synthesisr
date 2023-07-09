@@ -74,13 +74,13 @@ articles that have identical titles, especially since this reduces computational
 time for more sophisticated deduplication methods.
 
 ```{r}
-# first, we will remove articles that have identical titles
-# this is a fairly conservative approach, so we will remove them without review
-df <- deduplicate(
-  imported_files,
-  match_by = "title",
-  method = "exact"
-)
+## first, we will remove articles that have identical titles
+## this is a fairly conservative approach, so we will remove them without review
+# df <- deduplicate(
+#   imported_files,
+#   match_by = "title",
+#   method = "exact"
+# )
 
 ```
 
@@ -92,52 +92,52 @@ the code below and then remove them by extracting unique references. Although
 here we only use one secondary deduplication method (string distance), we could 
 look for additional duplicates based on fuzzy matching abstracts, for example.
 
-*NOTE: the examples below don't match now; need updating*
+## NOTE: the examples below don't match now; need updating
 
 ```{r}
 # there are still some duplicate articles that were not removed
 # for example, the titles for articles 91 and 114 appear identical
-df$title[c(91,114)]
+## df$title[c(91,114)]
 # the dash-like symbol in title 91, however, is a special character not punctuation
 # so it was not classified as identical
 
 # similarly, there is a missing space in the title for article 96
-df$title[c(21,96)]
+## df$title[c(21,96)]
 
 # and an extra space in title 47
-df$title[c(47, 101)]
+## df$title[c(47, 101)]
 
-# in this example, we will use string distance to identify likely duplicates
-duplicates_string <- find_duplicates(
-  df$title,
-  method = "string_osa",
-  to_lower = TRUE,
-  rm_punctuation = TRUE,
-  threshold = 7
-)
+# # in this example, we will use string distance to identify likely duplicates
+# duplicates_string <- find_duplicates(
+#   df$title,
+#   method = "string_osa",
+#   to_lower = TRUE,
+#   rm_punctuation = TRUE,
+#   threshold = 7
+# )
 
 # we can extract the line numbers from the dataset that are likely duplicated
 # this lets us manually review those titles to confirm they are duplicates
 
-manual_checks <- review_duplicates(df$title, duplicates_string)
+# manual_checks <- review_duplicates(df$title, duplicates_string)
 
 ```
 
 ```{r, include=FALSE, eval=TRUE}
-manual_checks[,1] <- substring(manual_checks[,1], 1, 60)
-
-print(manual_checks[1:10, ])
+# manual_checks[,1] <- substring(manual_checks[,1], 1, 60)
+# 
+# print(manual_checks[1:10, ])
 ```
 
 
 ```{r}
-# the titles under match #99 are not duplicates, so we need to keep them both
-# we can use the override_duplicates function to manually mark them as unique
-new_duplicates <- synthesisr::override_duplicates(duplicates_string, 99)
-
-# now we can extract unique references from our dataset
-# we need to pass it the dataset (df) and the matching articles (new_duplicates)
-results <- extract_unique_references(df, new_duplicates)
+# # the titles under match #99 are not duplicates, so we need to keep them both
+# # we can use the override_duplicates function to manually mark them as unique
+# new_duplicates <- synthesisr::override_duplicates(duplicates_string, 99)
+# 
+# # now we can extract unique references from our dataset
+# # we need to pass it the dataset (df) and the matching articles (new_duplicates)
+# results <- extract_unique_references(df, new_duplicates)
 
 ```
 
@@ -149,17 +149,17 @@ Optionally, `write_refs()` can write directly to a text file stored locally.
 
 ```{r paged.print=TRUE}
 
-# synthesisr can write the full dataset to a bibliographic file
-# but in this example, we will just write the first citation
-# we also want it to be a nice clean bibliographic file, so we remove NA data
-# this makes it easier to view the output when working with a single article
-citation <- df[1, !is.na(df[1,])]
-
-format_citation(citation)
-
-write_refs(citation,
-  format = "bib",
-  file = FALSE
-)
+# # synthesisr can write the full dataset to a bibliographic file
+# # but in this example, we will just write the first citation
+# # we also want it to be a nice clean bibliographic file, so we remove NA data
+# # this makes it easier to view the output when working with a single article
+# citation <- df[1, !is.na(df[1,])]
+# 
+# format_citation(citation)
+# 
+# write_refs(citation,
+#   format = "bib",
+#   file = FALSE
+# )
 
 ```

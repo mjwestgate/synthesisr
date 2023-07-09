@@ -33,7 +33,9 @@ formats) or \code{data.frame} (csv or tsv).
 Text in standard formats - such as imported via
 \code{base::readLines()} - can be parsed using a variety of standard formats. Use
 \code{detect_parser()} to determine which is the most appropriate parser for your
-situation.
+situation. Note that \code{parse_tsv()} and \code{parse_csv()} are maintained for
+backwards compatability only; within \code{read_ref} these have been replaced
+by \code{vroom::vroom()}.
 }
 \examples{
 eviatlas <- c(

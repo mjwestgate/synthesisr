@@ -10,6 +10,7 @@
 \alias{[.bibliography}
 \alias{c.bibliography}
 \alias{as.bibliography}
+\alias{as_tibble.bibliography}
 \title{bibliography-class}
 \usage{
 \method{summary}{bibliography}(object, ...)
@@ -23,6 +24,8 @@
 \method{as.data.frame}{bibliography}(x, ...)
 
 as.bibliography(x, ...)
+
+\method{as_tibble}{bibliography}(x, ..., .rows, .name_repair, rownames)
 }
 \arguments{
 \item{object}{An object of class 'bibliography'}
@@ -32,6 +35,12 @@ as.bibliography(x, ...)
 \item{x}{An object of class 'bibliography'}
 
 \item{n}{Number of items to select/print}
+
+\item{.rows}{currently ignored}
+
+\item{.name_repair}{currently ignored}
+
+\item{rownames}{currently ignored}
 }
 \description{
 This is a small number of standard methods for interacting with class 'bibliography'. More may be added later.

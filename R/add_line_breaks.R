@@ -9,6 +9,11 @@
 #' @param n Numeric: The desired number of characters that should separate
 #' consecutive line breaks.
 #' @param html Logical: Should the line breaks be specified in html?
+#' @param max_n DEPRECATED: If provided will currently overwrite `n`; otherwise
+#' synonymous with `n` and will be removed from future versions.
+#' @param max_time DEPRECATED: Previously the maximum amount of time (in
+#' seconds) allowed to adjust groups until character thresholds are reached.
+#' Ignored.
 #' @details Line breaks are only added between words, so the value of n is
 #' actually a threshold value rather than being matched exactly.
 #' @return Returns the input vector unaltered except for the addition of line
@@ -18,8 +23,14 @@
 #' @export
 add_line_breaks <- function(x,
                             n = 50,
-                            html = FALSE
+                            max_n = NULL,
+                            html = FALSE,
+                            max_time = NULL
                             ){
+  if(!is.null(max_n)){
+    n <- max_n
+  }
+
   if(html){
     break_string <- "<br>"
   }else{

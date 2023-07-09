@@ -3,7 +3,9 @@
 #' @description Text in standard formats - such as imported via
 #' `base::readLines()` - can be parsed using a variety of standard formats. Use
 #' `detect_parser()` to determine which is the most appropriate parser for your
-#' situation.
+#' situation. Note that `parse_tsv()` and `parse_csv()` are maintained for
+#' backwards compatability only; within `read_ref` these have been replaced
+#' by `vroom::vroom()`.
 #' @param x A character vector containing bibliographic information in ris
 #' format.
 #' @return Returns an object of class `bibliography` (ris, bib, or pubmed
@@ -290,157 +292,78 @@ parse_ris <- function(x, tag_naming = "best_guess"){
 
 
 #' @rdname parse_
+#' @importFrom dplyr bind_rows
+#' @importFrom tibble tibble
+#' @importFrom unglue unglue_data
 #' @export
 parse_bibtex <- function(x){
+  # use `unglue` to parse text
+  raw_df <- unglue_data(x,
+              patterns = c("[variable]={[value]},",
+                           "@[variable]{[value],"),
+              open = "[",
+              close = "]")
 
-  ### Remove lines that start with a percentage symbol (comments)
-  x <- grep("^\\s*%.*",
-            x,
-            invert = TRUE,
-            value=TRUE)
+  # remove missing values
+  raw_df <- raw_df[!(is.na(raw_df$variable) | is.na(raw_df$value)), ]
 
-  # which lines start with @article?
-  group_vec <- rep(0, length(x))
-  row_id <- which(regexpr("^@", x) == 1)
-  group_vec[row_id] <- 1
-  group_vec <- cumsum(group_vec)
+  # create a vector assigning rows to articles
+  article_vec <- as.integer(raw_df$variable == "ARTICLE")
+  article_vec[is.na(article_vec)] <- 0
+  raw_df$article <- cumsum(article_vec)
 
-  # work out row names
-  ref_names <- gsub(".*\\{|,$", "", x[row_id])
-  ref_type <- gsub(".*@|\\{.*", "", x[row_id])
+  # split by article and transpose
+  result <- lapply(
+    split(raw_df[, 1:2], raw_df$article),
+    function(a){
+      result <- as.data.frame(t(a$value))
+      colnames(result) <- a$variable
+      return(result)
+    }) |>
+    bind_rows() |>
+    tibble()
 
-  # split by reference
-  x_split <- split(x[-row_id], group_vec[-row_id])
-  length_vals <- unlist(lapply(x_split, length))
-  x_split <- x_split[which(length_vals > 3)]
-
-  x_final <- lapply(x_split, function(z){
-
-    # first use a stringent lookup term to locate only tagged rows
-    delimiter_lookup <- regexpr(
-      "^[[:blank:]]*([[:alnum:]]|[[:punct:]])+[[:blank:]]*=[[:blank:]]*\\{+",
-      z
-    )
-    delimiter_rows <- which(delimiter_lookup != -1)
-    other_rows <- which(delimiter_lookup == -1)
-    delimiters <- data.frame(
-      row = delimiter_rows,
-      location = regexpr("=", z[delimiter_rows])
-    )
-    split_tags <- apply(delimiters, 1, function(a, lookup){
-      c(
-        row = as.numeric(a[1]),
-        tag = substr(
-          x = lookup[a[1]],
-          start = 1,
-          stop = a[2] - 1
-        ),
-        value = substr(
-          x = lookup[a[1]],
-          start = a[2] + 1,
-          stop = nchar(lookup[a[1]])
-        )
-      )
-    },
-    lookup = z
-    )
-    entry_dframe <- rbind(
-      as.data.frame(
-        t(split_tags),
-        stringsAsFactors = FALSE
-      ),
-      data.frame(
-        row = other_rows,
-        tag = NA,
-        value = z[other_rows],
-        stringsAsFactors = FALSE
-      )
-    )
-    entry_dframe$row <- as.numeric(entry_dframe$row)
-    entry_dframe <- entry_dframe[order(entry_dframe$row), c("tag", "value")]
-
-    if(any(entry_dframe$value == "}")){
-      entry_dframe <- entry_dframe[seq_len(which(entry_dframe$value == "}")[1]-1), ]
+  # split authors
+  if(any(names(result) == "author")){
+    if(any(grepl("and", result$author))){
+      result$author <- strsplit(result$author, "\\s*and\\s*")
     }
-    if(any(entry_dframe$value == "")){
-      entry_dframe <- entry_dframe[-which(entry_dframe$value == ""), ]
-    }
+  }
 
-    # remove whitespace
-    entry_dframe <- as.data.frame(
-      lapply(entry_dframe, trimws),
-      stringsAsFactors = FALSE
-    )
-    # remove 1 or more opening brackets
-    entry_dframe$value <- gsub("^\\{+", "", entry_dframe$value)
-    # remove 1 or more closing brackets followed by zero or more punctuation marks
-    entry_dframe$value <- gsub("\\}+[[:punct:]]*$", "", entry_dframe$value)
+  # join duplicated columns
+  # note: needs to be done simultaneously with calling `tibble()`
 
-    # convert each entry to a list
-    label_group <- rep(0, nrow(entry_dframe))
-    tag_rows <- which(entry_dframe$tag != "")
-    label_group[tag_rows] <- 1
-    tag_names <- entry_dframe$tag[tag_rows]
-    entry_list <- split(
-      entry_dframe$value,
-      cumsum(label_group)+1
-    )
-    names(entry_list) <- tolower(
-      gsub("^\\s+|\\s+$",  "", tag_names)
-    )
-    entry_list <- lapply(entry_list,
-                         function(a){paste(a, collapse = " ")}
-    )
-    if(any(names(entry_list) == "author")){
-      if(length(entry_list$author) == 1){
-        entry_list$author <- strsplit(entry_list$author, " and ")[[1]]
-      }
-    }
-    return(entry_list)
-  })
-
-  # add type
-  x_final <- lapply(
-    seq_len(length(x_final)),
-    function(a, type, data){
-      c(type = type[a], data[[a]])
-    },
-    type = ref_type,
-    data = x_final
-  )
-
-  names(x_final) <- ref_names
-  class(x_final) <- "bibliography"
-  return(x_final)
-
+  return(result)
 }
 
 #' @rdname parse_
 #' @export
 parse_csv <- function(x){
-  z <- read.table(
+  read.table(
     text = x,
     header = TRUE,
     sep = ",",
     quote = "\"",
     dec = ".",
     fill = TRUE,
-    stringsAsFactors = FALSE, row.names = NULL
-  )
-  return(match_columns(z))
+    stringsAsFactors = FALSE,
+    row.names = NULL) |>
+  match_columns() |>
+  tibble()
 }
 
 #' @rdname parse_
 #' @export
 parse_tsv <- function(x){
-  z <- read.table(
+  read.table(
     text = x,
     header = TRUE,
     sep = "\t",
     quote = "\"",
     dec = ".",
     fill = TRUE,
-    stringsAsFactors = FALSE, row.names = NULL
-  )
-  return(match_columns(z))
+    stringsAsFactors = FALSE,
+    row.names = NULL) |>
+  match_columns() |>
+  tibble()
 }

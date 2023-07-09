@@ -8,7 +8,8 @@ read_refs(
   filename,
   tag_naming = "best_guess",
   return_df = TRUE,
-  verbose = FALSE
+  verbose = FALSE,
+  locale = default_locale()
 )
 }
 \arguments{
