@@ -8,7 +8,7 @@ library(ggplot2)
 library(hexSticker)
 # library(viridis)
 # remotes::install_github("johannesbjork/LaCroixColoR")
-library(LaCroixColoR)
+# library(LaCroixColoR)
 
 # get 'synthesisr' text as a polygon
 final_size <- 1.4
@@ -90,25 +90,22 @@ font_add("spacemono", "inst/hex/Space_Mono/SpaceMono-Regular.ttf")
 showtext_auto()
 
 edge_color <- "#000000" # "#b951c9"
-palette <- lacroix_palette("CranRaspberry", n = 15, type = "continuous") |>
-  as.character()
+# palette <- lacroix_palette("CranRaspberry", n = 15, type = "continuous") |>
+#   as.character()
 
 # example colors:
 # x <- lacroix_palette("CranRaspberry", n = 7, type = "continuous") |> as.character()
-simple_palette <- c("#D9565C",
-                    "#ED8182",
-                    "#EE9EA0",
-                    "#84AFAC",
-                    "#14A7B3",
-                    "#0A7AAF",
-                    "#172869")
+simple_palette <- c("#c92029",
+                    "#a3086a",
+                    "#6c159e",
+                    "#0a238a")
 
 p <- ggplot() +
   geom_sf(data = external_hexagon, fill = "white", color = NA) +
   geom_sf(data = background_lines,
           mapping = aes(
             color = x,
-            alpha = -(length ^ 1.2)),
+            alpha = (length ^ 1.2)),
           linewidth = 0.3) +
   geom_sf(data = internal_hexagon, fill = NA, color = edge_color, linewidth = 0.1) +
   geom_sf(data = words, fill = "white", color = edge_color, linewidth = 0.1) +
@@ -119,11 +116,11 @@ p <- ggplot() +
            family = "spacemono",
            size = 8,
            hjust = 1,
-           color = "#000000") +
+           color = "#ffffff") +
   # geom_vline(xintercept = 0.35) +
-  scale_colour_gradientn(colors = palette) +
+  scale_colour_gradientn(colors = simple_palette) +
   # scale_color_viridis(option = "H") +
-  scale_alpha(range = c(0.3, 1)) +
+  scale_alpha(range = c(0.5, 1)) +
   # scale_color_gradient(low = "#800194", high = "#b951c9") +
   theme_void() +
   theme(legend.position = "none")
