@@ -4,32 +4,40 @@
 #' information to either a .ris or .bib file.
 #' @param x Either a data.frame containing bibliographic information or an
 #' object of class bibliography.
+#' @param file filename to save to.
 #' @param format What format should the data be exported as? Options are ris or
 #' bib.
 #' @param tag_naming what naming convention should be used to write RIS files?
 #' See details for options.
-#' @param file Either logical indicating whether a file should be written
-#' (defaulting to FALSE), or a character giving the name of the file to be
-#' written.
-#' @return Returns a character vector containing bibliographic information in
-#' the specified format if \code{file} is FALSE, or saves output to a file if
-#' TRUE.
+#' @param write Logical should a file should be written? If FALSE returns a
+#' `list`.
+#' @return This function is typically called for it's side effect of writing a
+#' file in the specified location and format. If \code{write} is FALSE, returns
+#' a character vector containing bibliographic information in the specified
+#' format.
 #' @example inst/examples/parse_.R
 #' @rdname write_refs
 #' @importFrom rlang abort
 #' @export
 write_refs <- function(
     x,
+    file,
     format = "ris",
     tag_naming = "synthesisr",
-    file = FALSE # either logical or a character (i.e. a file name)
+    write = TRUE
 ){
   # check input data
   if(!inherits(x, c("bibliography", "data.frame"))) {
     abort("write_bibliography only accepts objects of class 'data.frame' or 'bibliography'")
   }
   if(inherits(x, "data.frame")){
-    x <- as.bibliography(x)
+    x <- x |>
+      as.data.frame() |>
+      as.bibliography()
+  }
+
+  if(missing(file) & (write == TRUE)){
+    abort("`file` is missing, with no default")
   }
 
   # check format
@@ -51,39 +59,17 @@ write_refs <- function(
     }
   }
 
-  # check file information
-  if(length(file) > 1){
-    abort("argument 'file' should be a length-1 character or logical")
-  }
-  if(!inherits(file, c("logical", "character"))){
-    abort("argument 'file' should be either logical or character")
-  }
-  if(inherits(file, "character")){
-    file_out <- TRUE
-    if(grepl("\\.[[:alpha:]]{2,4}$", file)){
-      filename <- file
-    }else{
-      filename <- paste(file, format, sep = ".")
-    }
-  }else{ # i.e. logical
-    if(file){
-      file_out <- TRUE
-      filename <- paste("synthesisr_bibliography", format, sep = ".")
-    }else{
-      file_out <- FALSE
-    }
-  }
-
   # write result in correct format
   export <- switch(format,
                    "bib" = {write_bib(x)},
                    "ris" = {write_ris(x, tag_naming = tag_naming)}
   )
+  names(export) <- NULL
 
-  if(file_out) {
+  if(write) {
     write.table(
       export,
-      filename,
+      check_filename(file),
       quote = FALSE,
       row.names = FALSE,
       col.names = FALSE
@@ -91,6 +77,25 @@ write_refs <- function(
   }else{
     invisible(return(export))
   }
+}
+
+#' Internal function to check file names
+#' @noRd
+#' @keywords Internal
+check_filename <- function(x){
+  # check file information
+  if(length(x) > 1){
+    abort("argument 'file' should be a length-1 character")
+  }
+  if(!inherits(x, "character")){
+    abort("argument 'file' should be an object of class `character`")
+  }
+  if(grepl("\\.[[:alpha:]]{2,4}$", x)){
+    filename <- x
+  }else{
+    filename <- paste(x, format, sep = ".")
+  }
+  filename
 }
 
 

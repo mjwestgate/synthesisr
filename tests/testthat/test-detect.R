@@ -14,6 +14,6 @@ test_that("detect_parser recognises files correctly", {
     unlist()
   detected_formats <- sub("^parse_", "", file_types)
   expect_equal(
-    c("ris", "ris", "pubmed", "bibtex", "ris", "ris", "ris"),
+    c("ris", "ris", "ris", "pubmed", "bibtex", "ris", "ris", "ris"),
     detected_formats)
 })

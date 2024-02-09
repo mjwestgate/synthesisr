@@ -6,7 +6,13 @@
 \alias{write_ris}
 \title{Export data to a bibliographic format}
 \usage{
-write_refs(x, format = "ris", tag_naming = "synthesisr", file = FALSE)
+write_refs(
+  x,
+  file = FALSE,
+  format = "ris",
+  tag_naming = "synthesisr",
+  write = TRUE
+)
 
 write_bib(x)
 
@@ -16,20 +22,22 @@ write_ris(x, tag_naming = "synthesisr")
 \item{x}{Either a data.frame containing bibliographic information or an
 object of class bibliography.}
 
+\item{file}{filename to save to.}
+
 \item{format}{What format should the data be exported as? Options are ris or
 bib.}
 
 \item{tag_naming}{what naming convention should be used to write RIS files?
 See details for options.}
 
-\item{file}{Either logical indicating whether a file should be written
-(defaulting to FALSE), or a character giving the name of the file to be
-written.}
+\item{write}{Logical should a file should be written? If FALSE returns a
+\code{list}.}
 }
 \value{
-Returns a character vector containing bibliographic information in
-the specified format if \code{file} is FALSE, or saves output to a file if
-TRUE.
+This function is typically called for it's side effect of writing a
+file in the specified location and format. If \code{write} is FALSE, returns
+a character vector containing bibliographic information in the specified
+format.
 }
 \description{
 This function exports data.frames containing bibliographic
