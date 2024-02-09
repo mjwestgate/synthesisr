@@ -6,13 +6,7 @@
 \alias{write_ris}
 \title{Export data to a bibliographic format}
 \usage{
-write_refs(
-  x,
-  file = FALSE,
-  format = "ris",
-  tag_naming = "synthesisr",
-  write = TRUE
-)
+write_refs(x, file, format = "ris", tag_naming = "synthesisr", write = TRUE)
 
 write_bib(x)
 

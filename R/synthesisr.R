@@ -47,9 +47,4 @@
 #'
 #' @docType package
 #' @name synthesisr
-
-# quiet no visible binding NOTEs
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
-
-#' @useDynLib
-#' @importFromRcpp sourceCpp
+"_PACKAGE"

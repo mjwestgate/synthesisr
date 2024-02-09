@@ -3,6 +3,7 @@
 \docType{package}
 \name{synthesisr}
 \alias{synthesisr}
+\alias{synthesisr-package}
 \title{synthesisr: Import, assemble, and deduplicate bibiliographic datasets}
 \description{
 Systematic review searches include multiple databases
@@ -56,3 +57,12 @@ control of the deduplication process, consider using the sub-functions:
 }
 }
 
+\author{
+\strong{Maintainer}: Martin Westgate \email{martinjwestgate@gmail.com} (\href{https://orcid.org/0000-0003-0854-2034}{ORCID})
+
+Authors:
+\itemize{
+  \item Eliza Grames \email{eliza.grames@uconn.edu} (\href{https://orcid.org/0000-0003-1743-6815}{ORCID})
+}
+
+}
