@@ -1,7 +1,7 @@
 Package: synthesisr
 Type: Package
 Title: Import, Assemble, and Deduplicate Bibliographic Datasets
-Version: 0.3.0.9999
+Version: 0.3.0
 Authors@R: c(
   person(
     given = "Martin",
@@ -38,7 +38,7 @@ Suggests:
     testthat
 Date: 2023-06-07
 License: GPL-3
-URL: https://mjwestgate.github.io/synthesisr
+URL: https://martinwestgate.com/synthesisr/
 LazyData: true
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
