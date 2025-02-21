@@ -1,11 +1,11 @@
-#' Clean a `data.frame` or vector
+#' Clean a `tibble` or vector
 #'
 #' Cleans column and author names
-#' @param data A `data.frame` with bibliographic information.
+#' @param data A `tibble` with bibliographic information.
 #' @param x A vector of strings
 #' @return Returns the input, but cleaner.
 #' @example inst/examples/clean_.R
-#' @rdname clean_
+#' @name clean_
 #' @export
 clean_df <- function(data){
   colnames(data) <- clean_colnames(colnames(data))

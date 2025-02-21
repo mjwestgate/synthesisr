@@ -5,6 +5,54 @@ template:
     code_font: {google: "Source Code Pro"}
     pkgdown-nav-height: 130px
   params:
-    bootswatch: lux
+    bootswatch: litera
 development:
   mode: auto
+navbar:
+  structure:
+    left:
+    - home
+    - articles
+    - reference
+    right:
+    - search
+    - news
+    - github
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: Overview
+        href: articles/overview.html
+    news:
+      text: News
+      href: news/index.html
+reference:
+- title: Overview
+  contents:
+  - synthesisr-package
+- title: Import & Export
+  contents:
+  - read_refs
+  - write_refs
+  - detect_
+  - parse_
+  - clean_
+  - code_lookup
+- title: Formatting
+  contents:
+  - bibliography-class
+  - format_citation
+  - add_line_breaks
+- title: Deduplication
+  contents:
+  - deduplicate
+  - find_duplicates
+  - extract_unique_references
+  - review_duplicates
+  - override_duplicates
+  - fuzz_
+  - string_
+- title: Deprecated
+  contents:
+  - merge_columns

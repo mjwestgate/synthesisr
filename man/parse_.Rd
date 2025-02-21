@@ -5,6 +5,7 @@
 \alias{parse_bibtex}
 \alias{parse_csv}
 \alias{parse_tsv}
+\alias{parse_}
 \alias{parse_pubmed}
 \alias{parse_ris}
 \title{Parse bibliographic text in a variety of formats}

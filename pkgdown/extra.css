@@ -8,10 +8,10 @@ h1, h2, h3, h4, .h1, .h2, .h3, .main-title, .main-subtitle {
 }
 
 a {
-    color: #14A7B3;
+    color: #0a238a;
     text-decoration: none;
 }
 
 a:hover {
-  color: #84AFAC;
+  color: #6c159e;
 }

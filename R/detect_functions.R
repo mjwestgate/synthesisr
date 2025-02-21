@@ -4,10 +4,10 @@
 #' types, meaning that detecting consistent attributes of those files is
 #' necessary if they are to be parsed accurately. These functions attempt to
 #' identify some of those key file attributes. Specifically, `detect_parser()`
-#' determines which \code{\link{parse_}} function to use; `detect_delimiter()`
+#' determines which [parse_] function to use; `detect_delimiter()`
 #' and `detect_lookup()` identify different attributes of RIS files; and
 #' `detect_year()` attempts to fill gaps in publication years from other
-#' information stored in a `data.frame`.
+#' information stored in a `tibble`.
 #' @param x A character vector containing bibliographic data
 #' @param tags A character vector containing RIS tags.
 #' @param df a data.frame containing bibliographic data
@@ -15,7 +15,7 @@
 #' character; `detect_year()` returns a character vector listing estimated
 #' publication years; and `detect_lookup()` returns a `data.frame.`
 #' @example inst/examples/detect_.R
-#' @rdname detect_
+#' @name detect_
 #' @importFrom rlang abort
 #' @export
 detect_parser <- function(x){

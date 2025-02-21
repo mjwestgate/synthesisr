@@ -11,7 +11,7 @@
 #' @return Returns an object of class `bibliography` (ris, bib, or pubmed
 #' formats) or `data.frame` (csv or tsv).
 #' @example inst/examples/parse_.R
-#' @rdname parse_
+#' @name parse_
 #' @export
 parse_pubmed <- function(x){
 

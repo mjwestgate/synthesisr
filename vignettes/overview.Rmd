@@ -1,9 +1,10 @@
 ---
-title: "Import, assemble, deduplicate, and write bibliographic data"
-author: Eliza M. Grames and Martin J. Westgate
+title: "Overview"
+author: Martin Westgate & Eliza Grames
+date: 2025-02-21
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Import, assemble, deduplicate, and write bibliographic data}
+  %\VignetteIndexEntry{Overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,9 +24,6 @@ process of importing, assembling, and deduplicating results, `synthesisr`
 recognizes bibliographic files exported from databases commonly used for 
 systematic reviews and merges results into a standardized format.  
 
-If you run into issues with the package, please open an issue at 
-https://github.com/mjwestgate/synthesisr or email martinjwestgate@gmail.com.
-
 ## Read and assemble bibliographic files
 
 `synthesisr` can read any BibTex or RIS formatted bibliographic data files. It 
@@ -44,6 +42,7 @@ search results in a directory called "search_results", you may want to use
 `list.files("./search_results/")` instead.
 
 ```{r}
+#| eval: false
 # system.file will look for the path to where synthesisr is installed
 # by using the example bibliographic data files, you can reproduce the vignette
 bibfiles <- list.files(
@@ -74,6 +73,7 @@ articles that have identical titles, especially since this reduces computational
 time for more sophisticated deduplication methods.
 
 ```{r}
+#| eval: false
 ## first, we will remove articles that have identical titles
 ## this is a fairly conservative approach, so we will remove them without review
 # df <- deduplicate(
@@ -95,6 +95,7 @@ look for additional duplicates based on fuzzy matching abstracts, for example.
 ## NOTE: the examples below don't match now; need updating
 
 ```{r}
+#| eval: false
 # there are still some duplicate articles that were not removed
 # for example, the titles for articles 91 and 114 appear identical
 ## df$title[c(91,114)]
@@ -124,6 +125,7 @@ look for additional duplicates based on fuzzy matching abstracts, for example.
 ```
 
 ```{r, include=FALSE, eval=TRUE}
+#| eval: false
 # manual_checks[,1] <- substring(manual_checks[,1], 1, 60)
 # 
 # print(manual_checks[1:10, ])
@@ -131,6 +133,7 @@ look for additional duplicates based on fuzzy matching abstracts, for example.
 
 
 ```{r}
+#| eval: false
 # # the titles under match #99 are not duplicates, so we need to keep them both
 # # we can use the override_duplicates function to manually mark them as unique
 # new_duplicates <- synthesisr::override_duplicates(duplicates_string, 99)
@@ -147,8 +150,9 @@ To facilitate exporting results to other platforms after assembly and
 deduplication, `synthesisr` can write bibliographic data to .ris or .bib files. 
 Optionally, `write_refs()` can write directly to a text file stored locally.
 
-```{r paged.print=TRUE}
-
+```{r}
+#| paged.print: TRUE
+#| eval: false
 # # synthesisr can write the full dataset to a bibliographic file
 # # but in this example, we will just write the first citation
 # # we also want it to be a nice clean bibliographic file, so we remove NA data

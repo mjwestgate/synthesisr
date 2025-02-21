@@ -1,7 +1,7 @@
 #' Import bibliographic search results
 #'
-#' @description Imports common bibliographic reference formats (i.e. .bib, .ris,
-#' or .txt).
+#' Import common bibliographic reference formats  such as `.bib`, `.ris`, or
+#' `.txt`.
 #' @param filename A path to a filename or vector of filenames containing search
 #' results to import.
 #' @param tag_naming Either a length-1 character stating how should ris tags be
@@ -33,7 +33,7 @@ read_refs <- function(
   tag_naming = "best_guess",
   return_df = TRUE,
   verbose = FALSE,
-  locale = default_locale()
+  locale = vroom::default_locale()
 ){
 
   if(missing(filename)){

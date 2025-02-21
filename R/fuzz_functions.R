@@ -25,7 +25,7 @@
 #' @return Returns a score of same length as b, giving the proportional
 #' dissimilarity between a and b.
 #' @example inst/examples/fuzzdist.R
-#' @rdname fuzz_
+#' @name fuzz_
 #' @export
 fuzzdist <- function(a, b, method = c(
   "fuzz_m_ratio", "fuzz_partial_ratio", "fuzz_token_sort_ratio", "fuzz_token_set_ratio")

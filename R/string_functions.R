@@ -8,7 +8,7 @@
 #' @return Returns a score of same length as b, giving the dissimilarity between
 #' a and b.
 #' @importFrom stringdist stringdist
-#' @rdname string_
+#' @name string_
 #' @export
 string_osa <- function(a, b){stringdist(a, b, method = "osa")}
 

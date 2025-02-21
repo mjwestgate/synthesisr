@@ -15,18 +15,19 @@
 #' that require more detailed control can use the following functions:
 #'
 #' \itemize{
-#'   \item \code{\link{detect_}} Detect file attributes
-#'   \item \code{\link{parse_}} Parse a vector containing bibliographic data
-#'   \item \code{\link{clean_}} Cleaning functions for author and column names
-#'   \item \code{\link{code_lookup}} A dataset of potential ris tags
+#'   \item [read_refs] Read bibliographic data
+#'   \item [write_refs] Write bibliographic data
+#'   \item [detect_] Detect file attributes
+#'   \item [parse_] Parse a vector containing bibliographic data
+#'   \item [clean_] Cleaning functions for author and column names
+#'   \item [code_lookup] A dataset of potential ris tags
 #' }
 #'
-#' @section Data formatting:
+#' @section Formatting:
 #' \itemize{
-#'   \item \code{\link{bibliography-class}} Methods for class `bibliography`
-#'  \item \code{\link{merge_columns}} `rbind` two `data.frame`s with different numbers of columns
-#'  \item \code{\link{format_citation}} Return a clean citation from a `bibliography` or `data.frame`
-#'  \item \code{\link{add_line_breaks}} Set a maximum character width for strings
+#'   \item [bibliography-class] Methods for class `bibliography`
+#'   \item [format_citation] Return a clean citation from a `bibliography` or `data.frame`
+#'   \item [add_line_breaks] Set a maximum character width for strings
 #'}
 #'
 #' @section Deduplication:
@@ -37,14 +38,20 @@
 #' control of the deduplication process, consider using the sub-functions:
 #'
 #'\itemize{
-#'   \item \code{\link{find_duplicates}} Locate potentially duplicated references
-#'   \item \code{\link{extract_unique_references}} Return a data.frame with only 'unique' references
-#'   \item \code{\link{review_duplicates}} Manually review potential duplicates
-#'   \item \code{\link{override_duplicates}} Manually override identified duplicates
-#'   \item \code{\link{fuzz_}} Fuzzy string matching c/o `fuzzywuzzy`
-#'   \item \code{\link{string_}} Fuzzy string matching c/o `stringdist`
+#'   \item [deduplicate] Semi-automated duplicate removal
+#'   \item [find_duplicates] Locate potentially duplicated references
+#'   \item [extract_unique_references] Return a data.frame with only 'unique' references
+#'   \item [review_duplicates] Manually review potential duplicates
+#'   \item [override_duplicates] Manually override identified duplicates
+#'   \item [fuzz_] Fuzzy string matching c/o `fuzzywuzzy`
+#'   \item [string_] Fuzzy string matching c/o `stringdist`
 #'}
 #'
+#' @section Deprecated:
+#'
+#' \itemize{
+#'   \item [merge_columns] Synonymous with [dplyr::bind_rows]
+#' }
+#' @name synthesisr-package
 #' @docType package
-#' @name synthesisr
 "_PACKAGE"

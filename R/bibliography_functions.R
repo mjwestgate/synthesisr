@@ -7,7 +7,7 @@
 #' @param n Number of items to select/print
 #' @param ... Any further information
 #' @aliases summary.bibliography, print.bibliography, c.bibliography, as.data.frame.bibliography
-#' @rdname bibliography-class
+#' @name bibliography-class
 #' @export
 summary.bibliography <- function(object, ...){
 
