@@ -1,0 +1,17 @@
+@import url(https://fonts.googleapis.com/css?family=Lato);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+h1, h2, h3, h4, .h1, .h2, .h3, .main-title, .main-subtitle {
+  font-family: Lato;
+  font-weight: normal;
+  color: #D9565C;
+}
+
+a {
+    color: #0a238a;
+    text-decoration: none;
+}
+
+a:hover {
+  color: #6c159e;
+}
