@@ -1,5 +1,15 @@
-#' @rdname bibliography-class
-  summary.bibliography <- function(object, ...){
+#' Methods for class bibliography
+#'
+#' @title bibliography-class
+#' @description This is a small number of standard methods for interacting with class 'bibliography'. More may be added later.
+#' @param x An object of class 'bibliography'
+#' @param object An object of class 'bibliography'
+#' @param n Number of items to select/print
+#' @param ... Any further information
+#' @aliases summary.bibliography, print.bibliography, c.bibliography, as.data.frame.bibliography
+#' @name bibliography-class
+#' @export
+summary.bibliography <- function(object, ...){
 
   # are any abstracts completely missing?
   null_check <- unlist(lapply(
@@ -67,6 +77,7 @@
 }
 
 #' @rdname bibliography-class
+#' @export
 print.bibliography <- function(x, n, ...){
   length_tr <- length(x)
   if(missing(n)){
@@ -81,10 +92,12 @@ print.bibliography <- function(x, n, ...){
 }
 
 #' @rdname bibliography-class
+#' @importFrom rlang abort
+#' @export
 '[.bibliography' <- function(x, n){
   class(x) <- "list"
   if(all(n %in% seq_len(length(x))) == FALSE){
-    stop("subset out of bounds")
+    abort("subset out of bounds")
   }
   z <- x[n]
   class(z) <- "bibliography"
@@ -92,6 +105,7 @@ print.bibliography <- function(x, n, ...){
 }
 
 #' @rdname bibliography-class
+#' @export
 c.bibliography <- function(...){
   result <- lapply(list(...), function(a){
     class(a) <- "list"
@@ -103,6 +117,7 @@ c.bibliography <- function(...){
 }
 
 #' @rdname bibliography-class
+#' @export
 as.data.frame.bibliography <- function(x, ...){
 
   cols <- unique(unlist(lapply(x, names)))
@@ -143,10 +158,12 @@ as.data.frame.bibliography <- function(x, ...){
 
 
 #' @rdname bibliography-class
+#' @importFrom rlang abort
+#' @export
 as.bibliography <- function(x, ...){
 
-  if(class(x) != "data.frame"){
-    stop("as.bibliography can only be called for objects of class 'data.frame'")
+  if(!inherits(x, "data.frame")){
+    abort("as.bibliography can only be called for objects of class 'data.frame'")
   }
 
   x_list <- lapply(
@@ -165,4 +182,20 @@ as.bibliography <- function(x, ...){
   names(x_list) <- seq_len(nrow(x))
   class(x_list) <- "bibliography"
   return(x_list)
+}
+
+#' @rdname bibliography-class
+#' @param .rows currently ignored
+#' @param .name_repair currently ignored
+#' @param rownames currently ignored
+#' @importFrom purrr list_transpose
+#' @importFrom tibble as_tibble
+#' @export
+as_tibble.bibliography <- function(x,
+                                   ...,
+                                   .rows,
+                                   .name_repair,
+                                   rownames){
+  class(x) <- "list"
+  as_tibble(list_transpose(x))
 }

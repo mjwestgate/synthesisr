@@ -1,0 +1,257 @@
+PMID- 28441597
+OWN - NLM
+STAT- PubMed-not-MEDLINE
+DCOM- 20180315
+LR  - 20180315
+IS  - 1879-1026 (Electronic)
+IS  - 0048-9697 (Linking)
+VI  - 598
+DP  - 2017 Nov 15
+TI  - Differences in nitrate and phosphorus export between wooded and grassed riparian
+      zones from farmland to receiving waterways under varying rainfall conditions.
+PG  - 188-197
+LID - S0048-9697(17)30912-9 [pii]
+LID - 10.1016/j.scitotenv.2017.04.075 [doi]
+AB  - Agricultural activities in catchments can cause excessive nutrient loads in
+      waterways. Catchment nitrogen (N) and phosphorus (P) flows may be intercepted and
+      assimilated by riparian vegetation. While prior studies suggest that woody
+      vegetation is preferable for reducing P loads, the question remains: is woody
+      vegetation or grass cover more effective at reducing catchment N and P exports to
+      waterways. To address this we investigated the relative importance of vegetation
+      type, hydrologic and soil microbial processes on N and P losses from soil to a
+      stream. The study involved the analysis of data from two soil microcosm experiments,
+      and a field case study. We found P leaching loss from riparian zones depended
+      significantly on vegetation type (woody vs. grass cover), with lower P exported from
+      wooded riparian zones, irrespective of the scale of rainfall. For N leaching losses,
+      the scale of rainfall had an effect. During high rainfall, vegetation type had a
+      major effect on N leaching loss, with lower N exported from grassed verses wooded
+      riparian zones. However, under low rainfall conditions, soil type and soil C and N
+      stores, potential indicators of soil microbial activity, rather than vegetation
+      cover, affected N leaching. It is hypothesized that soil microbes were reducing N
+      removal under these conditions. We reason that nitrifiers may have played an
+      important role in soil N cycling, as increased soil ammonium had a strong positive
+      effect on nitrate leaching loads, mediated through soil nitrate stores. Whereas, N
+      immobilization, via incorporation into microbial biomass, and denitrification
+      processes appeared to be limited by C availability, with increased C associated with
+      reduced N leaching. Overall, this study identified that N leaching losses from
+      riparian zones appeared to be affected by two different processes, vegetative uptake
+      and soil microbial processes, the relative importance of which was driven by
+      hydrological conditions.
+CI  - Copyright © 2017 Elsevier B.V. All rights reserved.
+FAU - Neilen, Amanda D
+AU  - Neilen AD
+AD  - Australian Rivers Institute, Griffith School of Environment, Griffith University,
+      Kessels Rd, Nathan, Queensland, 4111, Australia. Electronic address:
+      amanda.neilen@griffithuni.edu.au.
+FAU - Chen, Chengrong R
+AU  - Chen CR
+AD  - Australian Rivers Institute, Griffith School of Environment, Griffith University,
+      Kessels Rd, Nathan, Queensland, 4111, Australia.
+FAU - Parker, Brett M
+AU  - Parker BM
+AD  - Australian Rivers Institute, Griffith School of Environment, Griffith University,
+      Kessels Rd, Nathan, Queensland, 4111, Australia.
+FAU - Faggotter, Stephen J
+AU  - Faggotter SJ
+AD  - Australian Rivers Institute, Griffith School of Environment, Griffith University,
+      Kessels Rd, Nathan, Queensland, 4111, Australia.
+FAU - Burford, Michele A
+AU  - Burford MA
+AD  - Australian Rivers Institute, Griffith School of Environment, Griffith University,
+      Kessels Rd, Nathan, Queensland, 4111, Australia.
+LA  - eng
+PT  - Journal Article
+DEP - 20170422
+PL  - Netherlands
+TA  - Sci Total Environ
+JT  - The Science of the total environment
+JID - 0330500
+OTO - NOTNLM
+OT  - Buffer strips
+OT  - Landsat
+OT  - Leaching
+OT  - Nitrate
+OT  - Structural equation modelling
+OT  - Water quality
+OT  - Watershed
+EDAT- 2017/04/26 06:00
+MHDA- 2017/04/26 06:01
+CRDT- 2017/04/26 06:00
+PHST- 2016/11/28 00:00 [received]
+PHST- 2017/04/04 00:00 [revised]
+PHST- 2017/04/09 00:00 [accepted]
+PHST- 2017/04/26 06:00 [pubmed]
+PHST- 2017/04/26 06:01 [medline]
+PHST- 2017/04/26 06:00 [entrez]
+AID - S0048-9697(17)30912-9 [pii]
+AID - 10.1016/j.scitotenv.2017.04.075 [doi]
+PST - ppublish
+SO  - Sci Total Environ. 2017 Nov 15;598:188-197. doi: 10.1016/j.scitotenv.2017.04.075.
+      Epub 2017 Apr 22.
+
+PMID- 30868313
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20191011
+LR  - 20200309
+IS  - 1432-1009 (Electronic)
+IS  - 0364-152X (Linking)
+VI  - 63
+IP  - 5
+DP  - 2019 May
+TI  - Management of Grassland-like Wildflower Strips Sown on Nutrient-rich Arable Soils:
+      The Role of Grass Density and Mowing Regime.
+PG  - 647-657
+LID - 10.1007/s00267-019-01153-y [doi]
+AB  - Wildflower strips (WS) are proposed in many European countries as a strategy to
+      enhance biodiversity and ecosystem services in arable fields. To create and maintain
+      WS on nutrient-rich cultivated soils reveals challenging. Flowered species may be
+      outcompeted by grasses due to high phosphorus content in soil. We studied during 5
+      years seed mixture (grass density in the seed mix) and mowing regime influenced the
+      ability of WS to provide environmental benefits (flower provision for insects and
+      landscape purposes, reduction of soil nutrient load) and respond to farmer concerns
+      (noxious weed promotion, forage production). Lowered grass density increased flower
+      abundance, but not diversity, only in the first 3 years. In the last 2 years mowing
+      effects became determinant. Flower cover and richness were the highest under the
+      twice-a-year mowing regime. This regime also increased forage quantity and quality.
+      Flower colour diversity was conversely the highest where mowing occurred every two
+      years. Potassium in the soil decreased under the twice-a-year mowing regime. Other
+      nutrients were not affected. No management option kept noxious weed to an acceptable
+      level after 5 years. This supports the need to test the efficacy of specific
+      management practices such as selective clipping or spraying. Mowing WS twice a year
+      was retained as the most favourable treatment to maintain species-rich strips with
+      an abundant flower provision. It however implies to mow in late June, i.e. at the
+      peak of insect abundance. It is therefore suggested to keep an unmown refuge zone
+      when applying this management regime.
+FAU - Piqueray, Julien
+AU  - Piqueray J
+AUID- ORCID: 0000-0002-5930-8785
+AD  - Natagriwal ASBL, site de Gembloux, Passage des Déportés 2, Gembloux, 5030, Belgium.
+      jpiqueray@natagriwal.be.
+FAU - Gilliaux, Valentin
+AU  - Gilliaux V
+AD  - Natagriwal ASBL, site de Gembloux, Passage des Déportés 2, Gembloux, 5030, Belgium.
+FAU - Decruyenaere, Virginie
+AU  - Decruyenaere V
+AD  - Walloon Agricultural Research Centre (CRA-W)-Production and Sectors Department, Rue
+      de Liroux 8, Gembloux, 5030, Belgium.
+FAU - Cornelis, Jean-Thomas
+AU  - Cornelis JT
+AD  - Gembloux Agro-Bio Tech, Department BIOSystem Engineering (BIOSE),Water - Soil -
+      Plant Exchanges, University of Liege, Passage des Déportés 2, Gembloux, 5030,
+      Belgium.
+FAU - Uyttenbroeck, Roel
+AU  - Uyttenbroeck R
+AD  - Gembloux Agro-Bio Tech, Biodiversity and landscape Unit, University of Liege,
+      Passage des Déportés 2, Gembloux, 5030, Belgium.
+AD  - Gembloux Agro-Bio Tech, TERRA - AgricultureIsLife, University of Liege, Passage des
+      Déportés 2, Gembloux, 5030, Belgium.
+FAU - Mahy, Grégory
+AU  - Mahy G
+AD  - Gembloux Agro-Bio Tech, Biodiversity and landscape Unit, University of Liege,
+      Passage des Déportés 2, Gembloux, 5030, Belgium.
+LA  - eng
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20190313
+PL  - United States
+TA  - Environ Manage
+JT  - Environmental management
+JID - 7703893
+RN  - 0 (Soil)
+SB  - IM
+MH  - Animals
+MH  - Ecosystem
+MH  - Europe
+MH  - Grassland
+MH  - Nutrients
+MH  - *Poaceae
+MH  - *Soil
+OTO - NOTNLM
+OT  - *Agri-environment Schemes
+OT  - *Plant diversity
+OT  - *Soil nutrients
+OT  - *Weed management
+OT  - *Wildflower strips
+EDAT- 2019/03/15 06:00
+MHDA- 2019/10/12 06:00
+CRDT- 2019/03/15 06:00
+PHST- 2018/10/18 00:00 [received]
+PHST- 2019/02/26 00:00 [accepted]
+PHST- 2019/03/15 06:00 [pubmed]
+PHST- 2019/10/12 06:00 [medline]
+PHST- 2019/03/15 06:00 [entrez]
+AID - 10.1007/s00267-019-01153-y [pii]
+AID - 10.1007/s00267-019-01153-y [doi]
+PST - ppublish
+SO  - Environ Manage. 2019 May;63(5):647-657. doi: 10.1007/s00267-019-01153-y. Epub 2019
+      Mar 13.
+
+PMID- 29967742
+OWN - NLM
+STAT- PubMed-not-MEDLINE
+LR  - 20191120
+IS  - 2167-8359 (Print)
+IS  - 2167-8359 (Electronic)
+IS  - 2167-8359 (Linking)
+VI  - 6
+DP  - 2018
+TI  - Mulch and groundcover effects on soil temperature and moisture, surface reflectance,
+      grapevine water potential, and vineyard weed management.
+PG  - e5082
+LID - 10.7717/peerj.5082 [doi]
+LID - e5082
+AB  - The objectives of this research were to identify alternatives to glyphosate for
+      intra-row (under-trellis) vineyard floor management and to evaluate the potential
+      for intra-row and inter-row (alleyway) groundcovers to reduce vegetative vigor
+      of 'Marquette' grapevines (Vitis spp.) in a southeast Nebraska vineyard. The
+      experiment was a randomized factorial design with five intra-row treatments (crushed
+      glass mulch [CG], distillers' grain mulch [DG], creeping red fescue [CRF],
+      non-sprayed control [NSC], and glyphosate [GLY]) and three inter-row treatments
+      (creeping red fescue [CRF], Kentucky bluegrass [KB], and resident vegetation [RV]).
+      Treatments were established in 2010-2011 and measurements were conducted during 2012
+      and 2013 on 5- and 6-year-old vines. Soil temperatures were mostly higher under
+      mulches and lower under intra-row groundcovers, compared to GLY. Weed cover in CG,
+      DG, and CRF treatments was the same or less than GLY. At most sampling dates,
+      inter-row soil moisture was lowest under KB. Intra-row soil moisture was highest
+      under DG mulch and lowest under CRF and NSC; CG had the same or lower soil moisture
+      than GLY. Surprisingly, we did not detect differences in mid-day photosynthetically
+      active radiation (PAR) reflectance, despite visual differences among the intra-row
+      treatments. Mid-day vine water potential did not differ among treatments. We
+      concluded it is not necessary to maintain a bare soil strip under established vines
+      in this region, where soil fertility and moisture are non-limiting.
+FAU - Bavougian, Christina M
+AU  - Bavougian CM
+AD  - Department of Agronomy & Horticulture, University of Nebraska-Lincoln, Lincoln, NE,
+      United States of America.
+FAU - Read, Paul E
+AU  - Read PE
+AD  - Department of Agronomy & Horticulture, University of Nebraska-Lincoln, Lincoln, NE,
+      United States of America.
+LA  - eng
+PT  - Journal Article
+DEP - 20180625
+TA  - PeerJ
+JT  - PeerJ
+JID - 101603425
+PMC - PMC6022731
+OTO - NOTNLM
+OT  - Glyphosate
+OT  - Groundcover
+OT  - Mulch
+OT  - Vegetative vigor
+OT  - Vineyard floor management
+OT  - Weed control
+COIS- The authors declare there are no competing interests.
+EDAT- 2018/07/04 06:00
+MHDA- 2018/07/04 06:01
+CRDT- 2018/07/04 06:00
+PHST- 2018/01/04 00:00 [received]
+PHST- 2018/06/03 00:00 [accepted]
+PHST- 2018/07/04 06:00 [entrez]
+PHST- 2018/07/04 06:00 [pubmed]
+PHST- 2018/07/04 06:01 [medline]
+AID - 5082 [pii]
+AID - 10.7717/peerj.5082 [doi]
+PST - epublish
+SO  - PeerJ. 2018 Jun 25;6:e5082. doi: 10.7717/peerj.5082. eCollection 2018.

@@ -11,13 +11,17 @@ extract_unique_references(data, matches, type = "merge")
 
 \item{matches}{A vector showing which entries in \code{data} are duplicates.}
 
-\item{type}{How should entries be selected to retain? Default is \code{"merge"} which selects the entries with the largest number of characters in each column. Alternatively \code{"select"} which returns the row with the highest total number of characters.}
+\item{type}{How should entries be selected to retain? Default is \code{"merge"},
+which selects the entries with the largest number of characters in each
+column. Alternatively, \code{"select"} returns the row with the highest total
+number of characters.}
 }
 \value{
 Returns a \code{data.frame} of unique references.
 }
 \description{
-Given a list of duplicate entries and a data set, this function extracts only unique references.
+Given a list of duplicate entries and a data set, this function
+extracts only unique references.
 }
 \examples{
 my_df <-  data.frame(
@@ -52,5 +56,5 @@ deduplicate(my_df, "title",
   to_lower = TRUE)
 }
 \seealso{
-\code{\link{find_duplicates}}, \code{\link{deduplicate}}
+\code{find_duplicates()}, \code{deduplicate()}
 }

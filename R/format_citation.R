@@ -1,14 +1,23 @@
 #' Format a citation
 #'
-#' @description This function takes an object of class data.frame, list, or bibliography and returns a formatted citation.
-#' @param data An object of class data.frame, list, or or bibliography.
-#' @param details Logical: Should identifying information such as author names & journal titles be displayed? Defaults to TRUE.
-#' @param abstract Logical: Should the abstract be shown (if available)? Defaults to FALSE.
-#' @param add_html Logical: Should the journal title be italicized using html codes? Defaults to FALSE.
-#' @param line_breaks Either logical, stating whether line breaks should be added, or numeric stating how many characters should separate consecutive line breaks. Defaults to FALSE.
+#' @description This function takes an object of class `data.frame`, `list`, or
+#' `bibliography` and returns a formatted citation.
+#' @param data An object of class `data.frame`, `list`, or `bibliography.`
+#' @param details Logical: Should identifying information such as author names &
+#' journal titles be displayed? Defaults to `TRUE`.
+#' @param abstract Logical: Should the abstract be shown (if available)?
+#' Defaults to `FALSE.`
+#' @param add_html Logical: Should the journal title be italicized using html
+#' codes? Defaults to `FALSE`.
+#' @param line_breaks Either logical, stating whether line breaks should be
+#' added, or numeric stating how many characters should separate consecutive
+#' line breaks. Defaults to `FALSE`.
 #' @param ... any other arguments.
-#' @return Returns a string of length equal to length(data) that contains formatted citations.
+#' @return Returns a string of length equal to `length(data)` that contains
+#' formatted citations.
+#' @importFrom rlang abort
 #' @example inst/examples/format_citation.R
+#' @export
 format_citation <- function(
   data,
   details = TRUE,
@@ -17,11 +26,11 @@ format_citation <- function(
   line_breaks = FALSE,
   ...
 ){
-  if(!(class(data) %in% c("data.frame", "bibliography", "list"))){
-  stop(print("format_citation expects input data to be an object of class data.frame, bibliography, or list"))
-    }
+  if(!inherits(data, c("data.frame", "bibliography", "list"))){
+    abort("format_citation expects input data to be an object of class data.frame, bibliography, or list")
+  }
 
-  if(class(data)!="data.frame"){
+  if(!inherits(data, "data.frame")){
     data <- as.data.frame(data)
   }
 
@@ -114,4 +123,4 @@ format_citation <- function(
   }
   data_out <- unlist(lapply(data_out, trimws))
   return(data_out)
-  }
+}

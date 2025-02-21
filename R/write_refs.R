@@ -1,5 +1,107 @@
+#' Export data to a bibliographic format
+#'
+#' @description This function exports data.frames containing bibliographic
+#' information to either a .ris or .bib file.
+#' @param x Either a data.frame containing bibliographic information or an
+#' object of class bibliography.
+#' @param file filename to save to.
+#' @param format What format should the data be exported as? Options are ris or
+#' bib.
+#' @param tag_naming what naming convention should be used to write RIS files?
+#' See details for options.
+#' @param write Logical should a file should be written? If FALSE returns a
+#' `list`.
+#' @return This function is typically called for it's side effect of writing a
+#' file in the specified location and format. If \code{write} is FALSE, returns
+#' a character vector containing bibliographic information in the specified
+#' format.
+#' @example inst/examples/parse_.R
+#' @rdname write_refs
+#' @importFrom rlang abort
+#' @export
+write_refs <- function(
+    x,
+    file,
+    format = "ris",
+    tag_naming = "synthesisr",
+    write = TRUE
+){
+  # check input data
+  if(!inherits(x, c("bibliography", "data.frame"))) {
+    abort("write_bibliography only accepts objects of class 'data.frame' or 'bibliography'")
+  }
+  if(inherits(x, "data.frame")){
+    x <- x |>
+      as.data.frame() |>
+      as.bibliography()
+  }
+
+  if(missing(file) & (write == TRUE)){
+    abort("`file` is missing, with no default")
+  }
+
+  # check format
+  if(!(format %in% c("ris", "bib"))){
+    abort("format must be either 'ris' or 'bib'")
+  }
+
+  # check output format - consistent with read_refs
+  if(format == "ris"){
+    valid_tags <- c("best_guess", "none", "wos", "scopus", "ovid", "asp", "synthesisr")
+    if(inherits(tag_naming, "character")){
+      if(!any(valid_tags == tag_naming)){
+        abort("tag_naming should be one of 'best_guess', 'none', 'wos', 'scopus', 'ovid',  'asp' or 'synthesisr'.")
+      }
+    }else if(inherits(tag_naming, "data.frame")){
+      if(any(!(c("code", "field") %in% colnames(tag_naming)))){
+        abort("if a data.frame is supplied to replace_tags, it must contain columns 'code' & 'field'.")
+      }
+    }
+  }
+
+  # write result in correct format
+  export <- switch(format,
+                   "bib" = {write_bib(x)},
+                   "ris" = {write_ris(x, tag_naming = tag_naming)}
+  )
+  names(export) <- NULL
+
+  if(write) {
+    write.table(
+      export,
+      check_filename(file),
+      quote = FALSE,
+      row.names = FALSE,
+      col.names = FALSE
+    )
+  }else{
+    invisible(return(export))
+  }
+}
+
+#' Internal function to check file names
+#' @noRd
+#' @keywords Internal
+check_filename <- function(x){
+  # check file information
+  if(length(x) > 1){
+    abort("argument 'file' should be a length-1 character")
+  }
+  if(!inherits(x, "character")){
+    abort("argument 'file' should be an object of class `character`")
+  }
+  if(grepl("\\.[[:alpha:]]{2,4}$", x)){
+    filename <- x
+  }else{
+    filename <- paste(x, format, sep = ".")
+  }
+  filename
+}
+
+
 # Parse an object of class bibliography for export in bib format
-#' @describeIn write_refs Format a bib file for export
+#' @rdname write_refs
+#' @export
 write_bib <- function(x) {
   # process basic text
   result <- lapply(x, function(a) {
@@ -35,7 +137,8 @@ write_bib <- function(x) {
 
 
 # Parse an object of class bibliography for export in ris format
-#' @describeIn write_refs Format a ris file for export
+#' @rdname write_refs
+#' @export
 write_ris <- function(x,
   tag_naming = "synthesisr"
 ){
@@ -106,88 +209,4 @@ write_ris <- function(x,
 
   export <- do.call(c, result)
   return(export)
-}
-
-#' Export data to a bibliographic format
-#'
-#' @description This function exports data.frames containing bibliographic information to either a .ris or .bib file.
-#' @param x Either a data.frame containing bibliographic information or an object of class bibliography.
-#' @param format What format should the data be exported as? Options are ris or bib.
-#' @param tag_naming what naming convention should be used to write RIS files? See details for options.
-#' @param file Either logical indicating whether a file should be written (defaulting to FALSE), or a character giving the name of the file to be written.
-#' @return Returns a character vector containing bibliographic information in the specified format if \code{file} is FALSE, or saves output to a file if TRUE.
-#' @example inst/examples/parse_.R
-write_refs <- function(
-  x,
-  format = "ris",
-  tag_naming = "synthesisr",
-  file = FALSE # either logical or a character (i.e. a file name)
-){
-  # check input data
-  if(!any(c("bibliography", "data.frame") == class(x))) {
-    stop("write_bibliography only accepts objects of class 'data.frame' or 'bibliography'")
-  }
-  if(inherits(x, "data.frame")){
-    x <- as.bibliography(x)
-  }
-
-  # check format
-  if(!(format %in% c("ris", "bib"))){
-    stop("format must be either 'ris' or 'bib'")
-  }
-
-  # check output format - consistent with read_refs
-  if(format == "ris"){
-    valid_tags <- c("best_guess", "none", "wos", "scopus", "ovid", "asp", "synthesisr")
-    if(inherits(tag_naming, "character")){
-      if(!any(valid_tags == tag_naming)){
-        stop("tag_naming should be one of 'best_guess', 'none', 'wos', 'scopus', 'ovid',  'asp' or 'synthesisr'.")
-      }
-    }else if(inherits(tag_naming, "data.frame")){
-      if(any(!(c("code", "field") %in% colnames(tag_naming)))){
-        stop("if a data.frame is supplied to replace_tags, it must contain columns 'code' & 'field'.")
-      }
-    }
-  }
-
-  # check file information
-  if(length(file) > 1){
-    stop("argument 'file' should be a length-1 character or logical")
-  }
-  if(!inherits(file, c("logical", "character"))){
-    stop("argument 'file' should be either logical or character")
-  }
-  if(inherits(file, "character")){
-    file_out <- TRUE
-    if(grepl("\\.[[:alpha:]]{2,4}$", file)){
-      filename <- file
-    }else{
-      filename <- paste(file, format, sep = ".")
-    }
-  }else{ # i.e. logical
-    if(file){
-      file_out <- TRUE
-      filename <- paste("synthesisr_bibliography", format, sep = ".")
-    }else{
-      file_out <- FALSE
-    }
-  }
-
-  # write result in correct format
-  export <- switch(format,
-    "bib" = {write_bib(x)},
-    "ris" = {write_ris(x, tag_naming = tag_naming)}
-  )
-
-  if(file_out) {
-    write.table(
-      export,
-      filename,
-      quote = FALSE,
-      row.names = FALSE,
-      col.names = FALSE
-    )
-  }else{
-    invisible(return(export))
-  }
 }

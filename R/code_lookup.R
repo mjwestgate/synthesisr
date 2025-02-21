@@ -1,10 +1,9 @@
 #' Bibliographic code lookup for search results assembly
 #'
-#' A data frame that can be used to look up common
-#' codes for different bibliographic fields across
-#' databases and merge them to a common format.
+#' A data frame that can be used to look up common codes for different
+#' bibliographic fields across databases and merge them to a common format.
 #'
-#' @format A data frame with 226 obs of 12 variables
+#' @format A `data.frame` with 226 obs of 12 variables
 #'
 #' \describe{
 #'  \item{code}{code used in search results}

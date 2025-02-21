@@ -1,17 +1,23 @@
-# internal function to calculate the proportion of lines that contain a particular regex
-# called by detect_parser
-proportion_delimited <- function(x, regex){
-  delimiter_count <- unlist(lapply(
-    gregexpr(regex, x, perl = TRUE),
-    function(a){length(which(a > 0))}
-  ))
-  full_lines <- nchar(x, type = "bytes") > 0
-  proportion <- length(which(delimiter_count > 0)) / length(which(full_lines))
-  return(proportion)
-}
-
-
-#' @rdname detect_
+#' Detect file formatting information
+#'
+#' @description Bibliographic data can be stored in a number of different file
+#' types, meaning that detecting consistent attributes of those files is
+#' necessary if they are to be parsed accurately. These functions attempt to
+#' identify some of those key file attributes. Specifically, `detect_parser()`
+#' determines which [parse_] function to use; `detect_delimiter()`
+#' and `detect_lookup()` identify different attributes of RIS files; and
+#' `detect_year()` attempts to fill gaps in publication years from other
+#' information stored in a `tibble`.
+#' @param x A character vector containing bibliographic data
+#' @param tags A character vector containing RIS tags.
+#' @param df a data.frame containing bibliographic data
+#' @return `detect_parser()` and `detect_delimiter()` return a length-1
+#' character; `detect_year()` returns a character vector listing estimated
+#' publication years; and `detect_lookup()` returns a `data.frame.`
+#' @example inst/examples/detect_.R
+#' @name detect_
+#' @importFrom rlang abort
+#' @export
 detect_parser <- function(x){
 
   # calculate proportional of lines containing likely tags
@@ -34,7 +40,7 @@ detect_parser <- function(x){
       "tab" = "parse_tsv",
       "bibtex" = "parse_bibtex",
       "ris" = {
-        if(length(which(grepl("$PMID", x))) > 0){
+        if(length(which(grepl("PMID", x))) > 0){
           "parse_pubmed"
         }else{
           "parse_ris"
@@ -49,6 +55,7 @@ detect_parser <- function(x){
 
 
 #' @rdname detect_
+#' @export
 detect_delimiter <- function(x){
   if(any(grepl("^ER", x))){
     delimiter <- "endrow"
@@ -71,7 +78,7 @@ detect_delimiter <- function(x){
       if(any(space_break_check)){
         delimiter <- "space"
       }else{
-        stop("import failed: unknown reference delimiter")
+        abort("import failed: unknown reference delimiter")
       }
     }
   }
@@ -80,6 +87,7 @@ detect_delimiter <- function(x){
 
 
 #' @rdname detect_
+#' @export
 detect_lookup <- function(
   tags # a vector of strings representing ris tags
 ){
@@ -121,27 +129,11 @@ detect_lookup <- function(
   return(match_df[, c("code", "order", "field")])
 }
 
-
-# internal function for detect_year
-guess_year <- function(x){
-  number_lookup <- regexpr("[[:alnum:]]{4}", as.character(x))
-  if(any(number_lookup > 0)){
-    x <- x[number_lookup > 0]
-    result_vec <- unlist(lapply(seq_along(x), function(a){
-      substr(x[a], start = number_lookup[a], stop = number_lookup[a] + 3)
-    }))
-    # return(max(as.numeric(result)))
-    result <- names(sort(xtabs(~result_vec), decreasing = TRUE)[1])
-    return(result)
-  }else{
-    return(NA)
-  }
-}
-
 #' @rdname detect_
+#' @export
 detect_year <- function(df){
   if(!inherits(df, "data.frame")){
-    stop(print("detect_year expects an object of class data.frame as input"))
+    abort(print("detect_year expects an object of class data.frame as input"))
   }
   lc_colnames <- tolower(colnames(df))
   dates <- grepl("date", lc_colnames) & !grepl("access", lc_colnames)
@@ -162,4 +154,46 @@ detect_year <- function(df){
     result <- rep(NA, nrow(df))
   }
   return(result)
+}
+
+#' internal function to calculate the proportion of lines that contain a particular regex
+#' called by detect_parser
+#' @noRd
+#' @keywords Internal
+proportion_delimited <- function(x, regex){
+  delimiter_count <- unlist(lapply(
+    gregexpr(regex, x, perl = TRUE),
+    function(a){length(which(a > 0))}
+  ))
+  full_lines <- nchar(x, type = "bytes") > 0
+  proportion <- length(which(delimiter_count > 0)) / length(which(full_lines))
+  return(proportion)
+}
+
+#' internal function for detect_year
+#' @noRd
+#' @keywords Internal
+guess_year <- function(x){
+  number_lookup <- regexpr("[[:alnum:]]{4}", as.character(x))
+  if(any(number_lookup > 0)){
+    x <- x[number_lookup > 0]
+    result_vec <- unlist(lapply(seq_along(x), function(a){
+      substr(x[a], start = number_lookup[a], stop = number_lookup[a] + 3)
+    }))
+    # return(max(as.numeric(result)))
+    result <- names(sort(xtabs(~result_vec), decreasing = TRUE)[1])
+    return(result)
+  }else{
+    return(NA)
+  }
+}
+
+#' Compute the rolling sum of detections
+#'
+#' This function is intended to ensure multiple consecutive empty rows are
+#' removed. Called by `detect_delimiter()`.
+#' @noRd
+#' @keywords Internal
+rollingsum <- function(a, n = 2L){
+  tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
 }

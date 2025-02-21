@@ -16,21 +16,33 @@ find_duplicates(
 \arguments{
 \item{data}{A character vector containing duplicate bibliographic entries.}
 
-\item{method}{A string indicating how matching should be calculated. Either \code{"exact"} for exact matching (the default), or the name of a function for calculating string distance.}
+\item{method}{A string indicating how matching should be calculated. Either
+\code{"exact"} for exact matching (the default), or the name of a function for
+calculating string distance.}
 
-\item{group_by}{An optional vector, data.frame or list containing data to use as 'grouping' variables; that is, categories within which duplicates should be sought. Defaults to NULL, in which case all entries are compared against all others. Ignored if \code{method = "exact"}.}
+\item{group_by}{An optional vector, data.frame or list containing data to use
+as 'grouping' variables; that is, categories within which duplicates should
+be sought. Defaults to NULL, in which case all entries are compared against
+all others. Ignored if \code{method = "exact"}.}
 
-\item{threshold}{Numeric: the cutoff threshold for deciding if two strings are duplcates. Sensible values depend on the \code{method} chosen. Defaults to 5 is \code{method = "string_osa"} and must be specified in all other instances except \code{method = "exact"} (where no threshold is required).}
+\item{threshold}{Numeric: the cutoff threshold for deciding if two strings
+are duplicates. Sensible values depend on the \code{method} chosen. Defaults to 5
+if \code{method = "string_osa"} and must be specified in all other instances
+except \code{method = "exact"} (where no threshold is required).}
 
-\item{to_lower}{Logical: Should all entries be converted to lower case before calculating string distance? Defaults to FALSE.}
+\item{to_lower}{Logical: Should all entries be converted to lower case before
+calculating string distance? Defaults to \code{FALSE.}}
 
-\item{rm_punctuation}{Logical: Should punctuation should be removed before calculating string distance? Defaults to FALSE.}
+\item{rm_punctuation}{Logical: Should punctuation should be removed before
+calculating string distance? Defaults to \code{FALSE.}}
 }
 \value{
-Returns a vector of duplicate matches, with \code{attributes} listing methods used.
+Returns a vector of duplicate matches, with \code{attributes} listing
+methods used.
 }
 \description{
-Identifies duplicate bibliographic entries using different duplicate detection methods.
+Identifies duplicate bibliographic entries using different duplicate
+detection methods.
 }
 \examples{
 my_df <-  data.frame(
@@ -65,5 +77,7 @@ deduplicate(my_df, "title",
   to_lower = TRUE)
 }
 \seealso{
-\code{\link{string_}} or \code{\link{fuzz_}} for suitable functions to pass to \code{methods}; \code{\link{extract_unique_references}} and \code{\link{deduplicate}} for higher-level functions.
+\code{\link{string_}} or \code{\link{fuzz_}} for suitable functions
+to pass to \code{methods}; \code{\link{extract_unique_references}} and
+\code{\link{deduplicate}} for higher-level functions.
 }

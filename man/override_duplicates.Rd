@@ -7,13 +7,18 @@
 override_duplicates(matches, overrides)
 }
 \arguments{
-\item{matches}{Numeric: a vector of group numbers for texts that indicates duplicates and unique values returned by the \code{\link{find_duplicates}} function.}
+\item{matches}{Numeric: a vector of group numbers for texts that indicates
+duplicates and unique values returned by the \code{\link{find_duplicates}}
+function.}
 
-\item{overrides}{Numeric: a vector of group numbers that are not true duplicates.}
+\item{overrides}{Numeric: a vector of group numbers that are not true
+duplicates.}
 }
 \value{
-The input \code{matches} vector with unique group numbers for members of groups that the user overrides.
+The input \code{matches} vector with unique group numbers for members
+of groups that the user overrides.
 }
 \description{
-Re-assign group numbers to text that was classified as duplicated but is unique.
+Re-assign group numbers to text that was classified as
+duplicated but is unique.
 }

@@ -1,16 +1,25 @@
-# Cleans data.frames into synthesisr format
-#' @rdname clean_
+#' Clean a `tibble` or vector
+#'
+#' Cleans column and author names
+#' @param data A `tibble` with bibliographic information.
+#' @param x A vector of strings
+#' @return Returns the input, but cleaner.
+#' @example inst/examples/clean_.R
+#' @name clean_
+#' @export
 clean_df <- function(data){
   colnames(data) <- clean_colnames(colnames(data))
   if(any(colnames(data) == "author")){
     data$author <- clean_authors(data$author)
   }
+  data <- remove_factors(data)
   return(data)
 }
 
 
 # Standardize author delimiters
 #' @rdname clean_
+#' @export
 clean_authors <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
     x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)
@@ -24,6 +33,7 @@ clean_authors <- function(x){
 
 # Clean common issues with column names
 #' @rdname clean_
+#' @export
 clean_colnames <- function(
   x # colnames
 ){
@@ -40,4 +50,20 @@ clean_colnames <- function(
   x <- make.unique(x, sep = "_")
   x <- gsub(" ", "_", x)
   return(x)
+}
+
+#' Remove factors from an object
+#'
+#' Internal functions called by `clean_df()`:
+#' @description This function converts factors to characters to avoid errors with
+#' levels.
+#' @param z A data.frame
+#' @return Returns the input data.frame with all factors converted to character.
+#' @noRd
+#' @keywords Internal
+remove_factors <- function(z){
+  z[] <- lapply(z, function(x){
+    if(is.factor(x)){as.character(x)}else{x}
+  })
+  return(z)
 }

@@ -1,17 +1,13 @@
-# ensure multiple consecutive empty rows are removed
-# This function computes the rolling sum of detections; intended for use in detect_delimiter.
-rollingsum <- function(a, n = 2L){
-  tail(cumsum(a) - cumsum(c(rep(0, n), head(a, -n))), -n + 1)
-}
-
-
-# ' Clean an RIS file for import
-# '
-# ' @description This function preps RIS files by cleaning common issues and converting to a common format.
-# ' @param z A character vector that contains RIS bibliographic information.
-# ' @param delimiter A string indicating the type of delimiter separating entries.
-# ' @param type A string indicating the ris source; options are pubmed or generic.
-# ' @return Returns a data.frame intended for import with parse_ris.
+#' Internal function to clean a .ris file for import
+#'
+#' This function preps RIS files by cleaning common issues and converting to a
+#' common format.
+#' @param z A character vector that contains RIS bibliographic information.
+#' @param delimiter A string indicating the type of delimiter separating entries.
+#' @param type A string indicating the ris source; options are pubmed or generic.
+#' @return Returns a `data.frame` intended for import with `parse_ris()`.
+#' @noRd
+#' @keywords Internal
 prep_ris <- function(
   z,
   delimiter,
