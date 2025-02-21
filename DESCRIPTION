@@ -1,7 +1,7 @@
 Package: synthesisr
 Type: Package
 Title: Import, Assemble, and Deduplicate Bibliographic Datasets
-Version: 0.3.0.9999
+Version: 0.3.0
 Authors@R: c(
   person(
     given = "Martin",
