@@ -38,7 +38,7 @@ Suggests:
     testthat
 Date: 2023-06-07
 License: GPL-3
-URL: https://mjwestgate.github.io/synthesisr
+URL: https://martinwestgate.com/synthesisr/
 LazyData: true
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
