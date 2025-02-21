@@ -33,3 +33,7 @@ remotes::install_github("mjwestgate/synthesisr")
 ## Basic usage
 
 The default function for importing bibliographic data is `read_refs()`:
+
+``` r
+x <- read_refs("a_file.bib")
+```
