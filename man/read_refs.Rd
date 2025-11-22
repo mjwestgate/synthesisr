@@ -9,7 +9,7 @@ read_refs(
   tag_naming = "best_guess",
   return_df = TRUE,
   verbose = FALSE,
-  locale = default_locale()
+  locale = vroom::default_locale()
 )
 }
 \arguments{
@@ -29,8 +29,8 @@ returns a list.}
 Returns a \code{data.frame} or \code{list} of assembled search results.
 }
 \description{
-Imports common bibliographic reference formats (i.e. .bib, .ris,
-or .txt).
+Import common bibliographic reference formats  such as \code{.bib}, \code{.ris}, or
+\code{.txt}.
 }
 \details{
 The default for argument \code{tag_naming} is \code{"best_guess"},

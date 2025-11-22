@@ -54,4 +54,9 @@
 #' }
 #' @name synthesisr-package
 #' @docType package
+#' @importFrom stats xtabs
+#' @importFrom utils head
+#' @importFrom utils read.table
+#' @importFrom utils tail
+#' @importFrom utils write.table
 "_PACKAGE"

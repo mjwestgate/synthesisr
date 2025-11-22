@@ -26,6 +26,7 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom rlang abort
 #' @importFrom vroom default_locale
+#' @importFrom vroom vroom
 #' @example inst/examples/read_refs.R
 #' @export
 read_refs <- function(
