@@ -70,7 +70,7 @@ control of the deduplication process, consider using the sub-functions:
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://mjwestgate.github.io/synthesisr}
+  \item \url{https://martinwestgate.com/synthesisr/}
 }
 
 }

@@ -10,3 +10,4 @@ README.md
 ^docs$
 ^pkgdown$
 ^\.github$
+README.Rmd
