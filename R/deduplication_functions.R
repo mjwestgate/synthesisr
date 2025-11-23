@@ -212,7 +212,7 @@ extract_unique_references <- function(
           nx[is.na(nx)] <- 0
           return(b[which.max(nx)])
         })
-        result <- as.data.frame(result_list, stringsAsFactors = FALSE)
+        result <- tibble::as_tibble(result_list)
       }else{
         row <- which.max(
           apply(
@@ -296,7 +296,6 @@ deduplicate <- function(
 
   result <- find_duplicates(as.character(data_fd),
                             method = method, ...)
-
   return(
     extract_unique_references(data, matches = result, type = type)
   )
@@ -314,10 +313,9 @@ deduplicate <- function(
 #' @export
 review_duplicates <- function(text, matches){
   likely_duplicates <- unique(matches)[table(matches)>1]
-  review <- data.frame(
+  review <- tibble::tibble(
     title = text[matches %in% likely_duplicates],
-    matches = matches[matches %in% likely_duplicates],
-    stringsAsFactors = FALSE
+    matches = matches[matches %in% likely_duplicates]
   )
   review <- review[order(review[,2]),]
   return(review)
