@@ -7,3 +7,9 @@ test_that("write_refs() works", {
   expect_true(any(grep("ER ", evi_ris, ignore.case = FALSE)))
 })
 
+# Fix for Issue #22
+test_that("write_refs() successfully writes from a tibble", {
+  df <-  read_refs("testdata/eviatlas.txt")
+  write_refs(df, "TEST_TIBBLE.bib")
+  expect_true(file.exists("TEST_TIBBLE.bib"))
+})
