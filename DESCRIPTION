@@ -40,7 +40,7 @@ Date: 2023-06-07
 License: GPL-3
 URL: https://martinwestgate.com/synthesisr/
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
