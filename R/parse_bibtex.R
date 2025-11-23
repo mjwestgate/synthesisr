@@ -7,11 +7,11 @@ parse_bibtex <- function(x){
   # use `unglue` to parse text
   # 1. Matching reference to the type of reference (e.g. article)
   # 2. Matches each of the variables to their corresponding values
-  #   - Allows zero or more spaces around the equals sign `=`
+  #   - Allows zero or more spaces around the equals sign
   #   - Comma at the end is optional
   raw_df <- unglue_data(x,
                         patterns = c("@[variable]{[value],",
-                                     "[variable][=\\s*=\\s*]{[value]}[=,?]"),
+                                     "[=\\s*][variable][=\\s*=\\s*]{[value]}[=,?]"),
                         open = "[",
                         close = "]")
 
