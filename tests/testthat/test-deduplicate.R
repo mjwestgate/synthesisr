@@ -1,5 +1,13 @@
-test_that("deduplicate works", {
-  my_df <-  data.frame(
+test_that("find_duplicates() works when no duplicates are present", {
+  x <- read_refs("testdata/ASP_ris_example.ris")
+  result <- x |>
+    dplyr::pull("doi") |>
+    find_duplicates()
+  expect_equal(as.integer(result), c(1:4))
+})
+
+test_that("`deduplicate()` works", {
+  my_df <-  tibble::tibble(
     title = c(
       "EviAtlas: a tool for visualising evidence synthesis databases",
       "revtools: An R package to support article screening for evidence synthesis",
@@ -25,6 +33,8 @@ test_that("deduplicate works", {
   expect_true(all(dups[5:6] == dups[1:2]))
   expect_equal(length(unique(dups)), nrow(deduped))
   expect_equal(deduped, deduped2)
+  inherits(deduped2, c("tbl_df", "tbl", "data.frame")) |>
+    expect_true()
 })
 
 

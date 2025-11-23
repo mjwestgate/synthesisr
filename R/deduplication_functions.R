@@ -18,8 +18,8 @@
 #' calculating string distance? Defaults to `FALSE.`
 #' @param rm_punctuation Logical: Should punctuation should be removed before
 #' calculating string distance? Defaults to `FALSE.`
-#' @return Returns a vector of duplicate matches, with `attributes` listing
-#' methods used.
+#' @return Returns a vector of same length as `nrow(data)`, where duplicated
+#' values have the same integer, and `attributes` listing methods used.
 #' @seealso \code{\link{string_}} or \code{\link{fuzz_}} for suitable functions
 #' to pass to \code{methods}; \code{\link{extract_unique_references}} and
 #' \code{\link{deduplicate}} for higher-level functions.
@@ -226,13 +226,8 @@ extract_unique_references <- function(
       result$n_duplicates <- nrow(a)
     }
     return(result)
-  }, type = type
-  )
-  output <- as.data.frame(
-    do.call(rbind, x_split),
-    stringsAsFactors = FALSE
-  )
-  return(output)
+  }, type = type)
+  dplyr::bind_rows(x_split)
 }
 
 #' Remove duplicates from a bibliographic data set
@@ -240,7 +235,8 @@ extract_unique_references <- function(
 #' @description Removes duplicates using sensible defaults
 #'
 #' @param data A `data.frame` containing bibliographic information.
-#' @param match_by Name of the column in `data` where duplicates should be sought.
+#' @param match_by Name of the (single) column in `data` where duplicates should
+#' be sought.
 #' @param method The duplicate detection function to use; see
 #' \code{link{string_}} or \code{link{fuzz_}} for examples. Passed to
 #' `find_duplicates()`.
@@ -272,11 +268,11 @@ deduplicate <- function(
   # add defaults
   if(missing(match_by)){
     if(any(colnames(data) == "doi")){
-      data_fd <- data[, "doi"]
+      data_fd <- dplyr::pull(data, "doi")
       if(missing(method)){method <- "exact"}
     }else{
       if(any(colnames(data) == "title")){
-        data_fd <- data[, "title"]
+        data_fd <- dplyr::pull(data, "title")
         if(missing(method)){method <- "string_osa"}
       }else{
         abort("'match_by' is missing, with no default;
@@ -293,13 +289,14 @@ deduplicate <- function(
         ": Please specify which column should be searched for duplicates"
       ))
     }else{
-      data_fd <- data[, match_by]
+      data_fd <- dplyr::pull(data, {{match_by}})
       if(missing(method)){method <- "string_osa"}
     }
   }
 
   result <- find_duplicates(as.character(data_fd),
                             method = method, ...)
+
   return(
     extract_unique_references(data, matches = result, type = type)
   )

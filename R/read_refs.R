@@ -9,6 +9,7 @@
 #' class `data.frame` containing user-defined replacement tags.
 #' @param return_df If `TRUE` (default), returns a `data.frame`; if `FALSE`,
 #' returns a list.
+#' @param locale passed to [vroom::vroom_lines()]
 #' @param verbose If `TRUE`, prints status updates (defaults to `FALSE`).
 #' @param locale Overrides default locale.
 #' @details The default for argument `tag_naming` is `"best_guess"`,
