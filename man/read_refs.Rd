@@ -24,6 +24,8 @@ class \code{data.frame} containing user-defined replacement tags.}
 returns a list.}
 
 \item{verbose}{If \code{TRUE}, prints status updates (defaults to \code{FALSE}).}
+
+\item{locale}{Overrides default locale.}
 }
 \value{
 Returns a \code{data.frame} or \code{list} of assembled search results.

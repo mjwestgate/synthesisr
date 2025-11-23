@@ -10,6 +10,7 @@
 #' @param return_df If `TRUE` (default), returns a `data.frame`; if `FALSE`,
 #' returns a list.
 #' @param verbose If `TRUE`, prints status updates (defaults to `FALSE`).
+#' @param locale Overrides default locale.
 #' @details The default for argument `tag_naming` is `"best_guess"`,
 #' which estimates what database has been used for ris tag replacement, then
 #' fills any gaps with generic tags. Any tags missing from the database (i.e.
