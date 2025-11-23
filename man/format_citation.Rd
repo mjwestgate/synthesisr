@@ -56,6 +56,6 @@ roses <- c("@article{haddaway2018,
 tmp <- tempfile()
 writeLines(roses, tmp)
 
-citation <- read_ref(tmp)
+citation <- read_refs(tmp)
 format_citation(citation)
 }
