@@ -190,7 +190,7 @@ extract_unique_references <- function(
   type = "merge"
 ){
   if(missing(matches)){
-    a("please specify a vector containing identified matches
+    abort("please specify a vector containing identified matches
     (e.g. as returned by find_duplicates)")
   }
   if(length(matches) != nrow(data)){
