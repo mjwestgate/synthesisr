@@ -91,7 +91,7 @@ read_refs <- function(
   }
 }
 
-#' Internal function called by read_refs for each file
+#' Internal function called by read_refs for each File
 #'
 #' @description This is the underlying workhorse function that imports
 #' bibliographic files; primarily intended to be called from read_refs.
