@@ -22,5 +22,6 @@ eviatlas <- c(
 )
 
 detect_parser(eviatlas) # = "parse_ris"
-df <- as.data.frame(parse_ris(eviatlas))
+df <- parse_ris(eviatlas) |>
+  as_tibble()
 ris_out <- write_refs(df, format = "ris", write = FALSE)

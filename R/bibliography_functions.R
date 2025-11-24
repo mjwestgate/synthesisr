@@ -118,32 +118,9 @@ c.bibliography <- function(...){
 #' @rdname bibliography-class
 #' @export
 as.data.frame.bibliography <- function(x, ...){
-
-  cols <- unique(unlist(lapply(x, names)))
-  # cols <- cols[which(cols != "further_info")]
-
-  x_list <- lapply(x, function(a, cols){
-    result <- lapply(cols, function(b, lookup){
-      if(any(names(lookup) == b)){
-        data_tr <- lookup[[b]]
-        if(length(data_tr) > 1){
-          data_tr <- paste0(data_tr, collapse = " and ")
-        }
-        return(data_tr)
-      }else{
-        return(NA)
-      }
-    },
-    lookup = a)
-    names(result) <- cols
-    return(
-      as_tibble(result)
-    )
-    },
-    cols = cols
-  )
-
-  bind_rows(x_list)
+  as_tibble(x) |>
+    as.data.frame()
+  # NOTE: likely to break due to presence of list-columns (authors)
 }
 
 

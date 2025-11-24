@@ -12,8 +12,7 @@ clean_df <- function(data){
   if(any(colnames(data) == "author")){
     data$author <- clean_authors(data$author)
   }
-  data <- remove_factors(data)
-  return(data)
+  convert_factors_to_strings(data)
 }
 
 
@@ -61,7 +60,7 @@ clean_colnames <- function(
 #' @return Returns the input data.frame with all factors converted to character.
 #' @noRd
 #' @keywords Internal
-remove_factors <- function(z){
+convert_factors_to_strings <- function(z){
   z[] <- lapply(z, function(x){
     if(is.factor(x)){as.character(x)}else{x}
   })

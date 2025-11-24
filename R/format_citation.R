@@ -26,11 +26,11 @@ format_citation <- function(
   ...
 ){
   if(!inherits(data, c("data.frame", "bibliography", "list"))){
-    abort("format_citation expects input data to be an object of class data.frame, bibliography, or list")
+    abort("`format_citation()` expects `data` to inherit from class `data.frame`, `bibliography`, or `list`")
   }
 
   if(!inherits(data, "data.frame")){
-    data <- as.data.frame(data)
+    data <- as_tibble(data)
   }
 
   colnames(data) <- clean_colnames(colnames(data))
@@ -61,7 +61,7 @@ format_citation <- function(
       if(grepl("[[:punct:]]$", title_text)){
         text_list$title <- title_text
       }else{
-        text_list$title <- paste0(title_text, ".")
+        text_list$title <- glue("{title_text}.")
       }
     }else{
       text_list$title <- ""
@@ -69,7 +69,7 @@ format_citation <- function(
     if(details){
       # year
       if(any(cols_tr == "year")){
-        text_list$year <- paste0("(", a$year, ")")
+        text_list$year <- glue("({a$year})")
       }else{
         text_list$year <- NA
       }
@@ -78,9 +78,9 @@ format_citation <- function(
         if(!is.na(a[[source]])){
           journal_text <- tools::toTitleCase(tolower(a[[source]]))
           if(add_html){
-            text_list$journal <- paste0("<i>", journal_text, "</i>. ")
+            text_list$journal <- glue("<i>{journal_text}</i>. ")
           }else{
-            text_list$journal <- paste0(journal_text, ". ")
+            text_list$journal <- glue("{journal_text}. ")
           }
         }else{
           text_list$journal <- NA
@@ -88,11 +88,15 @@ format_citation <- function(
       }
       # authors
       if(any(cols_tr == "author")){
-        author_vector <- strsplit(a[['author']], " and ")[[1]]
-        if(length(author_vector) == 1){
-          text_list$author <- a[['author']]
+        if(is.list(a[["author"]])){
+          author_vector <- a[["author"]][[1]]
         }else{
-          text_list$author <- paste0(author_vector[1], " et al.")
+          author_vector <- strsplit(a[['author']], " and ")[[1]]
+        }
+        if(length(author_vector) == 1){
+          text_list$author <- author_vector
+        }else{
+          text_list$author <- glue("{author_vector[1]} et al.")
         }
       }else{
         if(!all(is.na(text_list))){
@@ -105,7 +109,7 @@ format_citation <- function(
       return(a[1])
     }else{
       return(
-        paste(text_vec[!is.na(text_vec)], collapse = " ")
+        glue::glue_collapse(text_vec[!is.na(text_vec)], sep = " ")
       )
     }
   }))
@@ -120,6 +124,5 @@ format_citation <- function(
       data_out <- add_line_breaks(data_out, line_breaks)
     }
   }
-  data_out <- unlist(lapply(data_out, trimws))
-  return(data_out)
+  unlist(lapply(data_out, trimws))
 }

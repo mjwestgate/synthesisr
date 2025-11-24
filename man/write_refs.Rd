@@ -13,18 +13,18 @@ write_bib(x)
 write_ris(x, tag_naming = "synthesisr")
 }
 \arguments{
-\item{x}{Either a data.frame containing bibliographic information or an
-object of class bibliography.}
+\item{x}{Either a \code{tibble} containing bibliographic information, or an
+object of class \code{bibliography.}}
 
 \item{file}{filename to save to.}
 
-\item{format}{What format should the data be exported as? Options are ris or
-bib.}
+\item{format}{What format should the data be exported as? Options are \code{"ris"} or
+\code{"bib"}.}
 
 \item{tag_naming}{what naming convention should be used to write RIS files?
 See details for options.}
 
-\item{write}{Logical should a file should be written? If FALSE returns a
+\item{write}{Logical should a file should be written? If \code{FALSE} returns a
 \code{list}.}
 }
 \value{
@@ -35,7 +35,7 @@ format.
 }
 \description{
 This function exports data.frames containing bibliographic
-information to either a .ris or .bib file.
+information to either a \code{.ris} or \code{.bib} file.
 }
 \examples{
 eviatlas <- c(
@@ -62,6 +62,7 @@ eviatlas <- c(
 )
 
 detect_parser(eviatlas) # = "parse_ris"
-df <- as.data.frame(parse_ris(eviatlas))
+df <- parse_ris(eviatlas) |>
+  as_tibble()
 ris_out <- write_refs(df, format = "ris", write = FALSE)
 }

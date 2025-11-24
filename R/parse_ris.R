@@ -67,7 +67,7 @@ parse_ris <- function(x, tag_naming = "best_guess"){
     result_order <- order(
       unlist(lapply(split(a$order, a$field), function(b){b[1]}))
     )
-    return(result[result_order])
+    result[result_order]
   })
   structure(x_final, class = "bibliography")
 }
@@ -103,10 +103,8 @@ clean_ris_years <- function(x){
         year_strings > 0 &
           year_strings <= as.numeric(format(Sys.Date(), "%Y")) + 1
       )
-      tag_frequencies <- as.data.frame(
-        xtabs(~ x$ris[check_rows[possible_rows]]),
-        stringsAsFactors = FALSE
-      )
+      tag_frequencies <- tibble(
+        xtabs(~ x$ris[check_rows[possible_rows]]))
       colnames(tag_frequencies) <- c("tag", "n")
       # now work out what proportion of each tag contain year data
       # compare against number of references to determine likelihood of being 'the' year tag
@@ -147,9 +145,23 @@ clean_ris_authors <- function(x){
 }
 
 #' Internal function to build a tag lookup table
+#' @param x a tibble
+#' @param tag_naming a string
 #' @noRd
 #' @keywords Internal
-get_tag_lookup <- function(x, tag_naming){
+get_tag_lookup <- function(x,
+                           tag_naming = "best_guess"){
+  if(missing(x)){
+    abort("`x` is missing, with no default")
+  }
+  if(!inherits(x, "data.frame")){
+    abort("Argument `x` must inherit from class `data.frame`")
+  }
+  ris_vec <- dplyr::pull(x, "ris")
+  if(is.null(ris_vec)){
+    abort("`x` must contain a column named `ris`")
+  }
+
   # create the appropriate lookup file for the specified tag
   if(inherits(tag_naming, "data.frame")){
     if(!any(colnames(tag_naming) == "order")){
@@ -169,6 +181,8 @@ get_tag_lookup <- function(x, tag_naming){
       synthesisr::code_lookup |>
         dplyr::filter(.data[[tag_column]] == TRUE) |>
         dplyr::select("code", "order", "field")
+    }else{
+      abort("argument `tag_naming` not recognized")
     }
   }
 }
@@ -178,8 +192,10 @@ get_tag_lookup <- function(x, tag_naming){
 #' @keywords Internal
 parse_ris_abstract <- function(result){
   if(length(result$abstract > 1)){
-    result$abstract <- paste(result$abstract, collapse = " ")
-    result$abstract <- gsub("\\s+", " ", result$abstract) # remove multiple spaces
+    result$abstract <- result$abstract |>
+      glue::glue_collapse(sep = " ") |> # collapse to a single string
+      stringr::str_replace_all("\\s+", " ") |>  # remove multiple spaces
+      as.character()
   }
   result
 }
@@ -193,10 +209,9 @@ parse_ris_year <- function(result){
       year_check <- regexpr("\\d{4}", result$year)
       if(any(year_check > 0)){
         result$year <- substr(
-          x = result$year[which(year_check>0)],
+          x = result$year[which(year_check > 0)],
           start = year_check[1],
-          stop = year_check[1]+3
-        )
+          stop = year_check[1] + 3)
       }else{
         result$year <- ""
       }
@@ -216,11 +231,14 @@ parse_ris_title <- function(result){
       if(result$title[1] == result$title[2]){
         result$title <- result$title[1]
       }else{
-        result$title <- paste(result$title, collapse = " ")
+        # Note: concatenation assumes line breaks are parsed as separate
+        # entries. For other use cases this approach doesn't make sense
+        result$title <- glue::glue_collapse(result$title, sep = " ") |>
+          as.character()
       }
     }
-    result$title <- gsub("\\s+", " ", result$title) # remove multiple spaces
-    result$title <- sub("\\.$", "", result$title) # remove final full stops
+    result$title <- stringr::str_replace_all(result$title, "\\s+", " ")
+    result$title <- stringr::str_replace(result$title, "\\.$", "")
   }
   result
 }
@@ -237,26 +255,29 @@ parse_ris_journal <- function(result){
         decreasing = FALSE
       )]
       result$journal <- unique_journals[1]
-      result$journal_secondary <- paste(
+      result$journal_secondary <- glue::glue_collapse(
         unique_journals[c(2:length(unique_journals))],
-        collapse = "; "
-      )
+        sep = "; ") |>
+        as.character()
     }else{
       result$journal <- unique_journals
     }
-    result$journal <-gsub("  ", " ", result$journal)
-    result$journal <-sub("\\.$", "", result$journal)
+    result$journal <- stringr::str_replace_all(result$journal, "\\s+", " ")
+    result$journal <- stringr::str_replace(result$journal, "\\.$", "")
   }
   result
 }
 
 #' Internal function to handle page numbers
+#' @param result a named list
 #' @noRd
 #' @keywords Internal
 parse_ris_page_numbers <- function(result){
   if(any(names(result) == "pages")){
     if(length(result$pages) > 1){
-      result$pages <- paste(sort(result$pages), collapse = "-")
+      result$pages <- sort(result$pages) |>
+        glue::glue_collapse(sep = "-") |>
+        as.character()
     }
   }
   result

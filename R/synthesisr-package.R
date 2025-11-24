@@ -49,6 +49,7 @@
 #' @name synthesisr-package
 #' @docType package
 #' @importFrom dplyr bind_rows
+#' @importFrom glue glue
 #' @importFrom rlang abort
 #' @importFrom rlang warn
 #' @importFrom rlang .data

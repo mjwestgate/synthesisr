@@ -1,3 +1,10 @@
+test_that("`format_citation()` fails for invalid object class", {
+  x <- list(x = 1) |>
+    structure(class = "some_class")
+  format_citation(x) |>
+    expect_error()
+})
+
 test_that("format_citation() works for an object of class bibliography", {
   bib <- read_refs("testdata/eviatlas.txt", return_df = FALSE)
   expect_equal(

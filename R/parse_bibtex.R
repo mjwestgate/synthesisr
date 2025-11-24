@@ -22,25 +22,19 @@ parse_bibtex <- function(x){
   raw_df$article <- cumsum(article_vec)
 
   # split by article and transpose
-  result <- lapply(
-    split(raw_df[, 1:2], raw_df$article),
-    function(a){
-      result <- as.data.frame(t(a$value))
-      colnames(result) <- a$variable
-      return(result)
-    }) |>
-    bind_rows() |>
-    tibble()
+  split_df <- split(raw_df[, 1:2], raw_df$article)
+  result <- lapply(split_df,
+         function(a){
+           b <- split(a$value, a$variable)}) |>
+    purrr::list_transpose() |>
+    as_tibble()
 
   # split authors
   if(any(names(result) == "author")){
-    if(any(grepl("and", result$author))){
+    if(any(stringr::str_detect(result$author, "and"))){
       result$author <- strsplit(result$author, "\\s*and\\s*")
     }
   }
-
-  # join duplicated columns
-  # note: needs to be done simultaneously with calling `tibble()`
 
   return(result)
 }

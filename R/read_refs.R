@@ -179,7 +179,7 @@ read_ref <- function(
   if(inherits(df, "data.frame")){
     if(!return_df){df <- as.bibliography(df)}
   }else{
-    if(return_df){df <- as.data.frame(df) |> tibble()}
+    if(return_df){df <- as_tibble(df)}
   }
   if(inherits(df, "data.frame")){df <- clean_df(df)}
   if(verbose){cat("done\n")}

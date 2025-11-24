@@ -69,6 +69,7 @@ test_that("pubmed formats are read correctly", {
 test_that("bibtex imports properly with json code", {
   x <- read_ref("testdata/Scopus_bib_example.bib")
   expect_true(inherits(x, c("data.frame", "tbl")))
+
   expect_equal(nrow(x), 3)
 })
 

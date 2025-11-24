@@ -1,15 +1,15 @@
 #' Export data to a bibliographic format
 #'
 #' @description This function exports data.frames containing bibliographic
-#' information to either a .ris or .bib file.
-#' @param x Either a data.frame containing bibliographic information or an
-#' object of class bibliography.
+#' information to either a `.ris` or `.bib` file.
+#' @param x Either a `tibble` containing bibliographic information, or an
+#' object of class `bibliography.`
 #' @param file filename to save to.
-#' @param format What format should the data be exported as? Options are ris or
-#' bib.
+#' @param format What format should the data be exported as? Options are `"ris"` or
+#' `"bib"`.
 #' @param tag_naming what naming convention should be used to write RIS files?
 #' See details for options.
-#' @param write Logical should a file should be written? If FALSE returns a
+#' @param write Logical should a file should be written? If `FALSE` returns a
 #' `list`.
 #' @return This function is typically called for it's side effect of writing a
 #' file in the specified location and format. If \code{write} is FALSE, returns
@@ -53,7 +53,7 @@ write_refs <- function(
       }
     }else if(inherits(tag_naming, "data.frame")){
       if(any(!(c("code", "field") %in% colnames(tag_naming)))){
-        abort("if a data.frame is supplied to replace_tags, it must contain columns 'code' & 'field'.")
+        abort("if a `tibble` is supplied to replace_tags, it must contain columns 'code' & 'field'.")
       }
     }
   }
