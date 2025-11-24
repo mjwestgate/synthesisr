@@ -17,5 +17,4 @@
 #'  \item{ris_asp}{logical: If the code is used in Academic Search Premier ris files}
 #'  \item{ris_ovid}{logical: If the code is used in Ovid ris files}
 #'  \item{ris_synthesisr}{logical: If the code used in synthesisr imports & exports}}
-#' @export
-code_lookup
+"code_lookup"
