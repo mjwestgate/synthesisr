@@ -23,7 +23,6 @@
 #' @seealso \code{\link{string_}} or \code{\link{fuzz_}} for suitable functions
 #' to pass to \code{methods}; \code{\link{extract_unique_references}} and
 #' \code{\link{deduplicate}} for higher-level functions.
-#' @importFrom rlang abort
 #' @example inst/examples/deduplicate.R
 #' @export
 find_duplicates <- function(
@@ -181,7 +180,6 @@ find_duplicates <- function(
 #' number of characters.
 #' @return Returns a `data.frame` of unique references.
 #' @seealso `find_duplicates()`, `deduplicate()`
-#' @importFrom rlang abort
 #' @example inst/examples/deduplicate.R
 #' @export
 extract_unique_references <- function(

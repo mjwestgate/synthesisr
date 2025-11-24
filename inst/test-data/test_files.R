@@ -163,3 +163,9 @@ res_synth_methods <-
 writeLines(eviatlas, "tests/testthat/testdata/eviatlas.txt")
 writeLines(litsearchr, "tests/testthat/testdata/litsearchr.txt")
 writeLines(res_synth_methods, "tests/testthat/testdata/res_synth_methods.txt")
+
+# add csv
+x <- read_ref("tests/testthat/testdata/eviatlas.txt",
+              tag_naming = "none")
+readr::write_csv(x, "tests/testthat/testdata/eviatlas.csv")
+readr::write_tsv(x, "tests/testthat/testdata/eviatlas.tsv")

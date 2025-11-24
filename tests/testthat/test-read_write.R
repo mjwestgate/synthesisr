@@ -20,6 +20,31 @@ test_that("read_refs() works for simple imports", {
   expect_true(any(grep("robvis", df[3, ])))
 })
 
+# check for a bug whereby `tag_naming` set to none still resulted in some renaming
+test_that("read_refs() works for ris with `tag_naming = 'none'`", {
+  x <- read_refs("testdata/eviatlas.txt",
+                 tag_naming = "none")
+  expect_true(inherits(x, c("tbl_df", "tbl", "data.frame")))
+  expect_equal(nrow(x), 1)
+  # ensure all columns are length-2 ris tags
+  xcols <- colnames(x)
+  expect_false(any(xcols == "year"))
+  expect_true(all(nchar(xcols) == 2))
+  expect_true(all(xcols %in% dplyr::pull(code_lookup, "code")))
+})
+
+test_that("read_refs() works for csv", {
+  x <- read_refs("testdata/eviatlas.csv", show_col_types = FALSE)
+  expect_true(inherits(x, c("tbl_df", "tbl", "data.frame")))
+  expect_equal(nrow(x), 1)
+})
+
+test_that("read_refs() works for tsv", {
+  x <- read_refs("testdata/eviatlas.tsv", show_col_types = FALSE)
+  expect_true(inherits(x, c("tbl_df", "tbl", "data.frame")))
+  expect_equal(nrow(x), 1)
+})
+
 test_that("pubmed formats are read correctly", {
   x <- read_refs("testdata/PubMed_example.txt")
   expect_s3_class(x, c("tbl_df", "tbl", "data.frame"))
@@ -83,6 +108,6 @@ test_that("`read_refs()` works for bibtext files with spaces around `=`", {
   tmp <- tempfile()
   writeLines(litsearchr, tmp)
   df <- read_refs(filename=tmp, return_df = TRUE, verbose = TRUE)
-  expect_equal(ncol(df), 7)
+  expect_equal(ncol(df), 9)
   expect_equal(nrow(df), 1)
 })

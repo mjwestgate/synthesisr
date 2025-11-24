@@ -92,7 +92,6 @@ print.bibliography <- function(x, n, ...){
 }
 
 #' @rdname bibliography-class
-#' @importFrom rlang abort
 #' @export
 '[.bibliography' <- function(x, n){
   class(x) <- "list"
@@ -138,27 +137,17 @@ as.data.frame.bibliography <- function(x, ...){
     lookup = a)
     names(result) <- cols
     return(
-      as.data.frame(
-        result,
-        stringsAsFactors=FALSE
-      )
+      as_tibble(result)
     )
     },
     cols = cols
   )
 
-  x_dframe <- data.frame(
-    do.call(rbind, x_list),
-    stringsAsFactors = FALSE
-  )
-  rownames(x_dframe) <- NULL
-
-  return(x_dframe)
+  bind_rows(x_list)
 }
 
 
 #' @rdname bibliography-class
-#' @importFrom rlang abort
 #' @export
 as.bibliography <- function(x, ...){
 
@@ -188,8 +177,6 @@ as.bibliography <- function(x, ...){
 #' @param .rows currently ignored
 #' @param .name_repair currently ignored
 #' @param rownames currently ignored
-#' @importFrom purrr list_transpose
-#' @importFrom tibble as_tibble
 #' @export
 as_tibble.bibliography <- function(x,
                                    ...,
@@ -197,5 +184,5 @@ as_tibble.bibliography <- function(x,
                                    .name_repair,
                                    rownames){
   class(x) <- "list"
-  as_tibble(list_transpose(x))
+  as_tibble(purrr::list_transpose(x))
 }

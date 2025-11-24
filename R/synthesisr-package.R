@@ -11,7 +11,7 @@
 #' The key task performed by `synthesisr` is flexible import and
 #' presentation of bibliographic data. This is typically achieved by
 #' `read_refs()`, which can import multiple files at once and link them together
-#' into a single `data.frame`. Conversely, export is via `write_refs()`. Users
+#' into a single `tibble`. Conversely, export is via `write_refs()`. Users
 #' that require more detailed control can use the following functions:
 #'
 #' \itemize{
@@ -46,17 +46,20 @@
 #'   \item [fuzz_] Fuzzy string matching c/o `fuzzywuzzy`
 #'   \item [string_] Fuzzy string matching c/o `stringdist`
 #'}
-#'
-#' @section Deprecated:
-#'
-#' \itemize{
-#'   \item [merge_columns] Synonymous with [dplyr::bind_rows]
-#' }
 #' @name synthesisr-package
 #' @docType package
+#' @importFrom dplyr bind_rows
+#' @importFrom rlang abort
+#' @importFrom rlang warn
+#' @importFrom rlang .data
 #' @importFrom stats xtabs
+#' @importFrom tibble as_tibble
+#' @importFrom tibble tibble
 #' @importFrom utils head
 #' @importFrom utils read.table
 #' @importFrom utils tail
 #' @importFrom utils write.table
+#' @importFrom vroom default_locale
+#' @importFrom vroom vroom
+#' @importFrom vroom vroom_lines
 "_PACKAGE"

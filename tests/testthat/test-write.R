@@ -12,4 +12,5 @@ test_that("write_refs() successfully writes from a tibble", {
   df <-  read_refs("testdata/eviatlas.txt")
   write_refs(df, "TEST_TIBBLE.bib")
   expect_true(file.exists("TEST_TIBBLE.bib"))
+  unlink("TEST_TIBBLE.bib")
 })

@@ -26,6 +26,7 @@ Description: A critical first step in systematic literature reviews
 Depends: R (>= 4.1.0)
 Imports:
     dplyr,
+    glue,
     purrr,
     rlang,
     stringdist,
@@ -33,9 +34,11 @@ Imports:
     unglue,
     vroom
 Suggests: 
-    knitr, 
-    rmarkdown, 
-    testthat
+    knitr,
+    readr,
+    rmarkdown,
+    testthat,
+    usethis
 Date: 2023-06-07
 License: GPL-3
 URL: https://martinwestgate.com/synthesisr/

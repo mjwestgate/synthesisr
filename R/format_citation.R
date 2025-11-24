@@ -15,7 +15,6 @@
 #' @param ... any other arguments.
 #' @return Returns a string of length equal to `length(data)` that contains
 #' formatted citations.
-#' @importFrom rlang abort
 #' @example inst/examples/format_citation.R
 #' @export
 format_citation <- function(

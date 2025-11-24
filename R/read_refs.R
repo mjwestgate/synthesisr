@@ -1,4 +1,4 @@
-#' Import bibliographic search results
+#' Import bibliographic data files
 #'
 #' Import common bibliographic reference formats  such as `.bib`, `.ris`, or
 #' `.txt`.
@@ -6,29 +6,29 @@
 #' results to import.
 #' @param tag_naming Either a length-1 character stating how should ris tags be
 #' replaced (see details for a list of options), or an object inheriting from
-#' class `data.frame` containing user-defined replacement tags.
-#' @param return_df If `TRUE` (default), returns a `data.frame`; if `FALSE`,
+#' class `tibble` containing user-defined replacement tags.
+#' @param return_df If `TRUE` (default), returns a `tibble`; if `FALSE`,
 #' returns a list.
-#' @param locale passed to [vroom::vroom_lines()]
 #' @param verbose If `TRUE`, prints status updates (defaults to `FALSE`).
-#' @param locale Overrides default locale.
-#' @details The default for argument `tag_naming` is `"best_guess"`,
-#' which estimates what database has been used for ris tag replacement, then
-#' fills any gaps with generic tags. Any tags missing from the database (i.e.
-#' `code_lookup`) are passed unchanged. Other options are to use tags from
-#' Web of Science (`"wos"`), Scopus (`"scopus"`), Ovid (`"ovid"`)
-#' or Academic Search Premier (`"asp"`). If a `data.frame` is given,
-#' then it must contain two columns: `"code"` listing the original tags in
-#' the source document, and `"field"` listing the replacement column/tag
-#' names. The `data.frame` may optionally include a third column named
-#' `"order"`, which specifies the order of columns in the resulting
-#' `data.frame`; otherwise this will be taken as the row order. Finally,
-#' passing `"none"` to `replace_tags` suppresses tag replacement.
-#' @return Returns a `data.frame` or `list` of assembled search results.
-#' @importFrom dplyr bind_rows
-#' @importFrom rlang abort
-#' @importFrom vroom default_locale
-#' @importFrom vroom vroom
+#' @param locale passed to [vroom::vroom_lines()]
+#' @param ... Additional arguments, passed to [vroom::vroom()] or [vroom::vroom_lines()]
+#' @details Accepted values for `tag_naming` are:
+#' '\itemize{
+#'     \item `"best_guess"`: estimate which database has been used for ris tag replacement,
+#'     then fill any gaps with generic tags. Any tags missing from [code_lookup] are passed
+#'     unchanged.
+#'     \item `"wos"` Web of Science tags
+#'     \item `"scopus"` Scopus tags
+#'     \item `"ovid"` OVID tags
+#'     \item `"asp"` Academic Search Premier tags
+#'     \item `"none"` Do not rename tags
+#'     \item A `tibble` with the following columns: \itemize{
+#'        \item `"code"` listing the original tags in the source document
+#'        \item `"field"` listing the replacement column/tag names
+#'        \item `"order"` (optional) listing the order of columns in the resulting `tibble`
+#'        }
+#' }
+#' @return Returns a `tibble` unless `return_df` is set to `FALSE`, when it returns a `list`.
 #' @example inst/examples/read_refs.R
 #' @export
 read_refs <- function(
@@ -36,7 +36,8 @@ read_refs <- function(
   tag_naming = "best_guess",
   return_df = TRUE,
   verbose = FALSE,
-  locale = vroom::default_locale()
+  locale = vroom::default_locale(),
+  ...
 ){
 
   if(missing(filename)){
@@ -49,13 +50,12 @@ read_refs <- function(
 
   if(length(filename) > 1){
     result_list <- lapply(filename, function(a){
-      read_ref(
-        filename = a,
-        tag_naming = tag_naming,
-        return_df = return_df,
-        verbose = verbose,
-        locale = locale
-      )
+      read_ref(filename = a,
+               tag_naming = tag_naming,
+               return_df = return_df,
+               verbose = verbose,
+               locale = locale,
+               ...)
     })
     names(result_list) <- filename
 
@@ -87,7 +87,8 @@ read_refs <- function(
         tag_naming = tag_naming,
         return_df = return_df,
         verbose = verbose,
-        locale = locale
+        locale = locale,
+        ...
       )
     )
   }
@@ -100,12 +101,7 @@ read_refs <- function(
 #' @param filename A path to a filename containing search results to import.
 #' @param return_df If TRUE, returns a data.frame; if FALSE, returns a list.
 #' @param verbose If TRUE, prints status updates.
-#' @return Returns a data.frame or list of assembled search results.
-#' @importFrom rlang abort
-#' @importFrom rlang warn
-#' @importFrom tibble tibble
-#' @importFrom vroom default_locale
-#' @importFrom vroom vroom_lines
+#' @return Returns a `tibble` or `list` of assembled search results.
 #' @noRd
 #' @keywords Internal
 read_ref <- function(
@@ -113,7 +109,8 @@ read_ref <- function(
   tag_naming = "best_guess",
   return_df = TRUE,
   verbose = FALSE,
-  locale = default_locale()
+  locale = default_locale(),
+  ...
 ){
 
   # error checking for replace tags
@@ -137,25 +134,33 @@ read_ref <- function(
 
   df <- switch(parse_function,
          "parse_ris" = {
-           parse_ris(x = vroom_lines(filename, locale = locale),
+           parse_ris(x = vroom_lines(filename,
+                                     locale = locale,
+                                     ...),
                      tag_naming = tag_naming)
          },
          "parse_pubmed" = {
-           parse_pubmed(x = vroom_lines(filename, locale = locale))
+           parse_pubmed(x = vroom_lines(filename,
+                                        locale = locale,
+                                        ...))
          },
          "parse_bibtex" = {
-           parse_bibtex(x = vroom_lines(filename, locale = locale))
+           parse_bibtex(x = vroom_lines(filename,
+                                        locale = locale,
+                                        ...))
          },
          "parse_csv" = {
            vroom(filename,
                  delim =  ",",
-                 locale = locale) |>
+                 locale = locale,
+                 ...) |>
            match_columns()
          },
          "parse_tsv" = {
            vroom(filename,
                  delim =  "\t",
-                 locale = locale) |>
+                 locale = locale,
+                 ...) |>
            match_columns()
          },
          { # aka "unknown"
@@ -179,4 +184,27 @@ read_ref <- function(
   if(inherits(df, "data.frame")){df <- clean_df(df)}
   if(verbose){cat("done\n")}
   return(df)
+}
+
+#' Internal function used by csv and tsv imports
+#' @description Takes an imported `tibble` and rearranges it to match lookup
+#' codes.
+#' @param df A data.frame that contains bibliographic information.
+#' @return Returns a data.frame rearranged and coded to match standard
+#' bibliographic fields, with unrecognized fields appended.
+#' @noRd
+#' @keywords Internal
+#' @example inst/examples/match_columns.R
+match_columns <- function(df){
+  # figure out which columns match known tags
+  rename_lookup <- synthesisr::code_lookup |>
+    dplyr::filter(.data[["code"]] %in% colnames(df)) |>
+    dplyr::select("code", "field")
+
+  # convert this to a vector
+  rename_vector <- rename_lookup$code
+  names(rename_vector) <- rename_lookup$field
+
+  # pass to `rename()`
+  dplyr::rename(df, !!!rename_vector)
 }

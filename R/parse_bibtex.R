@@ -1,7 +1,4 @@
 #' @rdname parse_
-#' @importFrom dplyr bind_rows
-#' @importFrom tibble tibble
-#' @importFrom unglue unglue_data
 #' @export
 parse_bibtex <- function(x){
   # use `unglue` to parse text
@@ -10,11 +7,11 @@ parse_bibtex <- function(x){
   #   - Removes any white space out the front of the variable name
   #   - Allows zero or more spaces around the equals sign
   #   - Comma at the end is optional
-  raw_df <- unglue_data(x,
-                        patterns = c("@[variable]{[value],",
-                                     "[=\\s*][variable][=\\s*=\\s*]{[value]}[=,?]"),
-                        open = "[",
-                        close = "]")
+  raw_df <- unglue::unglue_data(x,
+                                patterns = c("@[variable]{[value],",
+                                             "[=\\s*][variable][=\\s*=\\s*]{[value]}[=,?]"),
+                                open = "[",
+                                close = "]")
 
   # remove missing values
   raw_df <- raw_df[!(is.na(raw_df$variable) | is.na(raw_df$value)), ]

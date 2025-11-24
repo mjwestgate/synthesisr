@@ -9,44 +9,51 @@ parse_ris <- function(x, tag_naming = "best_guess"){
                 detect_delimiter(x),
                 type = "generic")
 
-  # merge data with lookup info, to provide bib-style tags
-  tag_lookup_thisfile <- get_tag_lookup(x, tag_naming)
-  x_merge <- merge(x,
-                   tag_lookup_thisfile,
-                   by.x = "ris",
-                   by.y = "code",
-                   all.x = TRUE,
-                   all.y = FALSE
-  )
-  x_merge <- x_merge[order(x_merge$row_order), ]
+  if(tag_naming == "none"){
+    x_merge <- x |>
+      dplyr::mutate("field" = .data[["ris"]],
+                    "order" = dplyr::row_number())
+  }else{
+    # handle lookup for tag renaming
+    # find a lookup table
+    tag_lookup_thisfile <- get_tag_lookup(x, tag_naming)
 
-  # find a way to store missing .bib data rather than discard
-  if(any(is.na(x_merge$field))){
-    rows_tr <- which(is.na(x_merge$field))
-    x_merge$field[rows_tr] <- x_merge$ris[rows_tr]
+    # join to source data
+    x_merge <- dplyr::left_join(x,
+                                tag_lookup_thisfile,
+                                by = c("ris" = "code")) |>
+      dplyr::arrange(.data[["row_order"]])
 
-    # ensure all headings have an order
-    if(all(is.na(x_merge$order))){
-      start_val <- 0
-    }else{
-      start_val <- max(x_merge$order, na.rm = TRUE)
+    # find a way to store missing .bib data rather than discard
+    if(any(is.na(x_merge$field))){
+      rows_tr <- which(is.na(x_merge$field))
+      x_merge$field[rows_tr] <- x_merge$ris[rows_tr]
+
+      # ensure all headings have an order
+      if(all(is.na(x_merge$order))){
+        start_val <- 0
+      }else{
+        start_val <- max(x_merge$order, na.rm = TRUE)
+      }
+      x_merge$order[rows_tr] <- as.numeric(as.factor(x_merge$ris[rows_tr])) + start_val
     }
-    x_merge$order[rows_tr] <- as.numeric(as.factor(x_merge$ris[rows_tr])) + start_val
-  }
 
-  # tidy up specific columns
-  x_merge <- x_merge |>
-    clean_ris_years() |>
-    clean_ris_authors()
+    # tidy up specific columns
+    x_merge <- x_merge |>
+      clean_ris_years() |>
+      clean_ris_authors()
+  }
 
   # convert into a list, where each reference is a separate entry
-  x_split <- split(x_merge[c("field", "ris", "text", "order")], x_merge$ref)
+  x_split <- x_merge |>
+    dplyr::select("field", "ris", "text", "order") |>
+    split(dplyr::pull(x_merge, "ref"))
 
-  # there is an issue with date accessed creating non-existing records
-  # removing datasets with 1 row fixes this
-  if(any(unlist(lapply(x_split, nrow))==1)){
-    x_split <- x_split[  -which(unlist(lapply(x_split, nrow))==1)]
-  }
+  # # there is an issue with date accessed creating non-existing records
+  # # removing datasets with 1 row fixes this
+  # if(any(unlist(lapply(x_split, nrow)) == 1)){
+  #   x_split <- x_split[  -which(unlist(lapply(x_split, nrow)) == 1)]
+  # }
 
   # convert to list format
   x_final <- lapply(x_split, function(a){
@@ -62,11 +69,11 @@ parse_ris <- function(x, tag_naming = "best_guess"){
     )
     return(result[result_order])
   })
-  class(x_final) <- "bibliography"
-  return(x_final)
+  structure(x_final, class = "bibliography")
 }
 
 #' Internal function to clean year data (above)
+#' @param x A tibble
 #' @noRd
 #' @keywords Internal
 clean_ris_years <- function(x){
@@ -148,27 +155,22 @@ get_tag_lookup <- function(x, tag_naming){
     if(!any(colnames(tag_naming) == "order")){
       tag_naming$order <- seq_len(nrow(tag_naming))
     }
-    code_lookup_thisfile <- tag_naming
+    tag_naming
   }else{
     if(tag_naming == "none"){
       ris_vals <- unique(x$ris)
-      code_lookup_thisfile <- data.frame(
-        code = ris_vals,
-        field = ris_vals,
-        order = seq_along(ris_vals),
-        stringsAsFactors = FALSE
-      )
+      tibble(code = ris_vals,
+             field = ris_vals,
+             order = seq_along(ris_vals))
     }else if(tag_naming == "best_guess"){
-      code_lookup_thisfile <- detect_lookup(tags = unique(x$ris))
+      detect_lookup(tags = unique(x$ris))
     }else if(any(c("wos", "scopus", "ovid", "asp", "synthesisr") == tag_naming)){
-      rows <- which(synthesisr::code_lookup[, paste0("ris_", tag_naming)])
-      code_lookup_thisfile <- synthesisr::code_lookup[
-        rows,
-        c("code", "order", "field")
-      ]
+      tag_column <- glue::glue("ris_{tag_naming}")
+      synthesisr::code_lookup |>
+        dplyr::filter(.data[[tag_column]] == TRUE) |>
+        dplyr::select("code", "order", "field")
     }
   }
-  code_lookup_thisfile
 }
 
 #' Internal function to handle abstracts

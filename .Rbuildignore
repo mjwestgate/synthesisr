@@ -11,3 +11,4 @@ README.md
 ^pkgdown$
 ^\.github$
 README.Rmd
+data-raw

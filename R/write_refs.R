@@ -17,7 +17,6 @@
 #' format.
 #' @example inst/examples/parse_.R
 #' @rdname write_refs
-#' @importFrom rlang abort
 #' @export
 write_refs <- function(
     x,
@@ -142,16 +141,20 @@ write_bib <- function(x) {
 write_ris <- function(x,
   tag_naming = "synthesisr"
 ){
+  # first get the tags we want to use here
+  tag_column <- glue::glue("ris_{tag_naming}")
+  lookup_tibble <- synthesisr::code_lookup |>
+    dplyr::filter(.data[[tag_column]] == TRUE) |>
+    dplyr::select("code", "field")
+
+  # then convert to ris, one entry at a time
   result <- lapply(x, function(a, lookup) {
 
     # convert to tagged vector
     b <- do.call(c, a)
     b <- b[!is.na(b)]
-    b <- data.frame(
-      tag = c(names(b), "end"),
-      entry = c(b, ""),
-      stringsAsFactors = FALSE
-    )
+    b <- tibble(tag = c(names(b), "end"),
+                entry = c(b, ""))
     rownames(b) <- NULL
     b$tag <- gsub("[[:digit:]]", "", b$tag)
 
@@ -174,7 +177,7 @@ write_ris <- function(x,
             entry = gsub("[[:punct:]]", "", text_cleaned),
             stringsAsFactors = FALSE
           )
-          b <- as.data.frame(rbind(
+          b <- as_tibble(rbind(
             b[c(1:(page_row - 1)),],
             new_rows,
             b[c((page_row + 1):nrow(b)),]
@@ -201,12 +204,6 @@ write_ris <- function(x,
     )
 
   },
-  lookup = synthesisr::code_lookup[
-    synthesisr::code_lookup[, paste0("ris_", tag_naming)],
-    c("code", "field")
-  ]
-  )
-
-  export <- do.call(c, result)
-  return(export)
+  lookup = lookup_tibble)
+  do.call(c, result)
 }

@@ -1,4 +1,4 @@
-my_df <-  data.frame(
+my_df <-  tibble::tibble(
   title = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
     "revtools: An R package to support article screening for evidence synthesis",
@@ -9,9 +9,7 @@ my_df <-  data.frame(
   ),
   year = c("2019", "2019", "2019", "2019", NA, NA),
   authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al", NA, NA),
-  stringsAsFactors = FALSE
-)
+              "Grames et al", "Pick et al", NA, NA))
 
 # run deduplication
 dups <- find_duplicates(
