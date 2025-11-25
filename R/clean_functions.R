@@ -7,12 +7,11 @@
 #' @example inst/examples/clean_.R
 #' @name clean_
 #' @export
-clean_df <- function(data){
-  colnames(data) <- clean_colnames(colnames(data))
-  if(any(colnames(data) == "author")){
-    data$author <- clean_authors(data$author)
-  }
-  convert_factors_to_strings(data)
+clean_df <- function(x){
+  x |>
+    clean_colnames() |>
+    clean_authors() |>
+    convert_factors_to_strings()
 }
 
 
@@ -20,35 +19,50 @@ clean_df <- function(data){
 #' @rdname clean_
 #' @export
 clean_authors <- function(x){
+  if(inherits(x, "data.frame")){
+    if(any(colnames(x) == "author")){
+      if(is.character(x$author)){ # exception added to ensure list-cols are ignored
+        x$author <- clean_authors_regex(x$author)
+      }
+    }
+  }else if(is.character(x)){
+    x <- clean_authors_regex(x)
+  }
+  x
+}
+
+#' Internal function to enact clean_authors
+#' @noRd
+#' @keywords Internal
+clean_authors_regex <- function(x){
   if(any(grepl("\\sand\\s|\\sAND\\s|\\s&\\s", x))){
-    x <- gsub("\\sAND\\s|\\s&\\s", " and ", x)
+    x <- stringr::str_replace_all(x, "\\sAND\\s|\\s&\\s", " and ")
   }else{
     x <- gsub(",(?=\\s[[:alpha:]]{2,})", " and ", x, perl = TRUE)
   }
-  x <- gsub("\\s{2, }", " ", x)
-  return(x)
+  stringr::str_replace_all(x, "\\s+", " ")
 }
-
 
 # Clean common issues with column names
 #' @rdname clean_
 #' @export
 clean_colnames <- function(
-  x # colnames
+  x # a tibble
 ){
-  if(inherits(x, "data.frame")){
-    x <- colnames(x)
-  }
-  x <- sub("^(X|Y|Z)\\.+", "", x) # remove leading X
-  x <- sub("^[[:punct:]]*", "", x) # leading punctuation
-  x <- sub("[[:punct:]]*$", "", x) # trailing punctuation
-  x <- gsub("\\.+", "_", x) # replace 1 or more dots with underscore
-  non_codes <- nchar(x) > 2 # for colnames with nchar > 2, convert to lower case
-  x[non_codes] <- tolower(x[non_codes])
-  x <- sub("authors", "author", x) # remove plural authors
-  x <- make.unique(x, sep = "_")
-  x <- gsub(" ", "_", x)
-  return(x)
+  # basic cleaning pipe
+  newcolnames <- colnames(x) |>
+    stringr::str_replace("^(X|Y|Z)\\.+", "") |> # remove leading X
+    stringr::str_replace("^[[:punct:]]*", "") |>  # leading punctuation
+    stringr::str_replace("[[:punct:]]*$", "") |> # trailing punctuation
+    stringr::str_replace("authors", "author") |> # remove plural authors
+    stringr::str_replace_all("\\.+", "_") |> # replace 1 or more dots with underscore
+    stringr::str_replace_all(" ", "_")
+
+  # break pipe to conditionally change strings based on length
+  non_codes <- nchar(newcolnames) > 2 # for colnames with nchar > 2, convert to lower case
+  newcolnames[non_codes] <- tolower(newcolnames[non_codes])
+  colnames(x) <- make.unique(newcolnames, sep = "_")
+  x
 }
 
 #' Remove factors from an object
@@ -62,7 +76,11 @@ clean_colnames <- function(
 #' @keywords Internal
 convert_factors_to_strings <- function(z){
   z[] <- lapply(z, function(x){
-    if(is.factor(x)){as.character(x)}else{x}
+    if(is.factor(x)){
+      as.character(x)
+    }else{
+      x
+    }
   })
   return(z)
 }

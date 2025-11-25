@@ -181,7 +181,9 @@ read_ref <- function(
   }else{
     if(return_df){df <- as_tibble(df)}
   }
-  if(inherits(df, "data.frame")){df <- clean_df(df)}
+  if(inherits(df, "data.frame")){
+    df <- clean_df(df)
+  }
   if(verbose){cat("done\n")}
   return(df)
 }

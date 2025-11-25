@@ -33,7 +33,7 @@ format_citation <- function(
     data <- as_tibble(data)
   }
 
-  colnames(data) <- clean_colnames(colnames(data))
+  data <- clean_colnames(data)
   if(any(names(data) == "journal")){
     source <- "journal"
   }else{

@@ -137,10 +137,14 @@ as.bibliography <- function(x, ...){
     function(a){
       a <- as.list(a)
       if(any(names(a) == "author")){
-        a$author <- strsplit(a$author, " and ")[[1]]
+        if(is.character(a$author)){
+          a$author <- strsplit(a$author, " and ")[[1]]
+        }
       }
       if(any(names(a) == "keywords")){
-        a$keywords <- strsplit(a$keywords, " and ")[[1]]
+        if(is.character(a$keywords)){
+          a$keywords <- strsplit(a$keywords, " and ")[[1]]
+        }
       }
       return(a)
     }

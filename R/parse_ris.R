@@ -58,6 +58,7 @@ parse_ris <- function(x, tag_naming = "best_guess"){
   # convert to list format
   x_final <- lapply(x_split, function(a){
     result <- split(a$text, a$field) |>
+      parse_ris_author() |>
       parse_ris_year() |>
       parse_ris_title() |>
       parse_ris_journal() |>
@@ -185,6 +186,16 @@ get_tag_lookup <- function(x,
       abort("argument `tag_naming` not recognized")
     }
   }
+}
+
+#' Internal function to handle authors
+#' @noRd
+#' @keywords Internal
+parse_ris_author <- function(result){
+  if(any(names(result) == "author")){
+    result$author <- as.list(result$author)
+  }
+  result
 }
 
 #' Internal function to handle abstracts
