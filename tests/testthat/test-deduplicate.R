@@ -1,3 +1,10 @@
+test_that("find_duplicates() doesn't flag list-col NULLs as identical", {
+  result <- list(1, NULL, NULL, 2, 1) |>
+    find_duplicates()
+  expect_equal(as.integer(result),
+               c(1, 2, 3, 4, 1))
+})
+
 test_that("find_duplicates() works", {
   # with no duplicates
   x <- read_refs("testdata/ASP_ris_example.ris")

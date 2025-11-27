@@ -12,21 +12,21 @@ revtools <- c(
   "LA  - eng",
   "PT  - Journal Article",
   "JT  - Research Synthesis Methods",
-  ""
-)
+  "")
 
 # detect basic attributes of ris files
 detect_parser(revtools)
 detect_delimiter(revtools)
 
 # determine which tag format to use
-tags <- trimws(unlist(lapply(
+tags <- lapply(
   strsplit(revtools, "- "),
-  function(a){a[1]}
-)))
+  function(a){a[1]}) |>
+  unlist() |>
+  trimws()
 pubmed_tag_list <- detect_lookup(tags[!is.na(tags)])
 
 # find year data in other columns
 df <- parse_pubmed(revtools) |>
-  as_tibble
+  as_tibble()
 df$year <- detect_year(df)

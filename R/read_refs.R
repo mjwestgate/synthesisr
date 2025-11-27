@@ -66,15 +66,9 @@ read_refs <- function(
     }
 
     if(return_df){
-      result <- bind_rows(result_list)
-      result$filename <- unlist(
-        lapply(seq_len(length(result_list)),
-        function(a, data){
-          rep(names(data)[a], nrow(data[[a]]))
-        },
-        data = result_list
-      ))
-      return(result)
+      result_list |>
+        add_filename() |>
+        safe_bind_rows()
     }else{
       result <- do.call(c, result_list)
       return(result)
@@ -209,4 +203,63 @@ match_columns <- function(df){
 
   # pass to `rename()`
   dplyr::rename(df, !!!rename_vector)
+}
+
+#' function to add filename to each tibble in a list
+#' @param x a named list
+#' @noRd
+#' @keywords Internal
+add_filename <- function(x){
+  x_names <- names(x)
+  result <- lapply(x_names, \(a){
+    dplyr::mutate(x[[a]], filename = a)
+  })
+  names(result) <- x_names # useful to preserve names attribute
+  result
+}
+
+#' function to use `bind_rows()` where some columns may have been converted to
+#' lists-cols (but not consistently)
+#' @param x a named list
+#' @noRd
+#' @keywords Internal
+safe_bind_rows <- function(x){
+  # for each tibble, determine the class and name of each column
+  class_df <- lapply(names(x), \(a){
+    y <- x[[a]]
+    tibble(filename = a,
+           column = names(y),
+           class = unlist(lapply(y, class)))
+  }) |>
+    bind_rows()
+
+  # determine which columns have multiple classes
+  problem_cols <- class_df |>
+    dplyr::group_by(.data$column) |>
+    dplyr::summarize(n_classes = dplyr::n_distinct(class)) |>
+    dplyr::filter(.data$n_classes > 1) |>
+    dplyr::pull("column")
+
+  if(length(problem_cols) > 0){
+    # find which cols need to be converted to list, and which files they are in
+    correct_cols <- class_df |>
+      dplyr::filter(.data$column %in% problem_cols &
+                    .data$class != "list")
+
+    # use this to map which columns need updating
+    correct_split <- split(correct_cols,
+                           seq_len(nrow(correct_cols)))
+    for(i in seq_along(correct_split)){
+      a <- correct_split[[i]]
+      df <- x[[a$filename]]
+      df[[a$column]] <- as.list(df[[a$column]])
+      x[[a$filename]] <- df
+    }
+
+    # bind rows as normal
+    bind_rows(x)
+  }else{
+    bind_rows(x)
+  }
+
 }

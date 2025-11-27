@@ -40,8 +40,16 @@ find_duplicates <- function(
   if(inherits(data, "data.frame")){
     abort("'data' must be a character vector, not a data.frame")
   }
+
   if(!inherits(data, "character")){
     data <- as.character(data)
+    # list-cols are parsed as lists, but may contain NULLs
+    # that are handled poorly by `as.character()`
+    # oddly, NAs are parsed correctly
+    if(any(data == "NULL")){
+      rows <- which(data == "NULL")
+      data[rows] <- NA
+    }
   }
 
   # grouping

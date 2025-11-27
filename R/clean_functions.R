@@ -1,8 +1,7 @@
 #' Clean a `tibble` or vector
 #'
 #' Cleans column and author names
-#' @param data A `tibble` with bibliographic information.
-#' @param x A vector of strings
+#' @param x A `tibble` with bibliographic information.
 #' @return Returns the input, but cleaner.
 #' @example inst/examples/clean_.R
 #' @name clean_

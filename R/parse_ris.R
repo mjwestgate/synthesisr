@@ -80,14 +80,23 @@ parse_ris <- function(x, tag_naming = "best_guess"){
 clean_ris_years <- function(x){
   # method to systematically search for year data
   year_check <- regexpr("^\\d{4}$", x$text)
-  if(any(year_check > 0)){
-    check_rows <- which(year_check > 0)
+  year_check <- stringr::str_detect(x$text, "^\\d{4}$")
+
+  if(any(year_check)){
+    check_rows <- which(year_check)
     year_strings <- as.numeric(x$text[check_rows])
 
     # for entries with a bib entry labelled year, check that there aren't multiple years
-    if(any(x$field[check_rows] == "year", na.rm = TRUE)){
+    field_check <- x$field[check_rows] == "year"
+    if(any(field_check, na.rm = TRUE)){
+
       # check for repeated year information
-      year_freq <- xtabs(~ ref, data = x[which(x$field == "year"), ])
+      year_freq <- x |>
+        dplyr::filter(.data$field == "year") |>
+        dplyr::group_by(.data$ref) |>
+        dplyr::count() |>
+        dplyr::pull("n")
+
       if(any(year_freq > 1)){
         year_df <- x[which(x$field == "year"), ]
         year_list <- split(nchar(year_df$text), year_df$ris)
@@ -102,16 +111,18 @@ clean_ris_years <- function(x){
     }else{
       possible_rows <- which(
         year_strings > 0 &
-          year_strings <= as.numeric(format(Sys.Date(), "%Y")) + 1
-      )
-      tag_frequencies <- tibble(
-        xtabs(~ x$ris[check_rows[possible_rows]]))
-      colnames(tag_frequencies) <- c("tag", "n")
+          year_strings <= as.numeric(format(Sys.Date(), "%Y")) + 1)
+
       # now work out what proportion of each tag contain year data
       # compare against number of references to determine likelihood of being 'the' year tag
-      tag_frequencies$prop <- tag_frequencies$n/(max(x$ref)+1) # number of references
+      tag_frequencies <- x |>
+        dplyr::slice(check_rows[possible_rows]) |>
+        dplyr::group_by(.data$ris) |>
+        dplyr::count() |>
+        dplyr::mutate(prop = .data$n / (max(x$ref) + 1)) # number of references
+
       if(any(tag_frequencies$prop > 0.9)){
-        year_tag <- tag_frequencies$tag[which.max(tag_frequencies$prop)]
+        year_tag <- tag_frequencies$ris[which.max(tag_frequencies$prop)]
         rows.tr <- which(x$ris == year_tag)
         x$field[rows.tr] <- "year"
         x$row_order[rows.tr] <- 3

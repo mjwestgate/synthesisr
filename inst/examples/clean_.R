@@ -9,13 +9,10 @@ df <-  data.frame(
     "Haddaway et al",
     "Westgate",
     "EM Grames AND AN Stillman  & MW Tingley and CS Elphick",
-    "Pick et al")
-)
-
+    "Pick et al"))
 clean_df(df)
 
 # or use sub-functions
-colnames(df) <- clean_colnames(df)
-# colnames(df) <- clean_colnames(colnames(df)) # also works
-df$author <- clean_authors(df$author)
+clean_colnames(df)
+clean_authors(df)
 

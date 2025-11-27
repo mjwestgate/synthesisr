@@ -9,11 +9,8 @@ litsearchr <- c(
   pages={1645--1654},
   year={2019},
   publisher={Wiley Online Library}
-}"
-)
+}")
 
 tmp <- tempfile()
-
 writeLines(litsearchr, tmp)
-
 df <- read_refs(tmp, return_df = TRUE, verbose = TRUE)

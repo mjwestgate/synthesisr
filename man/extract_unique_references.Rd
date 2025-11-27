@@ -42,8 +42,7 @@ dups <- find_duplicates(
   my_df$title,
   method = "string_osa",
   rm_punctuation = TRUE,
-  to_lower = TRUE
-)
+  to_lower = TRUE)
 
 extract_unique_references(my_df, matches = dups)
 
