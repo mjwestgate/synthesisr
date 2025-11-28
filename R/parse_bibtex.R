@@ -4,8 +4,14 @@ parse_bibtex <- function(x){
 
   # on rare occasions, for example when text is added in the console,
   # text arrives as a length-1 vector with embedded `\n`s for line breaks.
-  x_split <- strsplit(x, "\\n") |>
-    unlist() # unlist re-groups content that is split unnecessarily back into a vector
+  # BUT parsing `\n` is risky otherwise as it may be present in e.g.
+  # abstracts. So restrict this parsing for now.
+  if(length(x) == 1L){
+    x_split <- strsplit(x, "\\n") |>
+      unlist() # unlist re-groups content that is split unnecessarily back into a vector
+  }else{
+    x_split <- x
+  }
 
   # determine which values start a row
   open_tag <- stringr::str_detect(x_split, "@[[:alnum:]]+\\{") |>
