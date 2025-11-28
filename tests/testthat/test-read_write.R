@@ -20,6 +20,31 @@ test_that("read_refs() works for simple imports", {
   expect_true(any(grep("robvis", df[3, ])))
 })
 
+# check for a bug whereby `tag_naming` set to none still resulted in some renaming
+test_that("read_refs() works for ris with `tag_naming = 'none'`", {
+  x <- read_refs("testdata/eviatlas.txt",
+                 tag_naming = "none")
+  expect_true(inherits(x, c("tbl_df", "tbl", "data.frame")))
+  expect_equal(nrow(x), 1)
+  # ensure all columns are length-2 ris tags
+  xcols <- colnames(x)
+  expect_false(any(xcols == "year"))
+  expect_true(all(nchar(xcols) == 2))
+  expect_true(all(xcols %in% dplyr::pull(code_lookup, "code")))
+})
+
+test_that("read_refs() works for csv", {
+  x <- read_refs("testdata/eviatlas.csv", show_col_types = FALSE)
+  expect_true(inherits(x, c("tbl_df", "tbl", "data.frame")))
+  expect_equal(nrow(x), 1)
+})
+
+test_that("read_refs() works for tsv", {
+  x <- read_refs("testdata/eviatlas.tsv", show_col_types = FALSE)
+  expect_true(inherits(x, c("tbl_df", "tbl", "data.frame")))
+  expect_equal(nrow(x), 1)
+})
+
 test_that("pubmed formats are read correctly", {
   x <- read_refs("testdata/PubMed_example.txt")
   expect_s3_class(x, c("tbl_df", "tbl", "data.frame"))
@@ -44,6 +69,7 @@ test_that("pubmed formats are read correctly", {
 test_that("bibtex imports properly with json code", {
   x <- read_ref("testdata/Scopus_bib_example.bib")
   expect_true(inherits(x, c("data.frame", "tbl")))
+
   expect_equal(nrow(x), 3)
 })
 
@@ -65,4 +91,24 @@ test_that("read-write-read roundtripping works for .ris files", {
   expect_equal(nrow(x), nrow(y))
   # expect_equal(ncol(x), ncol(y)) # fails at present - i.e. round-tripping is lossy
   unlink("TEMP", recursive = TRUE)
+})
+
+test_that("`read_refs()` works for bibtext files with spaces around `=`", {
+  litsearchr <- c(
+    "@article{grames2019,
+  title = {An automated approach to identifying search terms for systematic reviews using keyword co-occurrence networks},
+  author={Grames, Eliza M and Stillman, Andrew N and Tingley, Morgan W and Elphick, Chris S},
+  journal={Methods in Ecology and Evolution},
+  volume={10},
+  number={10},
+  pages={1645--1654},
+  year={2019},
+  publisher={Wiley Online Library}
+}"
+  )
+  tmp <- tempfile()
+  writeLines(litsearchr, tmp)
+  df <- read_refs(filename=tmp, return_df = TRUE, verbose = TRUE)
+  expect_equal(ncol(df), 9)
+  expect_equal(nrow(df), 1)
 })

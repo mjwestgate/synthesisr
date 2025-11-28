@@ -7,45 +7,44 @@
 #' @param b A character vector of items to match to a.
 #' @return Returns a score of same length as b, giving the dissimilarity between
 #' a and b.
-#' @importFrom stringdist stringdist
 #' @name string_
 #' @export
-string_osa <- function(a, b){stringdist(a, b, method = "osa")}
+string_osa <- function(a, b){stringdist::stringdist(a, b, method = "osa")}
 
 ## NOTE: This looks like poor coding practice. Consider deprecating.
 
 #' @rdname string_
 #' @export
-string_lv <- function(a, b){stringdist(a, b, method = "lv")}
+string_lv <- function(a, b){stringdist::stringdist(a, b, method = "lv")}
 
 #' @rdname string_
 #' @export
-string_dl <- function(a, b){stringdist(a, b, method = "dl")}
+string_dl <- function(a, b){stringdist::stringdist(a, b, method = "dl")}
 
 #' @rdname string_
 #' @export
-string_hamming <- function(a, b){stringdist(a, b, method = "hamming")}
+string_hamming <- function(a, b){stringdist::stringdist(a, b, method = "hamming")}
 
 #' @rdname string_
 #' @export
-string_lcs <- function(a, b){stringdist(a, b, method = "lcs")}
+string_lcs <- function(a, b){stringdist::stringdist(a, b, method = "lcs")}
 
 #' @rdname string_
 #' @export
-string_qgram <- function(a, b){stringdist(a, b, method = "qgram")}
+string_qgram <- function(a, b){stringdist::stringdist(a, b, method = "qgram")}
 
 #' @rdname string_
 #' @export
-string_cosine <- function(a, b){stringdist(a, b, method = "cosine")}
+string_cosine <- function(a, b){stringdist::stringdist(a, b, method = "cosine")}
 
 #' @rdname string_
 #' @export
-string_jaccard <- function(a, b){stringdist(a, b, method = "jaccard")}
+string_jaccard <- function(a, b){stringdist::stringdist(a, b, method = "jaccard")}
 
 #' @rdname string_
 #' @export
-string_jw <- function(a, b){stringdist(a, b, method = "jw")}
+string_jw <- function(a, b){stringdist::stringdist(a, b, method = "jw")}
 
 #' @rdname string_
 #' @export
-string_soundex <- function(a, b){stringdist(a, b, method = "soundex")}
+string_soundex <- function(a, b){stringdist::stringdist(a, b, method = "soundex")}

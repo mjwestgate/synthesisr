@@ -7,16 +7,14 @@
 \alias{clean_colnames}
 \title{Clean a \code{tibble} or vector}
 \usage{
-clean_df(data)
+clean_df(x)
 
 clean_authors(x)
 
 clean_colnames(x)
 }
 \arguments{
-\item{data}{A \code{tibble} with bibliographic information.}
-
-\item{x}{A vector of strings}
+\item{x}{A \code{tibble} with bibliographic information.}
 }
 \value{
 Returns the input, but cleaner.
@@ -36,14 +34,11 @@ df <-  data.frame(
     "Haddaway et al",
     "Westgate",
     "EM Grames AND AN Stillman  & MW Tingley and CS Elphick",
-    "Pick et al")
-)
-
+    "Pick et al"))
 clean_df(df)
 
 # or use sub-functions
-colnames(df) <- clean_colnames(df)
-# colnames(df) <- clean_colnames(colnames(df)) # also works
-df$author <- clean_authors(df$author)
+clean_colnames(df)
+clean_authors(df)
 
 }

@@ -7,7 +7,7 @@
 extract_unique_references(data, matches, type = "merge")
 }
 \arguments{
-\item{data}{A \code{data.frame} containing bibliographic information.}
+\item{data}{A \code{tibble} containing bibliographic information.}
 
 \item{matches}{A vector showing which entries in \code{data} are duplicates.}
 
@@ -17,14 +17,14 @@ column. Alternatively, \code{"select"} returns the row with the highest total
 number of characters.}
 }
 \value{
-Returns a \code{data.frame} of unique references.
+Returns a \code{tibble} of unique references.
 }
 \description{
 Given a list of duplicate entries and a data set, this function
 extracts only unique references.
 }
 \examples{
-my_df <-  data.frame(
+my_df <-  tibble::tibble(
   title = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
     "revtools: An R package to support article screening for evidence synthesis",
@@ -35,17 +35,14 @@ my_df <-  data.frame(
   ),
   year = c("2019", "2019", "2019", "2019", NA, NA),
   authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al", NA, NA),
-  stringsAsFactors = FALSE
-)
+              "Grames et al", "Pick et al", NA, NA))
 
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
   method = "string_osa",
   rm_punctuation = TRUE,
-  to_lower = TRUE
-)
+  to_lower = TRUE)
 
 extract_unique_references(my_df, matches = dups)
 
@@ -56,5 +53,5 @@ deduplicate(my_df, "title",
   to_lower = TRUE)
 }
 \seealso{
-\code{find_duplicates()}, \code{deduplicate()}
+\code{\link[=find_duplicates]{find_duplicates()}}, \code{\link[=deduplicate]{deduplicate()}}
 }

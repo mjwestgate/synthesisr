@@ -2,14 +2,15 @@
 % Please edit documentation in R/read_refs.R
 \name{read_refs}
 \alias{read_refs}
-\title{Import bibliographic search results}
+\title{Import bibliographic data files}
 \usage{
 read_refs(
   filename,
   tag_naming = "best_guess",
   return_df = TRUE,
   verbose = FALSE,
-  locale = vroom::default_locale()
+  locale = vroom::default_locale(),
+  ...
 )
 }
 \arguments{
@@ -18,33 +19,41 @@ results to import.}
 
 \item{tag_naming}{Either a length-1 character stating how should ris tags be
 replaced (see details for a list of options), or an object inheriting from
-class \code{data.frame} containing user-defined replacement tags.}
+class \code{tibble} containing user-defined replacement tags.}
 
-\item{return_df}{If \code{TRUE} (default), returns a \code{data.frame}; if \code{FALSE},
+\item{return_df}{If \code{TRUE} (default), returns a \code{tibble}; if \code{FALSE},
 returns a list.}
 
 \item{verbose}{If \code{TRUE}, prints status updates (defaults to \code{FALSE}).}
+
+\item{locale}{passed to \code{\link[vroom:vroom_lines]{vroom::vroom_lines()}}}
+
+\item{...}{Additional arguments, passed to \code{\link[vroom:vroom]{vroom::vroom()}} or \code{\link[vroom:vroom_lines]{vroom::vroom_lines()}}}
 }
 \value{
-Returns a \code{data.frame} or \code{list} of assembled search results.
+Returns a \code{tibble} unless \code{return_df} is set to \code{FALSE}, when it returns a \code{list}.
 }
 \description{
 Import common bibliographic reference formats  such as \code{.bib}, \code{.ris}, or
 \code{.txt}.
 }
 \details{
-The default for argument \code{tag_naming} is \code{"best_guess"},
-which estimates what database has been used for ris tag replacement, then
-fills any gaps with generic tags. Any tags missing from the database (i.e.
-\code{code_lookup}) are passed unchanged. Other options are to use tags from
-Web of Science (\code{"wos"}), Scopus (\code{"scopus"}), Ovid (\code{"ovid"})
-or Academic Search Premier (\code{"asp"}). If a \code{data.frame} is given,
-then it must contain two columns: \code{"code"} listing the original tags in
-the source document, and \code{"field"} listing the replacement column/tag
-names. The \code{data.frame} may optionally include a third column named
-\code{"order"}, which specifies the order of columns in the resulting
-\code{data.frame}; otherwise this will be taken as the row order. Finally,
-passing \code{"none"} to \code{replace_tags} suppresses tag replacement.
+Accepted values for \code{tag_naming} are:
+'\itemize{
+\item \code{"best_guess"}: estimate which database has been used for ris tag replacement,
+then fill any gaps with generic tags. Any tags missing from \link{code_lookup} are passed
+unchanged.
+\item \code{"wos"} Web of Science tags
+\item \code{"scopus"} Scopus tags
+\item \code{"ovid"} OVID tags
+\item \code{"asp"} Academic Search Premier tags
+\item \code{"none"} Do not rename tags
+\item A \code{tibble} with the following columns: \itemize{
+\item \code{"code"} listing the original tags in the source document
+\item \code{"field"} listing the replacement column/tag names
+\item \code{"order"} (optional) listing the order of columns in the resulting \code{tibble}
+}
+}
 }
 \examples{
 litsearchr <- c(
@@ -58,12 +67,9 @@ litsearchr <- c(
   pages={1645--1654},
   year={2019},
   publisher={Wiley Online Library}
-}"
-)
+}")
 
 tmp <- tempfile()
-
 writeLines(litsearchr, tmp)
-
 df <- read_refs(tmp, return_df = TRUE, verbose = TRUE)
 }

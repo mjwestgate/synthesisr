@@ -18,12 +18,11 @@
 #' calculating string distance? Defaults to `FALSE.`
 #' @param rm_punctuation Logical: Should punctuation should be removed before
 #' calculating string distance? Defaults to `FALSE.`
-#' @return Returns a vector of duplicate matches, with `attributes` listing
-#' methods used.
+#' @return Returns a vector of same length as `nrow(data)`, where duplicated
+#' values have the same integer, and `attributes` listing methods used.
 #' @seealso \code{\link{string_}} or \code{\link{fuzz_}} for suitable functions
-#' to pass to \code{methods}; \code{\link{extract_unique_references}} and
-#' \code{\link{deduplicate}} for higher-level functions.
-#' @importFrom rlang abort
+#' to pass to \code{methods}; [extract_unique_references()] and
+#' [deduplicate()] for higher-level functions.
 #' @example inst/examples/deduplicate.R
 #' @export
 find_duplicates <- function(
@@ -41,8 +40,16 @@ find_duplicates <- function(
   if(inherits(data, "data.frame")){
     abort("'data' must be a character vector, not a data.frame")
   }
+
   if(!inherits(data, "character")){
     data <- as.character(data)
+    # list-cols are parsed as lists, but may contain NULLs
+    # that are handled poorly by `as.character()`
+    # oddly, NAs are parsed correctly
+    if(any(data == "NULL")){
+      rows <- which(data == "NULL")
+      data[rows] <- NA
+    }
   }
 
   # grouping
@@ -72,23 +79,35 @@ find_duplicates <- function(
 
   # transformations
   if(to_lower){data <- tolower(data)}
-  if(rm_punctuation){data <- gsub("[[:punct:]]", "", data)}
+  if(rm_punctuation){data <- stringr::str_replace_all(data, "[[:punct:]]", "")}
 
   # quick option for exact matching based on split()
   if(method == "exact"){
     order_initial <- seq_along(data)
+
     # ensure NAs are always given a unique value
-    data[is.na(data)] <- paste0("MISSING_VALUE_", seq_along(which(is.na(data))))
+    na_check <- is.na(data)
+    if(any(na_check)){
+      data[na_check] <- paste0("MISSING_VALUE_", seq_along(which(na_check)))
+    }
+
     # split data by name
-    order_list <- split(order_initial, data)
-    names(order_list) <- NULL
-    order_list <- order_list[order(unlist(lapply(order_list, min)))]
-    result <- do.call(c, lapply(
-      seq_along(order_list),
-      function(a, ol){rep(a, length(ol[[a]]))},
-      ol = order_list
-    ))
-    result <- result[order(do.call(c, order_list))]
+    string_df <- tibble(index = seq_along(data),
+                        string = data,
+                        unique = !duplicated(data))
+
+    # create a grouping based on text strings
+    grouped_df <- string_df |>
+      dplyr::filter(.data$unique) |>
+      dplyr::select("string") |>
+      dplyr::mutate(group = dplyr::row_number()) # create a group index
+
+    # join group index to source data, arrange, then pull
+    result <- dplyr::left_join(string_df,
+                               grouped_df,
+                               by = "string") |>
+      dplyr::arrange(.data$index) |>
+      dplyr::pull("group")
 
   }else{ # i.e. if a distance-based method is requested
 
@@ -173,15 +192,14 @@ find_duplicates <- function(
 #'
 #' @description Given a list of duplicate entries and a data set, this function
 #' extracts only unique references.
-#' @param data A `data.frame` containing bibliographic information.
+#' @param data A `tibble` containing bibliographic information.
 #' @param matches A vector showing which entries in `data` are duplicates.
 #' @param type How should entries be selected to retain? Default is `"merge"`,
 #' which selects the entries with the largest number of characters in each
 #' column. Alternatively, `"select"` returns the row with the highest total
 #' number of characters.
-#' @return Returns a `data.frame` of unique references.
-#' @seealso `find_duplicates()`, `deduplicate()`
-#' @importFrom rlang abort
+#' @return Returns a `tibble` of unique references.
+#' @seealso [find_duplicates()], [deduplicate()]
 #' @example inst/examples/deduplicate.R
 #' @export
 extract_unique_references <- function(
@@ -190,7 +208,7 @@ extract_unique_references <- function(
   type = "merge"
 ){
   if(missing(matches)){
-    a("please specify a vector containing identified matches
+    abort("please specify a vector containing identified matches
     (e.g. as returned by find_duplicates)")
   }
   if(length(matches) != nrow(data)){
@@ -212,7 +230,7 @@ extract_unique_references <- function(
           nx[is.na(nx)] <- 0
           return(b[which.max(nx)])
         })
-        result <- as.data.frame(result_list, stringsAsFactors = FALSE)
+        result <- tibble::as_tibble(result_list)
       }else{
         row <- which.max(
           apply(
@@ -226,35 +244,31 @@ extract_unique_references <- function(
       result$n_duplicates <- nrow(a)
     }
     return(result)
-  }, type = type
-  )
-  output <- as.data.frame(
-    do.call(rbind, x_split),
-    stringsAsFactors = FALSE
-  )
-  return(output)
+  }, type = type)
+  dplyr::bind_rows(x_split)
 }
 
 #' Remove duplicates from a bibliographic data set
 #'
 #' @description Removes duplicates using sensible defaults
 #'
-#' @param data A `data.frame` containing bibliographic information.
-#' @param match_by Name of the column in `data` where duplicates should be sought.
+#' @param data A `tibble` containing bibliographic information.
+#' @param match_by Name of the (single) column in `data` where duplicates should
+#' be sought.
 #' @param method The duplicate detection function to use; see
-#' \code{link{string_}} or \code{link{fuzz_}} for examples. Passed to
-#' `find_duplicates()`.
+#' \code{\link{string_}} or \code{\link{fuzz_}} for examples. Passed to
+#' [find_duplicates()].
 #' @param type How should entries be selected? Default is `"merge"` which
 #' selects the entries with the largest number of characters in each column.
 #' Alternatively `"select"` returns the row with the highest total number of
 #' characters.
-#' @param \dots Arguments passed to `find_duplicates()`.
-#' @return A `data.frame` containing data identified as unique.
+#' @param \dots Arguments passed to [find_duplicates()].
+#' @return A `tibble` containing data identified as unique.
 #' @details
-#' This is a wrapper function to `find_duplicates()` and
-#' `extract_unique_references()`, which tries to choose some sensible defaults.
+#' This is a wrapper function to [find_duplicates()] and
+#' [extract_unique_references()], which tries to choose some sensible defaults.
 #' Use with care.
-#' @seealso `find_duplicates()` and `extract_unique_references()` for underlying
+#' @seealso [find_duplicates()] and [extract_unique_references()] for underlying
 #' functions.
 #' @example inst/examples/deduplicate.R
 #' @export
@@ -272,11 +286,11 @@ deduplicate <- function(
   # add defaults
   if(missing(match_by)){
     if(any(colnames(data) == "doi")){
-      data_fd <- data[, "doi"]
+      data_fd <- dplyr::pull(data, "doi")
       if(missing(method)){method <- "exact"}
     }else{
       if(any(colnames(data) == "title")){
-        data_fd <- data[, "title"]
+        data_fd <- dplyr::pull(data, "title")
         if(missing(method)){method <- "string_osa"}
       }else{
         abort("'match_by' is missing, with no default;
@@ -293,7 +307,7 @@ deduplicate <- function(
         ": Please specify which column should be searched for duplicates"
       ))
     }else{
-      data_fd <- data[, match_by]
+      data_fd <- dplyr::pull(data, {{match_by}})
       if(missing(method)){method <- "string_osa"}
     }
   }
@@ -316,14 +330,14 @@ deduplicate <- function(
 #' @return A `data.frame` of potential duplicates grouped together.
 #' @export
 review_duplicates <- function(text, matches){
-  likely_duplicates <- unique(matches)[table(matches)>1]
-  review <- data.frame(
+  match_counts <- table(matches)
+  likely_duplicates <- which(match_counts > 1) |>
+    names() |>
+    as.integer()
+  tibble::tibble(
     title = text[matches %in% likely_duplicates],
-    matches = matches[matches %in% likely_duplicates],
-    stringsAsFactors = FALSE
-  )
-  review <- review[order(review[,2]),]
-  return(review)
+    matches = matches[matches %in% likely_duplicates]) |>
+    dplyr::arrange(.data$matches)
 }
 
 #' Manually override duplicates
@@ -338,9 +352,9 @@ review_duplicates <- function(text, matches){
 #' of groups that the user overrides.
 #' @export
 override_duplicates <- function(matches, overrides){
-  matches <- as.numeric(matches)
+  matches <- as.integer(matches)
   for(i in 1:length(overrides)){
-    matches[max(which(matches==overrides[i]))] <- max(matches)+1
+    matches[max(which(matches == overrides[i]))] <- max(matches) + 1
   }
-  return(matches)
+  matches
 }

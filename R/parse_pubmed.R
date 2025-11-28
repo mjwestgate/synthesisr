@@ -3,9 +3,7 @@
 #' @description Text in standard formats - such as imported via
 #' `base::readLines()` - can be parsed using a variety of standard formats. Use
 #' `detect_parser()` to determine which is the most appropriate parser for your
-#' situation. Note that `parse_tsv()` and `parse_csv()` are maintained for
-#' backwards compatability only; within `read_ref` these have been replaced
-#' by `vroom::vroom()`.
+#' situation.
 #' @param x A character vector containing bibliographic information in ris
 #' format.
 #' @return Returns an object of class `bibliography` (ris, bib, or pubmed

@@ -92,7 +92,6 @@ print.bibliography <- function(x, n, ...){
 }
 
 #' @rdname bibliography-class
-#' @importFrom rlang abort
 #' @export
 '[.bibliography' <- function(x, n){
   class(x) <- "list"
@@ -119,46 +118,13 @@ c.bibliography <- function(...){
 #' @rdname bibliography-class
 #' @export
 as.data.frame.bibliography <- function(x, ...){
-
-  cols <- unique(unlist(lapply(x, names)))
-  # cols <- cols[which(cols != "further_info")]
-
-  x_list <- lapply(x, function(a, cols){
-    result <- lapply(cols, function(b, lookup){
-      if(any(names(lookup) == b)){
-        data_tr <- lookup[[b]]
-        if(length(data_tr) > 1){
-          data_tr <- paste0(data_tr, collapse = " and ")
-        }
-        return(data_tr)
-      }else{
-        return(NA)
-      }
-    },
-    lookup = a)
-    names(result) <- cols
-    return(
-      as.data.frame(
-        result,
-        stringsAsFactors=FALSE
-      )
-    )
-    },
-    cols = cols
-  )
-
-  x_dframe <- data.frame(
-    do.call(rbind, x_list),
-    stringsAsFactors = FALSE
-  )
-  rownames(x_dframe) <- NULL
-
-  return(x_dframe)
+  as_tibble(x) |>
+    as.data.frame()
+  # NOTE: likely to break due to presence of list-columns (authors)
 }
 
 
 #' @rdname bibliography-class
-#' @importFrom rlang abort
 #' @export
 as.bibliography <- function(x, ...){
 
@@ -171,10 +137,14 @@ as.bibliography <- function(x, ...){
     function(a){
       a <- as.list(a)
       if(any(names(a) == "author")){
-        a$author <- strsplit(a$author, " and ")[[1]]
+        if(is.character(a$author)){
+          a$author <- strsplit(a$author, " and ")[[1]]
+        }
       }
       if(any(names(a) == "keywords")){
-        a$keywords <- strsplit(a$keywords, " and ")[[1]]
+        if(is.character(a$keywords)){
+          a$keywords <- strsplit(a$keywords, " and ")[[1]]
+        }
       }
       return(a)
     }
@@ -188,8 +158,6 @@ as.bibliography <- function(x, ...){
 #' @param .rows currently ignored
 #' @param .name_repair currently ignored
 #' @param rownames currently ignored
-#' @importFrom purrr list_transpose
-#' @importFrom tibble as_tibble
 #' @export
 as_tibble.bibliography <- function(x,
                                    ...,
@@ -197,5 +165,5 @@ as_tibble.bibliography <- function(x,
                                    .name_repair,
                                    rownames){
   class(x) <- "list"
-  as_tibble(list_transpose(x))
+  as_tibble(purrr::list_transpose(x))
 }

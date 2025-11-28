@@ -16,7 +16,6 @@
 #' publication years; and `detect_lookup()` returns a `data.frame.`
 #' @example inst/examples/detect_.R
 #' @name detect_
-#' @importFrom rlang abort
 #' @export
 detect_parser <- function(x){
 
@@ -91,42 +90,42 @@ detect_delimiter <- function(x){
 detect_lookup <- function(
   tags # a vector of strings representing ris tags
 ){
-  rows <- which(synthesisr::code_lookup$code %in% tags)
+  rows <- which(dplyr::pull(synthesisr::code_lookup, "code") %in% tags)
   ris_list <- split(
-    synthesisr::code_lookup[rows, grepl("ris_", colnames(synthesisr::code_lookup))],
-    synthesisr::code_lookup$code[rows]
+    {synthesisr::code_lookup |>
+        dplyr::select(dplyr::starts_with("ris_")) |>
+        dplyr::slice(rows)},
+    {synthesisr::code_lookup |>
+        dplyr::slice(rows) |>
+        dplyr::pull("code")}
   )
   ris_matrix <- do.call(
     rbind,
-    lapply(ris_list, function(a){apply(a, 2, any)})
-  )
+    lapply(ris_list, function(a){apply(a, 2, any)}))
   ris_sums <- apply(ris_matrix, 2, sum)
   best_match <- which.max(ris_sums[-1])
   best_proportion <- ris_sums[best_match + 1] / nrow(ris_matrix)
   generic_proportion <- ris_sums[1] / nrow(ris_matrix)
   # default to ris_generic if everything else is bad
   if(best_proportion < 0.75 & generic_proportion > best_proportion){
-    match_df <- synthesisr::code_lookup[synthesisr::code_lookup$ris_generic, ]
+    match_df <- synthesisr::code_lookup |>
+      dplyr::filter(.data[["ris_generic"]] == TRUE)
   }else{ # i.e. if the 'best' match performs perfectly
     if(best_proportion > 0.99){ # i.e. a perfect match
-      match_df <- synthesisr::code_lookup[
-        synthesisr::code_lookup[, names(best_match)],
-
-      ]
+      match_df <- synthesisr::code_lookup |>
+        dplyr::filter(.data[[names(best_match)]] == TRUE)
     }else{ # otherwise use the best choice, then generic to fill gaps
        rows_best <- which(
-         synthesisr::code_lookup[, names(best_match)] &
-         synthesisr::code_lookup$code %in% names(which(ris_matrix[, names(best_match)]))
-       )
+           dplyr::pull(synthesisr::code_lookup, names(best_match)) &
+           dplyr::pull(synthesisr::code_lookup, "code") %in% names(which(ris_matrix[, names(best_match)])))
        rows_generic <- which(
-         synthesisr::code_lookup$ris_generic &
-         synthesisr::code_lookup$code %in% names(which(!ris_matrix[, names(best_match)]))
-       )
-      match_df <- synthesisr::code_lookup[c(rows_best, rows_generic), ]
+         dplyr::pull(synthesisr::code_lookup, "ris_generic") &
+         dplyr::pull(synthesisr::code_lookup, "code") %in% names(which(!ris_matrix[, names(best_match)])))
+      match_df <- synthesisr::code_lookup |>
+        dplyr::slice(c(rows_best, rows_generic))
     }
   }
-
-  return(match_df[, c("code", "order", "field")])
+  dplyr::select(match_df, "code", "order", "field")
 }
 
 #' @rdname detect_

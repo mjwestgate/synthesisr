@@ -37,15 +37,15 @@ calculating string distance? Defaults to \code{FALSE.}}
 calculating string distance? Defaults to \code{FALSE.}}
 }
 \value{
-Returns a vector of duplicate matches, with \code{attributes} listing
-methods used.
+Returns a vector of same length as \code{nrow(data)}, where duplicated
+values have the same integer, and \code{attributes} listing methods used.
 }
 \description{
 Identifies duplicate bibliographic entries using different duplicate
 detection methods.
 }
 \examples{
-my_df <-  data.frame(
+my_df <-  tibble::tibble(
   title = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
     "revtools: An R package to support article screening for evidence synthesis",
@@ -56,17 +56,14 @@ my_df <-  data.frame(
   ),
   year = c("2019", "2019", "2019", "2019", NA, NA),
   authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al", NA, NA),
-  stringsAsFactors = FALSE
-)
+              "Grames et al", "Pick et al", NA, NA))
 
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
   method = "string_osa",
   rm_punctuation = TRUE,
-  to_lower = TRUE
-)
+  to_lower = TRUE)
 
 extract_unique_references(my_df, matches = dups)
 
@@ -78,6 +75,6 @@ deduplicate(my_df, "title",
 }
 \seealso{
 \code{\link{string_}} or \code{\link{fuzz_}} for suitable functions
-to pass to \code{methods}; \code{\link{extract_unique_references}} and
-\code{\link{deduplicate}} for higher-level functions.
+to pass to \code{methods}; \code{\link[=extract_unique_references]{extract_unique_references()}} and
+\code{\link[=deduplicate]{deduplicate()}} for higher-level functions.
 }

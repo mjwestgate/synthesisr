@@ -1,15 +1,15 @@
 #' Export data to a bibliographic format
 #'
 #' @description This function exports data.frames containing bibliographic
-#' information to either a .ris or .bib file.
-#' @param x Either a data.frame containing bibliographic information or an
-#' object of class bibliography.
+#' information to either a `.ris` or `.bib` file.
+#' @param x Either a `tibble` containing bibliographic information, or an
+#' object of class `bibliography.`
 #' @param file filename to save to.
-#' @param format What format should the data be exported as? Options are ris or
-#' bib.
+#' @param format What format should the data be exported as? Options are `"ris"` or
+#' `"bib"`.
 #' @param tag_naming what naming convention should be used to write RIS files?
 #' See details for options.
-#' @param write Logical should a file should be written? If FALSE returns a
+#' @param write Logical should a file should be written? If `FALSE` returns a
 #' `list`.
 #' @return This function is typically called for it's side effect of writing a
 #' file in the specified location and format. If \code{write} is FALSE, returns
@@ -17,7 +17,6 @@
 #' format.
 #' @example inst/examples/parse_.R
 #' @rdname write_refs
-#' @importFrom rlang abort
 #' @export
 write_refs <- function(
     x,
@@ -54,7 +53,7 @@ write_refs <- function(
       }
     }else if(inherits(tag_naming, "data.frame")){
       if(any(!(c("code", "field") %in% colnames(tag_naming)))){
-        abort("if a data.frame is supplied to replace_tags, it must contain columns 'code' & 'field'.")
+        abort("if a `tibble` is supplied to replace_tags, it must contain columns 'code' & 'field'.")
       }
     }
   }
@@ -142,16 +141,20 @@ write_bib <- function(x) {
 write_ris <- function(x,
   tag_naming = "synthesisr"
 ){
+  # first get the tags we want to use here
+  tag_column <- glue::glue("ris_{tag_naming}")
+  lookup_tibble <- synthesisr::code_lookup |>
+    dplyr::filter(.data[[tag_column]] == TRUE) |>
+    dplyr::select("code", "field")
+
+  # then convert to ris, one entry at a time
   result <- lapply(x, function(a, lookup) {
 
     # convert to tagged vector
     b <- do.call(c, a)
     b <- b[!is.na(b)]
-    b <- data.frame(
-      tag = c(names(b), "end"),
-      entry = c(b, ""),
-      stringsAsFactors = FALSE
-    )
+    b <- tibble(tag = c(names(b), "end"),
+                entry = c(b, ""))
     rownames(b) <- NULL
     b$tag <- gsub("[[:digit:]]", "", b$tag)
 
@@ -174,7 +177,7 @@ write_ris <- function(x,
             entry = gsub("[[:punct:]]", "", text_cleaned),
             stringsAsFactors = FALSE
           )
-          b <- as.data.frame(rbind(
+          b <- as_tibble(rbind(
             b[c(1:(page_row - 1)),],
             new_rows,
             b[c((page_row + 1):nrow(b)),]
@@ -201,12 +204,6 @@ write_ris <- function(x,
     )
 
   },
-  lookup = synthesisr::code_lookup[
-    synthesisr::code_lookup[, paste0("ris_", tag_naming)],
-    c("code", "field")
-  ]
-  )
-
-  export <- do.call(c, result)
-  return(export)
+  lookup = lookup_tibble)
+  do.call(c, result)
 }

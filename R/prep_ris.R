@@ -5,7 +5,7 @@
 #' @param z A character vector that contains RIS bibliographic information.
 #' @param delimiter A string indicating the type of delimiter separating entries.
 #' @param type A string indicating the ris source; options are pubmed or generic.
-#' @return Returns a `data.frame` intended for import with `parse_ris()`.
+#' @return Returns a `tibble` intended for import with `parse_ris()`.
 #' @noRd
 #' @keywords Internal
 prep_ris <- function(
@@ -21,34 +21,26 @@ prep_ris <- function(
     # NOTE: "^ER$" is a bug fix for .ciw end rows
   }
   tags <- regexpr(ris_regex, perl = TRUE, z)
-  z_dframe <- data.frame(
-    text = z,
-    row = seq_along(z),
-    match_length = attr(tags, "match.length"),
-    stringsAsFactors = FALSE
-  )
+  z_dframe <- tibble(text = z,
+                     row = seq_along(z),
+                     match_length = attr(tags, "match.length"))
   z_list <- split(z_dframe, z_dframe$match_length)
   z_list <- lapply(z_list, function(a){
     n <- a$match_length[1]
     if(n < 0){
-      result <- data.frame(
-        ris = "",
-        text = a$text,
-        row_order = a$row,
-        stringsAsFactors = FALSE
-      )
+      result <- tibble(ris = "",
+                       text = a$text,
+                       row_order = a$row)
     }else{
-      result <- data.frame(
+      result <- tibble(
         ris = sub("\\s{0,}-\\s{0,}|^\\s+|\\s+$", "", substr(a$text, 1, n)),
         text = gsub("^\\s+|\\s+$", "", substr(a$text, n+1, nchar(a$text))),
-        row_order = a$row,
-        stringsAsFactors = FALSE
-      )
+        row_order = a$row)
     }
     return(result)
   })
-  z_dframe <- do.call(rbind, z_list)
-  z_dframe <- z_dframe[order(z_dframe$row), ]
+  z_dframe <- bind_rows(z_list) |>
+    dplyr::arrange(.data$row_order)
 
   # clean up obvious errors
   z_dframe$ris <- gsub("[[:punct:]]", "", z_dframe$ris)
@@ -90,37 +82,25 @@ prep_ris <- function(
     # previous behavior:
     if(max(xtabs(~ start_tags)) == length(which(z_dframe$ris == "ER"))){
       start_tag <- names(which.max(xtabs(~ start_tags)))
-      row_df <- data.frame(
-        start = which(z_dframe$ris == start_tag),
-        end = end_rows
-      )
+      row_df <- tibble(start = which(z_dframe$ris == start_tag),
+                       end = end_rows)
     # new option:
     }else{
-      row_df <- data.frame(
-        start = c(1, end_rows[seq_len(length(end_rows) - 1)]),
-        end = end_rows
-      )
+      row_df <- tibble(start = c(1, end_rows[seq_len(length(end_rows) - 1)]),
+                       end = end_rows)
     }
 
-    z_list <- apply(
-      row_df,
-      1,
-      function(a){c(a[1]:a[2])}
-    )
-    z_list <- lapply(
-      z_list,
-      function(a, lookup){lookup[a, ]},
-      lookup = z_dframe
-    )
-    z_dframe <- as.data.frame(
-      do.call(rbind, z_list)
-    )
+    z_list <- apply(row_df,
+                    1,
+                    function(a){c(a[1]:a[2])})
+    z_list <- lapply(z_list,
+                     function(a, lookup){lookup[a, ]},
+                     lookup = z_dframe)
+    z_dframe <- bind_rows(z_list)
   }
 
   # cleaning
-  z_dframe$ref <- c(0, cumsum(z_dframe$ris == "ER")[
-    seq_len(nrow(z_dframe)-1)]
-  ) # split by reference
+  z_dframe$ref <- c(0, cumsum(z_dframe$ris == "ER")[seq_len(nrow(z_dframe)-1)]) # split by reference
   z_dframe <- z_dframe[which(z_dframe$text != ""), ] # remove empty rows
   z_dframe <- z_dframe[which(z_dframe$ris != "ER"), ] # remove end rows
   z_dframe$text <- trimws(z_dframe$text)
@@ -140,9 +120,5 @@ prep_ris <- function(
       }))
     return(a)
   })
-  z_dframe <- as.data.frame(
-    do.call(rbind, z_split)
-  )
-
-  return(z_dframe)
+  bind_rows(z_split)
 }

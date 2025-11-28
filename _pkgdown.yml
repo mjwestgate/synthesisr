@@ -53,6 +53,3 @@ reference:
   - override_duplicates
   - fuzz_
   - string_
-- title: Deprecated
-  contents:
-  - merge_columns

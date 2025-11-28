@@ -4,7 +4,7 @@
 \alias{add_line_breaks}
 \title{Add line breaks to one or more strings}
 \usage{
-add_line_breaks(x, n = 50, max_n = NULL, html = FALSE, max_time = NULL)
+add_line_breaks(x, n = 50, html = FALSE)
 }
 \arguments{
 \item{x}{Either a string or a vector; if the vector is not of class character
@@ -13,14 +13,7 @@ if will be coerced to one using \code{as.character()}.}
 \item{n}{Numeric: The desired number of characters that should separate
 consecutive line breaks.}
 
-\item{max_n}{DEPRECATED: If provided will currently overwrite \code{n}; otherwise
-synonymous with \code{n} and will be removed from future versions.}
-
 \item{html}{Logical: Should the line breaks be specified in html?}
-
-\item{max_time}{DEPRECATED: Previously the maximum amount of time (in
-seconds) allowed to adjust groups until character thresholds are reached.
-Ignored.}
 }
 \value{
 Returns the input vector unaltered except for the addition of line

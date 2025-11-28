@@ -7,34 +7,35 @@
 deduplicate(data, match_by, method, type = "merge", ...)
 }
 \arguments{
-\item{data}{A \code{data.frame} containing bibliographic information.}
+\item{data}{A \code{tibble} containing bibliographic information.}
 
-\item{match_by}{Name of the column in \code{data} where duplicates should be sought.}
+\item{match_by}{Name of the (single) column in \code{data} where duplicates should
+be sought.}
 
 \item{method}{The duplicate detection function to use; see
-\code{link{string_}} or \code{link{fuzz_}} for examples. Passed to
-\code{find_duplicates()}.}
+\code{\link{string_}} or \code{\link{fuzz_}} for examples. Passed to
+\code{\link[=find_duplicates]{find_duplicates()}}.}
 
 \item{type}{How should entries be selected? Default is \code{"merge"} which
 selects the entries with the largest number of characters in each column.
 Alternatively \code{"select"} returns the row with the highest total number of
 characters.}
 
-\item{\dots}{Arguments passed to \code{find_duplicates()}.}
+\item{\dots}{Arguments passed to \code{\link[=find_duplicates]{find_duplicates()}}.}
 }
 \value{
-A \code{data.frame} containing data identified as unique.
+A \code{tibble} containing data identified as unique.
 }
 \description{
 Removes duplicates using sensible defaults
 }
 \details{
-This is a wrapper function to \code{find_duplicates()} and
-\code{extract_unique_references()}, which tries to choose some sensible defaults.
+This is a wrapper function to \code{\link[=find_duplicates]{find_duplicates()}} and
+\code{\link[=extract_unique_references]{extract_unique_references()}}, which tries to choose some sensible defaults.
 Use with care.
 }
 \examples{
-my_df <-  data.frame(
+my_df <-  tibble::tibble(
   title = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
     "revtools: An R package to support article screening for evidence synthesis",
@@ -45,17 +46,14 @@ my_df <-  data.frame(
   ),
   year = c("2019", "2019", "2019", "2019", NA, NA),
   authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al", NA, NA),
-  stringsAsFactors = FALSE
-)
+              "Grames et al", "Pick et al", NA, NA))
 
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
   method = "string_osa",
   rm_punctuation = TRUE,
-  to_lower = TRUE
-)
+  to_lower = TRUE)
 
 extract_unique_references(my_df, matches = dups)
 
@@ -66,6 +64,6 @@ deduplicate(my_df, "title",
   to_lower = TRUE)
 }
 \seealso{
-\code{find_duplicates()} and \code{extract_unique_references()} for underlying
+\code{\link[=find_duplicates]{find_duplicates()}} and \code{\link[=extract_unique_references]{extract_unique_references()}} for underlying
 functions.
 }

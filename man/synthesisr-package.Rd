@@ -18,7 +18,7 @@ systematic reviews and merges results into a standardized format.
 The key task performed by \code{synthesisr} is flexible import and
 presentation of bibliographic data. This is typically achieved by
 \code{read_refs()}, which can import multiple files at once and link them together
-into a single \code{data.frame}. Conversely, export is via \code{write_refs()}. Users
+into a single \code{tibble}. Conversely, export is via \code{write_refs()}. Users
 that require more detailed control can use the following functions:
 
 \itemize{
@@ -56,14 +56,6 @@ control of the deduplication process, consider using the sub-functions:
 \item \link{override_duplicates} Manually override identified duplicates
 \item \link{fuzz_} Fuzzy string matching c/o \code{fuzzywuzzy}
 \item \link{string_} Fuzzy string matching c/o \code{stringdist}
-}
-}
-
-\section{Deprecated}{
-
-
-\itemize{
-\item \link{merge_columns} Synonymous with \link[dplyr:bind_rows]{dplyr::bind_rows}
 }
 }
 

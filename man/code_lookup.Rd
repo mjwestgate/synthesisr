@@ -5,8 +5,7 @@
 \alias{code_lookup}
 \title{Bibliographic code lookup for search results assembly}
 \format{
-A \code{data.frame} with 226 obs of 12 variables
-
+A \code{tibble} with 226 obs of 12 variables
 \describe{
 \item{code}{code used in search results}
 \item{order}{the order in which to rank fields in assembled results}
@@ -25,7 +24,7 @@ A \code{data.frame} with 226 obs of 12 variables
 code_lookup
 }
 \description{
-A data frame that can be used to look up common codes for different
+A \code{tibble} that can be used to look up common codes for different
 bibliographic fields across databases and merge them to a common format.
 }
 \keyword{datasets}
