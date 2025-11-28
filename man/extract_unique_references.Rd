@@ -7,7 +7,7 @@
 extract_unique_references(data, matches, type = "merge")
 }
 \arguments{
-\item{data}{A \code{data.frame} containing bibliographic information.}
+\item{data}{A \code{tibble} containing bibliographic information.}
 
 \item{matches}{A vector showing which entries in \code{data} are duplicates.}
 
@@ -17,7 +17,7 @@ column. Alternatively, \code{"select"} returns the row with the highest total
 number of characters.}
 }
 \value{
-Returns a \code{data.frame} of unique references.
+Returns a \code{tibble} of unique references.
 }
 \description{
 Given a list of duplicate entries and a data set, this function
@@ -53,5 +53,5 @@ deduplicate(my_df, "title",
   to_lower = TRUE)
 }
 \seealso{
-\code{find_duplicates()}, \code{deduplicate()}
+\code{\link[=find_duplicates]{find_duplicates()}}, \code{\link[=deduplicate]{deduplicate()}}
 }

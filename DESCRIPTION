@@ -35,6 +35,8 @@ Imports:
     unglue,
     vroom
 Suggests: 
+    cli,
+    devtools,
     knitr,
     readr,
     rmarkdown,

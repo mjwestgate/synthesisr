@@ -75,6 +75,6 @@ deduplicate(my_df, "title",
 }
 \seealso{
 \code{\link{string_}} or \code{\link{fuzz_}} for suitable functions
-to pass to \code{methods}; \code{\link{extract_unique_references}} and
-\code{\link{deduplicate}} for higher-level functions.
+to pass to \code{methods}; \code{\link[=extract_unique_references]{extract_unique_references()}} and
+\code{\link[=deduplicate]{deduplicate()}} for higher-level functions.
 }
