@@ -1,4 +1,4 @@
-# Import bibliographic search results
+# Import bibliographic data files
 
 Import common bibliographic reference formats such as `.bib`, `.ris`, or
 `.txt`.
@@ -11,7 +11,8 @@ read_refs(
   tag_naming = "best_guess",
   return_df = TRUE,
   verbose = FALSE,
-  locale = vroom::default_locale()
+  locale = vroom::default_locale(),
+  ...
 )
 ```
 
@@ -26,35 +27,60 @@ read_refs(
 
   Either a length-1 character stating how should ris tags be replaced
   (see details for a list of options), or an object inheriting from
-  class `data.frame` containing user-defined replacement tags.
+  class `tibble` containing user-defined replacement tags.
 
 - return_df:
 
-  If `TRUE` (default), returns a `data.frame`; if `FALSE`, returns a
-  list.
+  If `TRUE` (default), returns a `tibble`; if `FALSE`, returns a list.
 
 - verbose:
 
   If `TRUE`, prints status updates (defaults to `FALSE`).
 
+- locale:
+
+  passed to
+  [`vroom::vroom_lines()`](https://vroom.r-lib.org/reference/vroom_lines.html)
+
+- ...:
+
+  Additional arguments, passed to
+  [`vroom::vroom()`](https://vroom.r-lib.org/reference/vroom.html) or
+  [`vroom::vroom_lines()`](https://vroom.r-lib.org/reference/vroom_lines.html)
+
 ## Value
 
-Returns a `data.frame` or `list` of assembled search results.
+Returns a `tibble` unless `return_df` is set to `FALSE`, when it returns
+a `list`.
 
 ## Details
 
-The default for argument `tag_naming` is `"best_guess"`, which estimates
-what database has been used for ris tag replacement, then fills any gaps
-with generic tags. Any tags missing from the database (i.e.
-`code_lookup`) are passed unchanged. Other options are to use tags from
-Web of Science (`"wos"`), Scopus (`"scopus"`), Ovid (`"ovid"`) or
-Academic Search Premier (`"asp"`). If a `data.frame` is given, then it
-must contain two columns: `"code"` listing the original tags in the
-source document, and `"field"` listing the replacement column/tag names.
-The `data.frame` may optionally include a third column named `"order"`,
-which specifies the order of columns in the resulting `data.frame`;
-otherwise this will be taken as the row order. Finally, passing `"none"`
-to `replace_tags` suppresses tag replacement.
+Accepted values for `tag_naming` are: '
+
+- `"best_guess"`: estimate which database has been used for ris tag
+  replacement, then fill any gaps with generic tags. Any tags missing
+  from
+  [code_lookup](https://martinwestgate.com/synthesisr/reference/code_lookup.md)
+  are passed unchanged.
+
+- `"wos"` Web of Science tags
+
+- `"scopus"` Scopus tags
+
+- `"ovid"` OVID tags
+
+- `"asp"` Academic Search Premier tags
+
+- `"none"` Do not rename tags
+
+- A `tibble` with the following columns:
+
+  - `"code"` listing the original tags in the source document
+
+  - `"field"` listing the replacement column/tag names
+
+  - `"order"` (optional) listing the order of columns in the resulting
+    `tibble`
 
 ## Examples
 
@@ -70,13 +96,10 @@ litsearchr <- c(
   pages={1645--1654},
   year={2019},
   publisher={Wiley Online Library}
-}"
-)
+}")
 
 tmp <- tempfile()
-
 writeLines(litsearchr, tmp)
-
 df <- read_refs(tmp, return_df = TRUE, verbose = TRUE)
-#> Reading file /tmp/RtmpIJAhzk/file18ee8e39010 ... done
+#> Reading file /tmp/RtmpvqJqrb/file194d12857dd6 ... done
 ```

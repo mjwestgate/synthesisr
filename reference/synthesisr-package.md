@@ -13,7 +13,7 @@ The key task performed by `synthesisr` is flexible import and
 presentation of bibliographic data. This is typically achieved by
 [`read_refs()`](https://martinwestgate.com/synthesisr/reference/read_refs.md),
 which can import multiple files at once and link them together into a
-single `data.frame`. Conversely, export is via
+single `tibble`. Conversely, export is via
 [`write_refs()`](https://martinwestgate.com/synthesisr/reference/write_refs.md).
 Users that require more detailed control can use the following
 functions:
@@ -77,12 +77,6 @@ using the sub-functions:
 
 - [string\_](https://martinwestgate.com/synthesisr/reference/string_.md)
   Fuzzy string matching c/o `stringdist`
-
-## Deprecated
-
-- [merge_columns](https://martinwestgate.com/synthesisr/reference/merge_columns.md)
-  Synonymous with
-  [dplyr::bind_rows](https://dplyr.tidyverse.org/reference/bind_rows.html)
 
 ## See also
 

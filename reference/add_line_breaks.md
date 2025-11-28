@@ -9,7 +9,7 @@ contexts.
 ## Usage
 
 ``` r
-add_line_breaks(x, n = 50, max_n = NULL, html = FALSE, max_time = NULL)
+add_line_breaks(x, n = 50, html = FALSE)
 ```
 
 ## Arguments
@@ -25,19 +25,9 @@ add_line_breaks(x, n = 50, max_n = NULL, html = FALSE, max_time = NULL)
   Numeric: The desired number of characters that should separate
   consecutive line breaks.
 
-- max_n:
-
-  DEPRECATED: If provided will currently overwrite `n`; otherwise
-  synonymous with `n` and will be removed from future versions.
-
 - html:
 
   Logical: Should the line breaks be specified in html?
-
-- max_time:
-
-  DEPRECATED: Previously the maximum amount of time (in seconds) allowed
-  to adjust groups until character thresholds are reached. Ignored.
 
 ## Value
 

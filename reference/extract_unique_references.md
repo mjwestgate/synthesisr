@@ -13,7 +13,7 @@ extract_unique_references(data, matches, type = "merge")
 
 - data:
 
-  A `data.frame` containing bibliographic information.
+  A `tibble` containing bibliographic information.
 
 - matches:
 
@@ -28,7 +28,7 @@ extract_unique_references(data, matches, type = "merge")
 
 ## Value
 
-Returns a `data.frame` of unique references.
+Returns a `tibble` of unique references.
 
 ## See also
 
@@ -38,7 +38,7 @@ Returns a `data.frame` of unique references.
 ## Examples
 
 ``` r
-my_df <-  data.frame(
+my_df <-  tibble::tibble(
   title = c(
     "EviAtlas: a tool for visualising evidence synthesis databases",
     "revtools: An R package to support article screening for evidence synthesis",
@@ -49,43 +49,34 @@ my_df <-  data.frame(
   ),
   year = c("2019", "2019", "2019", "2019", NA, NA),
   authors = c("Haddaway et al", "Westgate",
-              "Grames et al", "Pick et al", NA, NA),
-  stringsAsFactors = FALSE
-)
+              "Grames et al", "Pick et al", NA, NA))
 
 # run deduplication
 dups <- find_duplicates(
   my_df$title,
   method = "string_osa",
   rm_punctuation = TRUE,
-  to_lower = TRUE
-)
+  to_lower = TRUE)
 
 extract_unique_references(my_df, matches = dups)
-#>                                                                                title
-#> 1                      EviAtlas: a tool for visualising evidence synthesis databases
-#> 2         revtools: An R package to support article screening for evidence synthesis
-#> 3           An automated approach to identifying search terms for systematic reviews
-#> 4 Reproducible, flexible and high-throughput data extraction from primary literature
-#>   year        authors n_duplicates
-#> 1 2019 Haddaway et al            2
-#> 2 2019       Westgate            2
-#> 3 2019   Grames et al            1
-#> 4 2019     Pick et al            1
+#> # A tibble: 4 × 4
+#>   title                                               year  authors n_duplicates
+#>   <chr>                                               <chr> <chr>          <dbl>
+#> 1 EviAtlas: a tool for visualising evidence synthesi… 2019  Haddaw…            2
+#> 2 revtools: An R package to support article screenin… 2019  Westga…            2
+#> 3 An automated approach to identifying search terms … 2019  Grames…            1
+#> 4 Reproducible, flexible and high-throughput data ex… 2019  Pick e…            1
 
 # or, in one line:
 deduplicate(my_df, "title",
   method = "string_osa",
   rm_punctuation = TRUE,
   to_lower = TRUE)
-#>                                                                                title
-#> 1                      EviAtlas: a tool for visualising evidence synthesis databases
-#> 2         revtools: An R package to support article screening for evidence synthesis
-#> 3           An automated approach to identifying search terms for systematic reviews
-#> 4 Reproducible, flexible and high-throughput data extraction from primary literature
-#>   year        authors n_duplicates
-#> 1 2019 Haddaway et al            2
-#> 2 2019       Westgate            2
-#> 3 2019   Grames et al            1
-#> 4 2019     Pick et al            1
+#> # A tibble: 4 × 4
+#>   title                                               year  authors n_duplicates
+#>   <chr>                                               <chr> <chr>          <dbl>
+#> 1 EviAtlas: a tool for visualising evidence synthesi… 2019  Haddaw…            2
+#> 2 revtools: An R package to support article screenin… 2019  Westga…            2
+#> 3 An automated approach to identifying search terms … 2019  Grames…            1
+#> 4 Reproducible, flexible and high-throughput data ex… 2019  Pick e…            1
 ```

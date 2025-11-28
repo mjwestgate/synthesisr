@@ -17,7 +17,7 @@ systematic reviews and merges results into a standardized format."><meta propert
 
     <a class="navbar-brand me-2" href="../index.html">synthesisr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@ systematic reviews and merges results into a standardized format.</p>
 <p>The key task performed by <code>synthesisr</code> is flexible import and
 presentation of bibliographic data. This is typically achieved by
 <code><a href="read_refs.html">read_refs()</a></code>, which can import multiple files at once and link them together
-into a single <code>data.frame</code>. Conversely, export is via <code><a href="write_refs.html">write_refs()</a></code>. Users
+into a single <code>tibble</code>. Conversely, export is via <code><a href="write_refs.html">write_refs()</a></code>. Users
 that require more detailed control can use the following functions:</p>
 <ul><li><p><a href="read_refs.html">read_refs</a> Read bibliographic data</p></li>
 <li><p><a href="write_refs.html">write_refs</a> Write bibliographic data</p></li>
@@ -95,13 +95,6 @@ control of the deduplication process, consider using the sub-functions:</p>
 <li><p><a href="override_duplicates.html">override_duplicates</a> Manually override identified duplicates</p></li>
 <li><p><a href="fuzz_.html">fuzz_</a> Fuzzy string matching c/o <code>fuzzywuzzy</code></p></li>
 <li><p><a href="string_.html">string_</a> Fuzzy string matching c/o <code>stringdist</code></p></li>
-</ul></div>
-    <div class="section level2">
-    <h2 id="deprecated">Deprecated<a class="anchor" aria-label="anchor" href="#deprecated"></a></h2>
-
-
-
-<ul><li><p><a href="merge_columns.html">merge_columns</a> Synonymous with <a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows</a></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

@@ -10,13 +10,13 @@
 ## Citation
 
 Westgate M, Grames E (2025). *synthesisr: Import, Assemble, and
-Deduplicate Bibliographic Datasets*. R package version 0.3.0,
+Deduplicate Bibliographic Datasets*. R package version 0.4.0,
 <https://martinwestgate.com/synthesisr/>.
 
     @Manual{,
       title = {synthesisr: Import, Assemble, and Deduplicate Bibliographic Datasets},
       author = {Martin Westgate and Eliza Grames},
       year = {2025},
-      note = {R package version 0.3.0},
+      note = {R package version 0.4.0},
       url = {https://martinwestgate.com/synthesisr/},
     }

@@ -9,6 +9,15 @@ deduplicating results, `synthesisr` recognizes bibliographic files
 exported from databases commonly used for systematic reviews and merges
 results into a standardized format.
 
+We begin, as always, by loading the package:
+
+``` r
+# install.packages("synthesisr") # if needed
+library(synthesisr)
+```
+
+    #> ℹ Loading synthesisr
+
 ## Read and assemble bibliographic files
 
 `synthesisr` can read any BibTex or RIS formatted bibliographic data
@@ -33,19 +42,10 @@ in a directory called “search_results”, you may want to use
 # by using the example bibliographic data files, you can reproduce the vignette
 bibfiles <- list.files(
   system.file("extdata/", package = "synthesisr"),
-  full.names = TRUE
-)
-
-# we can print the list of bibfiles to confirm what we will import
-# in this example, we have bibliographic data exported from Scopus and Zoological Record
-print(bibfiles)
+  full.names = TRUE)
 
 # now we can use read_refs to read in our bibliographic data files
-# we save them to a data.frame object (because return_df=TRUE) called imported_files
-library(synthesisr)
-imported_files <- read_refs(
-  filename = bibfiles,
-  return_df = TRUE)
+df_initial <- read_refs(bibfiles)
 ```
 
 ## Deduplicate bibliographic data
@@ -54,18 +54,13 @@ Many journals are indexed in multiple databases, so searching across
 databases will retrieve duplicates. After import, `synthesisr` can
 detect duplicates and retain only unique bibliographic records using a
 variety of methods such as string distance or fuzzy matching records. A
-good place to start is removing articles that have identical titles,
-especially since this reduces computational time for more sophisticated
-deduplication methods.
+good place to start is removing articles that have identical DOIs,
+because these are unique (by definition), and while not every entry will
+have a DOI stored, removing them reduces the computational time required
+for more sophisticated deduplication methods.
 
 ``` r
-## first, we will remove articles that have identical titles
-## this is a fairly conservative approach, so we will remove them without review
-# df <- deduplicate(
-#   imported_files,
-#   match_by = "title",
-#   method = "exact"
-# )
+df <- deduplicate(df_initial) # uses DOI by default
 ```
 
 In some cases, it may be useful to know which articles were identified
@@ -75,47 +70,93 @@ dataset, we check a few titles and use string distance methods to find
 additional duplicate articles in the code below and then remove them by
 extracting unique references. Although here we only use one secondary
 deduplication method (string distance), we could look for additional
-duplicates based on fuzzy matching abstracts, for example.
-
-## NOTE: the examples below don’t match now; need updating
+duplicates based on fuzzy matching abstracts, for example:
 
 ``` r
-# there are still some duplicate articles that were not removed
-# for example, the titles for articles 91 and 114 appear identical
-## df$title[c(91,114)]
-# the dash-like symbol in title 91, however, is a special character not punctuation
-# so it was not classified as identical
+possible_duplicates <- find_duplicates(df$title,
+                                       to_lower = TRUE,
+                                       rm_punctuation = TRUE)
 
-# similarly, there is a missing space in the title for article 96
-## df$title[c(21,96)]
 
-# and an extra space in title 47
-## df$title[c(47, 101)]
-
-# # in this example, we will use string distance to identify likely duplicates
-# duplicates_string <- find_duplicates(
-#   df$title,
-#   method = "string_osa",
-#   to_lower = TRUE,
-#   rm_punctuation = TRUE,
-#   threshold = 7
-# )
-
-# we can extract the line numbers from the dataset that are likely duplicated
-# this lets us manually review those titles to confirm they are duplicates
-
-# manual_checks <- review_duplicates(df$title, duplicates_string)
+manual_checks <- review_duplicates(df$title, possible_duplicates)
+print(manual_checks, n = 6)
+#> # A tibble: 4 × 2
+#>   title                                                                  matches
+#>   <chr>                                                                    <int>
+#> 1 Comparing bird assemblages in successional black spruce stands origin…      78
+#> 2 Comparing bird assemblages in successional black spruce stands origin…      78
+#> 3 Composition of Bird Communities Following Stand-Replacement Fires in …      82
+#> 4 Composition of bird communities following stand-replacement fires in …      82
 ```
+
+In this case, the examples look fine, so we accept them:
 
 ``` r
-# # the titles under match #99 are not duplicates, so we need to keep them both
-# # we can use the override_duplicates function to manually mark them as unique
-# new_duplicates <- synthesisr::override_duplicates(duplicates_string, 99)
-# 
-# # now we can extract unique references from our dataset
-# # we need to pass it the dataset (df) and the matching articles (new_duplicates)
-# results <- extract_unique_references(df, new_duplicates)
+df <- extract_unique_references(df, possible_duplicates)
 ```
+
+Exact string matching is a fairly coarse method, however, even when
+we’ve taken some basic steps to avoid issues from differences in
+capitalisation and punctuation. Having removed ‘obvious’ duplicates,
+therefore, it may be wise to seek near-misses using string distances.
+
+``` r
+more_duplicates <- find_duplicates(df$title,
+                                   method = "string_osa",
+                                   to_lower = TRUE,
+                                   rm_punctuation = TRUE)
+
+review_duplicates(df$title, more_duplicates)
+#> # A tibble: 0 × 2
+#> # ℹ 2 variables: title <chr>, matches <dbl>
+```
+
+Here we see that *why* our earlier approach had some issues. For
+example, one of our examples had improper spacing:
+
+``` r
+df$title[more_duplicates == 21]
+```
+
+    #> An integrated occupancy and **space-use model** to predict abundance of
+    #> imperfectly detected, territorial vertebrates
+    #> An integrated occupancy and **space-usemodel** to predict abundance of
+    #> imperfectly detected, territorial vertebrates
+
+(emphasis added)
+
+Similarly, different databases sometime add
+
+``` r
+df$title[more_duplicates == 140]
+```
+
+    #> Black-backed **three-toed wood-pecker**, Picoides arcticus, predation on
+    #> Monochamus oregopensis(Coleoptera: Cerambycidae)
+    #> Black-backed **three-toed woodpecker**, Pieoides arcticus, predation on
+    #> Monochamus oregonensis (Coleoptera, Cerambycidae)
+
+More problematically, however, entries that are deliberately named in a
+similar way are detected as duplicates in this method:
+
+``` r
+df$title[more_duplicates == 99]
+```
+
+    #> **2006** May species count of birds
+    #> **2002** May species count for birds
+
+We can add these as exceptions manually before applying our changes:
+
+``` r
+new_duplicates <- override_duplicates(more_duplicates, 99)
+#> Warning in max(which(matches == overrides[i])): no non-missing arguments to
+#> max; returning -Inf
+results <- extract_unique_references(df, new_duplicates)
+```
+
+This leaves us with 91 entries, down from the 226 returned by
+[`read_refs()`](https://martinwestgate.com/synthesisr/reference/read_refs.md).
 
 ## Write bibliographic files
 

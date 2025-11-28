@@ -71,8 +71,8 @@ roses <- c("@article{haddaway2018,
 tmp <- tempfile()
 writeLines(roses, tmp)
 
-citation <- read_ref(tmp)
-#> Error in read_ref(tmp): could not find function "read_ref"
+citation <- read_refs(tmp)
 format_citation(citation)
-#> Error in format_citation(citation): format_citation expects input data to be an object of class data.frame, bibliography, or list
+#>                                                         1 
+#> "Haddaway, Neal R et al. (2018)  Environmental Evidence." 
 ```

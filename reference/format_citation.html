@@ -9,7 +9,7 @@ bibliography and returns a formatted citation."><meta property="og:image" conten
 
     <a class="navbar-brand me-2" href="../index.html">synthesisr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,10 +111,10 @@ formatted citations.</p>
 <span class="r-in"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="va">roses</span>, <span class="va">tmp</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">citation</span> <span class="op">&lt;-</span> <span class="fu">read_ref</span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in read_ref(tmp):</span> could not find function "read_ref"</span>
+<span class="r-in"><span><span class="va">citation</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_refs.html">read_refs</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">format_citation</span><span class="op">(</span><span class="va">citation</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in format_citation(citation):</span> format_citation expects input data to be an object of class data.frame, bibliography, or list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "Haddaway, Neal R et al. (2018)  Environmental Evidence." </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

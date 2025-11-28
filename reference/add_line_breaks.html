@@ -13,7 +13,7 @@ useful in other contexts."><meta property="og:image" content="https://martinwest
 
     <a class="navbar-brand me-2" href="../index.html">synthesisr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ useful in other contexts.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_line_breaks</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">50</span>, max_n <span class="op">=</span> <span class="cn">NULL</span>, html <span class="op">=</span> <span class="cn">FALSE</span>, max_time <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_line_breaks</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">50</span>, html <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,19 +67,8 @@ if will be coerced to one using <code><a href="https://rdrr.io/r/base/character.
 consecutive line breaks.</p></dd>
 
 
-<dt id="arg-max-n">max_n<a class="anchor" aria-label="anchor" href="#arg-max-n"></a></dt>
-<dd><p>DEPRECATED: If provided will currently overwrite <code>n</code>; otherwise
-synonymous with <code>n</code> and will be removed from future versions.</p></dd>
-
-
 <dt id="arg-html">html<a class="anchor" aria-label="anchor" href="#arg-html"></a></dt>
 <dd><p>Logical: Should the line breaks be specified in html?</p></dd>
-
-
-<dt id="arg-max-time">max_time<a class="anchor" aria-label="anchor" href="#arg-max-time"></a></dt>
-<dd><p>DEPRECATED: Previously the maximum amount of time (in
-seconds) allowed to adjust groups until character thresholds are reached.
-Ignored.</p></dd>
 
 </dl></div>
     <div class="section level2">

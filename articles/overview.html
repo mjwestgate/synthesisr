@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">synthesisr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,6 +82,11 @@ databases. To streamline the process of importing, assembling, and
 deduplicating results, <code>synthesisr</code> recognizes bibliographic
 files exported from databases commonly used for systematic reviews and
 merges results into a standardized format.</p>
+<p>We begin, as always, by loading the package:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("synthesisr") # if needed</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://martinwestgate.com/synthesisr/">synthesisr</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">synthesisr</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="read-and-assemble-bibliographic-files">Read and assemble bibliographic files<a class="anchor" aria-label="anchor" href="#read-and-assemble-bibliographic-files"></a>
@@ -101,24 +106,15 @@ and instead will want to pass a character vector of the path(s) to the
 file(s) you want to import. For example, if you have saved all your
 search results in a directory called “search_results”, you may want to
 use <code>list.files("./search_results/")</code> instead.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># system.file will look for the path to where synthesisr is installed</span></span>
 <span><span class="co"># by using the example bibliographic data files, you can reproduce the vignette</span></span>
 <span><span class="va">bibfiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/"</span>, package <span class="op">=</span> <span class="st">"synthesisr"</span><span class="op">)</span>,</span>
-<span>  full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># we can print the list of bibfiles to confirm what we will import</span></span>
-<span><span class="co"># in this example, we have bibliographic data exported from Scopus and Zoological Record</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">bibfiles</span><span class="op">)</span></span>
+<span>  full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># now we can use read_refs to read in our bibliographic data files</span></span>
-<span><span class="co"># we save them to a data.frame object (because return_df=TRUE) called imported_files</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://martinwestgate.com/synthesisr/">synthesisr</a></span><span class="op">)</span></span>
-<span><span class="va">imported_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_refs.html">read_refs</a></span><span class="op">(</span></span>
-<span>  filename <span class="op">=</span> <span class="va">bibfiles</span>,</span>
-<span>  return_df <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">df_initial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_refs.html">read_refs</a></span><span class="op">(</span><span class="va">bibfiles</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="deduplicate-bibliographic-data">Deduplicate bibliographic data<a class="anchor" aria-label="anchor" href="#deduplicate-bibliographic-data"></a>
@@ -128,16 +124,12 @@ databases will retrieve duplicates. After import,
 <code>synthesisr</code> can detect duplicates and retain only unique
 bibliographic records using a variety of methods such as string distance
 or fuzzy matching records. A good place to start is removing articles
-that have identical titles, especially since this reduces computational
-time for more sophisticated deduplication methods.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## first, we will remove articles that have identical titles</span></span>
-<span><span class="co">## this is a fairly conservative approach, so we will remove them without review</span></span>
-<span><span class="co"># df &lt;- deduplicate(</span></span>
-<span><span class="co">#   imported_files,</span></span>
-<span><span class="co">#   match_by = "title",</span></span>
-<span><span class="co">#   method = "exact"</span></span>
-<span><span class="co"># )</span></span></code></pre></div>
+that have identical DOIs, because these are unique (by definition), and
+while not every entry will have a DOI stored, removing them reduces the
+computational time required for more sophisticated deduplication
+methods.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/deduplicate.html">deduplicate</a></span><span class="op">(</span><span class="va">df_initial</span><span class="op">)</span> <span class="co"># uses DOI by default</span></span></code></pre></div>
 <p>In some cases, it may be useful to know which articles were
 identified as duplicates so they can be manually reviewed or so that
 information from two records can be merged. Using our
@@ -146,45 +138,70 @@ distance methods to find additional duplicate articles in the code below
 and then remove them by extracting unique references. Although here we
 only use one secondary deduplication method (string distance), we could
 look for additional duplicates based on fuzzy matching abstracts, for
-example.</p>
-</div>
-<div class="section level2">
-<h2 id="note-the-examples-below-dont-match-now-need-updating">NOTE: the examples below don’t match now; need updating<a class="anchor" aria-label="anchor" href="#note-the-examples-below-dont-match-now-need-updating"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># there are still some duplicate articles that were not removed</span></span>
-<span><span class="co"># for example, the titles for articles 91 and 114 appear identical</span></span>
-<span><span class="co">## df$title[c(91,114)]</span></span>
-<span><span class="co"># the dash-like symbol in title 91, however, is a special character not punctuation</span></span>
-<span><span class="co"># so it was not classified as identical</span></span>
+example:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">possible_duplicates</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_duplicates.html">find_duplicates</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">title</span>,</span>
+<span>                                       to_lower <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                       rm_punctuation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># similarly, there is a missing space in the title for article 96</span></span>
-<span><span class="co">## df$title[c(21,96)]</span></span>
 <span></span>
-<span><span class="co"># and an extra space in title 47</span></span>
-<span><span class="co">## df$title[c(47, 101)]</span></span>
+<span><span class="va">manual_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/review_duplicates.html">review_duplicates</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">title</span>, <span class="va">possible_duplicates</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">manual_checks</span>, n <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">#&gt;   title                                                                  matches</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Comparing bird assemblages in successional black spruce stands origin…      78</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Comparing bird assemblages in successional black spruce stands origin…      78</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Composition of Bird Communities Following Stand-Replacement Fires in …      82</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Composition of bird communities following stand-replacement fires in …      82</span></span></code></pre></div>
+<p>In this case, the examples look fine, so we accept them:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_unique_references.html">extract_unique_references</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">possible_duplicates</span><span class="op">)</span></span></code></pre></div>
+<p>Exact string matching is a fairly coarse method, however, even when
+we’ve taken some basic steps to avoid issues from differences in
+capitalisation and punctuation. Having removed ‘obvious’ duplicates,
+therefore, it may be wise to seek near-misses using string
+distances.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">more_duplicates</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_duplicates.html">find_duplicates</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">title</span>,</span>
+<span>                                   method <span class="op">=</span> <span class="st">"string_osa"</span>,</span>
+<span>                                   to_lower <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                   rm_punctuation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># # in this example, we will use string distance to identify likely duplicates</span></span>
-<span><span class="co"># duplicates_string &lt;- find_duplicates(</span></span>
-<span><span class="co">#   df$title,</span></span>
-<span><span class="co">#   method = "string_osa",</span></span>
-<span><span class="co">#   to_lower = TRUE,</span></span>
-<span><span class="co">#   rm_punctuation = TRUE,</span></span>
-<span><span class="co">#   threshold = 7</span></span>
-<span><span class="co"># )</span></span>
-<span></span>
-<span><span class="co"># we can extract the line numbers from the dataset that are likely duplicated</span></span>
-<span><span class="co"># this lets us manually review those titles to confirm they are duplicates</span></span>
-<span></span>
-<span><span class="co"># manual_checks &lt;- review_duplicates(df$title, duplicates_string)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># # the titles under match #99 are not duplicates, so we need to keep them both</span></span>
-<span><span class="co"># # we can use the override_duplicates function to manually mark them as unique</span></span>
-<span><span class="co"># new_duplicates &lt;- synthesisr::override_duplicates(duplicates_string, 99)</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># # now we can extract unique references from our dataset</span></span>
-<span><span class="co"># # we need to pass it the dataset (df) and the matching articles (new_duplicates)</span></span>
-<span><span class="co"># results &lt;- extract_unique_references(df, new_duplicates)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/review_duplicates.html">review_duplicates</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">title</span>, <span class="va">more_duplicates</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 variables: title &lt;chr&gt;, matches &lt;dbl&gt;</span></span></span></code></pre></div>
+<p>Here we see that <em>why</em> our earlier approach had some issues.
+For example, one of our examples had improper spacing:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span><span class="op">$</span><span class="va">title</span><span class="op">[</span><span class="va">more_duplicates</span> <span class="op">==</span> <span class="fl">21</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; An integrated occupancy and **space-use model** to predict abundance of</span></span>
+<span><span class="co">#&gt; imperfectly detected, territorial vertebrates</span></span>
+<span><span class="co">#&gt; An integrated occupancy and **space-usemodel** to predict abundance of</span></span>
+<span><span class="co">#&gt; imperfectly detected, territorial vertebrates</span></span></code></pre>
+<p>(emphasis added)</p>
+<p>Similarly, different databases sometime add</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span><span class="op">$</span><span class="va">title</span><span class="op">[</span><span class="va">more_duplicates</span> <span class="op">==</span> <span class="fl">140</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Black-backed **three-toed wood-pecker**, Picoides arcticus, predation on</span></span>
+<span><span class="co">#&gt; Monochamus oregopensis(Coleoptera: Cerambycidae)</span></span>
+<span><span class="co">#&gt; Black-backed **three-toed woodpecker**, Pieoides arcticus, predation on</span></span>
+<span><span class="co">#&gt; Monochamus oregonensis (Coleoptera, Cerambycidae)</span></span></code></pre>
+<p>More problematically, however, entries that are deliberately named in
+a similar way are detected as duplicates in this method:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span><span class="op">$</span><span class="va">title</span><span class="op">[</span><span class="va">more_duplicates</span> <span class="op">==</span> <span class="fl">99</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; **2006** May species count of birds</span></span>
+<span><span class="co">#&gt; **2002** May species count for birds</span></span></code></pre>
+<p>We can add these as exceptions manually before applying our
+changes:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">new_duplicates</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/override_duplicates.html">override_duplicates</a></span><span class="op">(</span><span class="va">more_duplicates</span>, <span class="fl">99</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in max(which(matches == overrides[i])): no non-missing arguments to</span></span>
+<span><span class="co">#&gt; max; returning -Inf</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_unique_references.html">extract_unique_references</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">new_duplicates</span><span class="op">)</span></span></code></pre></div>
+<p>This leaves us with 91 entries, down from the 226 returned by
+<code><a href="../reference/read_refs.html">read_refs()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="write-bibliographic-files">Write bibliographic files<a class="anchor" aria-label="anchor" href="#write-bibliographic-files"></a>
@@ -193,7 +210,7 @@ example.</p>
 deduplication, <code>synthesisr</code> can write bibliographic data to
 .ris or .bib files. Optionally, <code><a href="../reference/write_refs.html">write_refs()</a></code> can write
 directly to a text file stored locally.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># # synthesisr can write the full dataset to a bibliographic file</span></span>
 <span><span class="co"># # but in this example, we will just write the first citation</span></span>
 <span><span class="co"># # we also want it to be a nice clean bibliographic file, so we remove NA data</span></span>

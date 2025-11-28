@@ -1,7 +1,7 @@
 # Export data to a bibliographic format
 
 This function exports data.frames containing bibliographic information
-to either a .ris or .bib file.
+to either a `.ris` or `.bib` file.
 
 ## Usage
 
@@ -17,8 +17,8 @@ write_ris(x, tag_naming = "synthesisr")
 
 - x:
 
-  Either a data.frame containing bibliographic information or an object
-  of class bibliography.
+  Either a `tibble` containing bibliographic information, or an object
+  of class `bibliography.`
 
 - file:
 
@@ -26,7 +26,8 @@ write_ris(x, tag_naming = "synthesisr")
 
 - format:
 
-  What format should the data be exported as? Options are ris or bib.
+  What format should the data be exported as? Options are `"ris"` or
+  `"bib"`.
 
 - tag_naming:
 
@@ -35,7 +36,7 @@ write_ris(x, tag_naming = "synthesisr")
 
 - write:
 
-  Logical should a file should be written? If FALSE returns a `list`.
+  Logical should a file should be written? If `FALSE` returns a `list`.
 
 ## Value
 
@@ -72,7 +73,7 @@ eviatlas <- c(
 
 detect_parser(eviatlas) # = "parse_ris"
 #> [1] "parse_ris"
-df <- as.data.frame(parse_ris(eviatlas))
-ris_out <- write_refs(df, format = "ris", file = FALSE)
-#> Error in check_filename(file): argument 'file' should be an object of class `character`
+df <- parse_ris(eviatlas) |>
+  as_tibble()
+ris_out <- write_refs(df, format = "ris", write = FALSE)
 ```

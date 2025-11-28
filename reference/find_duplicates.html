@@ -9,7 +9,7 @@ detection methods."><meta property="og:image" content="https://martinwestgate.co
 
     <a class="navbar-brand me-2" href="../index.html">synthesisr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,19 +94,19 @@ calculating string distance? Defaults to <code>FALSE.</code></p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a vector of duplicate matches, with <code>attributes</code> listing
-methods used.</p>
+    <p>Returns a vector of same length as <code>nrow(data)</code>, where duplicated
+values have the same integer, and <code>attributes</code> listing methods used.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="string_.html">string_</a></code> or <code><a href="fuzz_.html">fuzz_</a></code> for suitable functions
-to pass to <code>methods</code>; <code><a href="extract_unique_references.html">extract_unique_references</a></code> and
-<code><a href="deduplicate.html">deduplicate</a></code> for higher-level functions.</p></div>
+to pass to <code>methods</code>; <code><a href="extract_unique_references.html">extract_unique_references()</a></code> and
+<code><a href="deduplicate.html">deduplicate()</a></code> for higher-level functions.</p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_df</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_df</span> <span class="op">&lt;-</span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="st">"EviAtlas: a tool for visualising evidence synthesis databases"</span>,</span></span>
 <span class="r-in"><span>    <span class="st">"revtools: An R package to support article screening for evidence synthesis"</span>,</span></span>
@@ -117,45 +117,36 @@ to pass to <code>methods</code>; <code><a href="extract_unique_references.html">
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2019"</span>, <span class="st">"2019"</span>, <span class="st">"2019"</span>, <span class="st">"2019"</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  authors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Haddaway et al"</span>, <span class="st">"Westgate"</span>,</span></span>
-<span class="r-in"><span>              <span class="st">"Grames et al"</span>, <span class="st">"Pick et al"</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span>              <span class="st">"Grames et al"</span>, <span class="st">"Pick et al"</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># run deduplication</span></span></span>
 <span class="r-in"><span><span class="va">dups</span> <span class="op">&lt;-</span> <span class="fu">find_duplicates</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">my_df</span><span class="op">$</span><span class="va">title</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="st">"string_osa"</span>,</span></span>
 <span class="r-in"><span>  rm_punctuation <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  to_lower <span class="op">=</span> <span class="cn">TRUE</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span>  to_lower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract_unique_references.html">extract_unique_references</a></span><span class="op">(</span><span class="va">my_df</span>, matches <span class="op">=</span> <span class="va">dups</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                title</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                      EviAtlas: a tool for visualising evidence synthesis databases</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         revtools: An R package to support article screening for evidence synthesis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           An automated approach to identifying search terms for systematic reviews</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Reproducible, flexible and high-throughput data extraction from primary literature</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   year        authors n_duplicates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2019 Haddaway et al            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2019       Westgate            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2019   Grames et al            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2019     Pick et al            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   title                                               year  authors n_duplicates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> EviAtlas: a tool for visualising evidence synthesi… 2019  Haddaw…            2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> revtools: An R package to support article screenin… 2019  Westga…            2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> An automated approach to identifying search terms … 2019  Grames…            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Reproducible, flexible and high-throughput data ex… 2019  Pick e…            1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># or, in one line:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="deduplicate.html">deduplicate</a></span><span class="op">(</span><span class="va">my_df</span>, <span class="st">"title"</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="st">"string_osa"</span>,</span></span>
 <span class="r-in"><span>  rm_punctuation <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  to_lower <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                title</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                      EviAtlas: a tool for visualising evidence synthesis databases</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         revtools: An R package to support article screening for evidence synthesis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           An automated approach to identifying search terms for systematic reviews</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Reproducible, flexible and high-throughput data extraction from primary literature</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   year        authors n_duplicates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2019 Haddaway et al            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2019       Westgate            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2019   Grames et al            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2019     Pick et al            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   title                                               year  authors n_duplicates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> EviAtlas: a tool for visualising evidence synthesi… 2019  Haddaw…            2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> revtools: An R package to support article screenin… 2019  Westga…            2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> An automated approach to identifying search terms … 2019  Grames…            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Reproducible, flexible and high-throughput data ex… 2019  Pick e…            1</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

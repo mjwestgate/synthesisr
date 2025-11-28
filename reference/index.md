@@ -10,7 +10,7 @@
 ## Import & Export
 
 - [`read_refs()`](https://martinwestgate.com/synthesisr/reference/read_refs.md)
-  : Import bibliographic search results
+  : Import bibliographic data files
 
 - [`write_refs()`](https://martinwestgate.com/synthesisr/reference/write_refs.md)
   [`write_bib()`](https://martinwestgate.com/synthesisr/reference/write_refs.md)
@@ -24,8 +24,6 @@
   : Detect file formatting information
 
 - [`parse_bibtex()`](https://martinwestgate.com/synthesisr/reference/parse_.md)
-  [`parse_csv()`](https://martinwestgate.com/synthesisr/reference/parse_.md)
-  [`parse_tsv()`](https://martinwestgate.com/synthesisr/reference/parse_.md)
   [`parse_pubmed()`](https://martinwestgate.com/synthesisr/reference/parse_.md)
   [`parse_ris()`](https://martinwestgate.com/synthesisr/reference/parse_.md)
   : Parse bibliographic text in a variety of formats
@@ -84,8 +82,3 @@
   [`string_jw()`](https://martinwestgate.com/synthesisr/reference/string_.md)
   [`string_soundex()`](https://martinwestgate.com/synthesisr/reference/string_.md)
   : Calculate similarity between two strings
-
-## Deprecated
-
-- [`merge_columns()`](https://martinwestgate.com/synthesisr/reference/merge_columns.md)
-  : Bind two or more data frames with different columns

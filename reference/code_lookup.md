@@ -1,6 +1,6 @@
 # Bibliographic code lookup for search results assembly
 
-A data frame that can be used to look up common codes for different
+A `tibble` that can be used to look up common codes for different
 bibliographic fields across databases and merge them to a common format.
 
 ## Usage
@@ -11,7 +11,7 @@ code_lookup
 
 ## Format
 
-A `data.frame` with 226 obs of 12 variables
+A `tibble` with 226 obs of 12 variables
 
 - code:
 
