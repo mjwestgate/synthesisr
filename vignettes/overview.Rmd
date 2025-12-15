@@ -147,7 +147,7 @@ cli::cli_text("An integrated occupancy and **space-usemodel** to predict abundan
 ```
 (emphasis added)
 
-Similarly, different databases sometime add 
+Similarly, databases sometimes differ in their punctuation:
 
 ```{r}
 #| eval: false
