@@ -102,5 +102,5 @@ litsearchr <- c(
 tmp <- tempfile()
 writeLines(litsearchr, tmp)
 df <- read_refs(tmp, return_df = TRUE, verbose = TRUE)
-#> Reading file /tmp/RtmpwUw8RK/file1d8f5256265 ... done
+#> Reading file /tmp/RtmpaGyoZc/file1cdb5733466 ... done
 ```

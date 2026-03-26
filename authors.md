@@ -10,7 +10,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/mjwestgate/synthesisr/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/mjwestgate/synthesisr/blob/v0.4.0/DESCRIPTION)
 
 Westgate M, Grames E (2026). *synthesisr: Import, Assemble, and
 Deduplicate Bibliographic Datasets*. R package version 0.4.0,
