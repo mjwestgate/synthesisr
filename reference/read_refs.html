@@ -25,6 +25,7 @@
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/mjwestgate/synthesisr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -33,7 +34,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Import bibliographic data files</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/mjwestgate/synthesisr/blob/main/R/read_refs.R" class="external-link"><code>R/read_refs.R</code></a></small>
       <div class="d-none name"><code>read_refs.Rd</code></div>
     </div>
 
@@ -49,7 +50,7 @@
 <span>  tag_naming <span class="op">=</span> <span class="st">"best_guess"</span>,</span>
 <span>  return_df <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  locale <span class="op">=</span> <span class="fu">vroom</span><span class="fu">::</span><span class="fu"><a href="https://vroom.r-lib.org/reference/locale.html" class="external-link">default_locale</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  locale <span class="op">=</span> <span class="fu">vroom</span><span class="fu">::</span><span class="fu"><a href="https://vroom.tidyverse.org/reference/locale.html" class="external-link">default_locale</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -79,11 +80,11 @@ returns a list.</p></dd>
 
 
 <dt id="arg-locale">locale<a class="anchor" aria-label="anchor" href="#arg-locale"></a></dt>
-<dd><p>passed to <code><a href="https://vroom.r-lib.org/reference/vroom_lines.html" class="external-link">vroom::vroom_lines()</a></code></p></dd>
+<dd><p>passed to <code><a href="https://vroom.tidyverse.org/reference/vroom_lines.html" class="external-link">vroom::vroom_lines()</a></code></p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments, passed to <code><a href="https://vroom.r-lib.org/reference/vroom.html" class="external-link">vroom::vroom()</a></code> or <code><a href="https://vroom.r-lib.org/reference/vroom_lines.html" class="external-link">vroom::vroom_lines()</a></code></p></dd>
+<dd><p>Additional arguments, passed to <code><a href="https://vroom.tidyverse.org/reference/vroom.html" class="external-link">vroom::vroom()</a></code> or <code><a href="https://vroom.tidyverse.org/reference/vroom_lines.html" class="external-link">vroom::vroom_lines()</a></code></p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -125,7 +126,7 @@ unchanged.</p></li>
 <span class="r-in"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="va">litsearchr</span>, <span class="va">tmp</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">read_refs</span><span class="op">(</span><span class="va">tmp</span>, return_df <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file /tmp/RtmpvqJqrb/file194d12857dd6 ... done</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file /tmp/RtmpwUw8RK/file1d8f5256265 ... done</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

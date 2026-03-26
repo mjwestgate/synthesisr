@@ -125,7 +125,7 @@ df$title[more_duplicates == 21]
 
 (emphasis added)
 
-Similarly, different databases sometime add
+Similarly, databases sometimes differ in their punctuation:
 
 ``` r
 df$title[more_duplicates == 140]

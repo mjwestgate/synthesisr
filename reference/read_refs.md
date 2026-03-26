@@ -40,13 +40,14 @@ read_refs(
 - locale:
 
   passed to
-  [`vroom::vroom_lines()`](https://vroom.r-lib.org/reference/vroom_lines.html)
+  [`vroom::vroom_lines()`](https://vroom.tidyverse.org/reference/vroom_lines.html)
 
 - ...:
 
   Additional arguments, passed to
-  [`vroom::vroom()`](https://vroom.r-lib.org/reference/vroom.html) or
-  [`vroom::vroom_lines()`](https://vroom.r-lib.org/reference/vroom_lines.html)
+  [`vroom::vroom()`](https://vroom.tidyverse.org/reference/vroom.html)
+  or
+  [`vroom::vroom_lines()`](https://vroom.tidyverse.org/reference/vroom_lines.html)
 
 ## Value
 
@@ -101,5 +102,5 @@ litsearchr <- c(
 tmp <- tempfile()
 writeLines(litsearchr, tmp)
 df <- read_refs(tmp, return_df = TRUE, verbose = TRUE)
-#> Reading file /tmp/RtmpvqJqrb/file194d12857dd6 ... done
+#> Reading file /tmp/RtmpwUw8RK/file1d8f5256265 ... done
 ```
