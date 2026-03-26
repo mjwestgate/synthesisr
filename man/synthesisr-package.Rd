@@ -63,6 +63,7 @@ control of the deduplication process, consider using the sub-functions:
 Useful links:
 \itemize{
   \item \url{https://martinwestgate.com/synthesisr/}
+  \item Report bugs at \url{https://github.com/mjwestgate/synthesisr/issues}
 }
 
 }

@@ -1,3 +1,8 @@
+## synthesisr 0.4.1
+
+- remove unnecessary files from `inst`
+- remove redundant `Date` field from `DESCRIPTION`
+
 ## synthesisr 0.4.0
 
 - full clean-up of import functions

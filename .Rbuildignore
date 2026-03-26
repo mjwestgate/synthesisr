@@ -1,7 +1,6 @@
-synthesisr_hex.png
 synthesisr.Rproj
-./inst/ris_tags
-README.md
+inst/hex
+inst/test-data
 ^doc$
 ^Meta$
 ^.*\.Rproj$
@@ -11,4 +10,5 @@ README.md
 ^pkgdown$
 ^\.github$
 README.Rmd
+README.md
 data-raw

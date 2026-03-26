@@ -1,7 +1,7 @@
 Package: synthesisr
 Type: Package
 Title: Import, Assemble, and Deduplicate Bibliographic Datasets
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: c(
   person(
     given = "Martin",
@@ -42,7 +42,6 @@ Suggests:
     rmarkdown,
     testthat,
     usethis
-Date: 2023-06-07
 License: GPL-3
 URL: https://martinwestgate.com/synthesisr/
 BugReports: https://github.com/mjwestgate/synthesisr/issues
